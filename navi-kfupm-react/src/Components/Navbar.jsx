@@ -1,6 +1,9 @@
 import "../App.css";
+import { useAuth } from "../AuthContext";
 
-function Navbar() {
+function Navbar({ onLoginClick, onSignupClick }) {
+  const { role, login, logout, signup } = useAuth();
+
   return (
     <nav className="navbar">
 
@@ -20,8 +23,17 @@ function Navbar() {
 
       {/* RIGHT: Auth buttons */}
       <div className="navbar-right">
-        <button>Login</button>
-        <button>Sign Up</button>
+        {role === "guest" ? (
+          <>
+            <button onClick={onLoginClick}>Login</button>
+            <button onClick={onSignupClick}>Sign Up</button>
+          </>
+        ) : (
+          <>
+            <span className="role-text">{role}</span>
+            <button onClick={logout}>Logout</button>
+          </>
+        )}
       </div>
 
     </nav>

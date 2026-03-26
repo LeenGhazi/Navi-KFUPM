@@ -1,14 +1,18 @@
-import Navbar from "../Components/Navbar";
+import { useAuth } from "../AuthContext";
 
 function BusRoutesPage() {
+  const { role } = useAuth();
+
   return (
     <div>
-      <Navbar />
-
       <h1>Campus Bus Routes</h1>
-      <p>Select routes to view on the map</p>
+
+      {role === "user" && <button>Request Route</button>}
+      {role === "admin" && <button>Manage Routes</button>}
+      {role === "technical" && <button>Edit Routes</button>}
     </div>
   );
 }
+
 
 export default BusRoutesPage;
