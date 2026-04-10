@@ -9,7 +9,7 @@ import { LoginDialog } from './Components/LoginDialog';
 import { Toaster } from './Components/ui/sonner';
 import { RegisterDialog } from './Components/RegisterDialog';
 // Import these as you build them
-// import { HomePage } from "./Pages/HomePage";
+import { HomePage } from "./Pages/HomePage";
 import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
 import { AdminAnnouncementsPage } from "./Pages/AdminAnnouncementsPage"; 
 import { ComplaintsPage } from "./Pages/ComplaintsPage";
@@ -37,7 +37,7 @@ function AppContent() {
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <Routes>
-          <Route path="/" element={<div>Home Page</div>} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/bus-routes" element={<BusRoutesPage />} />
           <Route path="/announcements" element={<AnnouncementsPage />} />
           <Route path="/complaints" element={<ComplaintsPage />} />

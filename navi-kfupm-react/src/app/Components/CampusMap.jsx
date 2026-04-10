@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { mockLocations, mockBusRoutes, mockMainPaths } from '../data/mockData';
+import { mockLocations, mockBusRoutes, mockMainPaths } from '../../mockData';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
