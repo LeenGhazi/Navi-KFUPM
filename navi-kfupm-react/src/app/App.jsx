@@ -32,7 +32,7 @@ function AppContent() {
           <Route path="/bus-routes" element={<BusRoutesPage />} />
           <Route path="/announcements" element={<div>Announcements Page</div>} />
           <Route path="/complaints" element={<div>Complaints Page</div>} />
-          <Route path="/about" element={<div>About Page</div>} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/account" element={<div>Account Page</div>} />
           <Route path="/admin" element={<div>Staff Dashboard</div>} />
           <Route path="/kfupm-admin" element={<div>KFUPM Admin Dashboard</div>} />
