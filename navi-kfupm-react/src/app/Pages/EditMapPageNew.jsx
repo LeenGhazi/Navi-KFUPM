@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from "../../AuthContext";
 import { Navigate } from 'react-router';
-import { mockLocations } from '@/data/mockData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Textarea } from '@/app/components/ui/textarea';
-import { Badge } from '@/app/components/ui/badge';
-import { Separator } from '@/app/components/ui/separator';
-import { ScrollArea } from '@/app/components/ui/scroll-area';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
+import { mockLocations } from '../../mockData';
+import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Input } from '../Components/ui/input';
+import { Textarea } from '../Components/ui/textarea';
+import { Badge } from '../Components/ui/badge';
+import { Separator } from '../Components/ui/separator';
+import { ScrollArea } from '../Components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
 import { MapPin, Clock, Users, Search, Edit, Save, X, Plus, Trash2, } from 'lucide-react';
 import { toast } from 'sonner';
 export function EditMapPage() {

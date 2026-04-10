@@ -4,6 +4,7 @@ import { Navigation } from "./Components/Navigation";
 import { AuthProvider, useAuth } from "../AuthContext";
 import { ThemeProvider } from '../ThemeContext';
 import { BusRoutesPage } from "./Pages/BusRoutesPage";
+import { EditMapPage } from "./Pages/EditMapPageNew";
 
 // Import these as you build them
 // import { HomePage } from "./Pages/HomePage";
@@ -11,8 +12,7 @@ import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
 import { ComplaintsPage } from "./Pages/ComplaintsPage";
 import { AboutPage } from "./Pages/AboutPage";
 import { AccountPage } from "./Pages/AccountPage";
-// import { AccountPage } from "./Pages/AccountPage";
-// import { AdminDashboard } from "./Pages/AdminDashboard";
+import { AdminDashboard } from "./Pages/AdminDashboard";
 // import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 
 
@@ -28,7 +28,7 @@ function AppContent() {
         onLoginClick={() => setShowLoginPopup(true)}
         onRegisterClick={() => setShowSignupPopup(true)}
       />
-
+      {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <Routes>
           <Route path="/" element={<div>Home Page</div>} />
@@ -37,8 +37,20 @@ function AppContent() {
           <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/account" element={<AccountPage />} />
-          <Route path="/admin" element={<div>Staff Dashboard</div>} />
-          <Route path="/kfupm-admin" element={<div>KFUPM Admin Dashboard</div>} />
+          {/* Staff Dashboard Routes */}
+          <Route path="/admin" element={<AdminDashboard />}/>
+          <Route path="/admin/requests" element={<div>AdminRequestsPage</div>}/>
+          <Route path="/admin/filters" element={<div>FilterManagementPage</div>}/>
+          <Route path="/admin/feedback" element={<div>FeedbackManagementPage</div>}/>
+          <Route path="/admin/announcements" element={<div>AdminAnnouncementsPage</div>}/>
+          <Route path="/admin/comments" element={<div>AdminCommentsPage</div>}/>
+          <Route path="/admin/edit-map" element={<EditMapPage />}/>
+          {/* KFUPM Admin Dashboard Routes */}
+          <Route path="/kfupm-admin" element={<div>KFUPMAdminDashboard</div>}/>
+          <Route path="/kfupm-admin/requests-to-tech" element={<div>AdminRequestsToTechPage</div>}/>
+          <Route path="/kfupm-admin/complaints-management" element={<div>AdminComplaintsManagement</div>}/>
+          <Route path="/kfupm-admin/community-paths-review" element={<div>AdminCommunityPathsReview</div>}/>
+          <Route path="/kfupm-admin/verify-comments" element={<div>AdminVerifyComments</div>}/>
         </Routes>
       </main>
 
