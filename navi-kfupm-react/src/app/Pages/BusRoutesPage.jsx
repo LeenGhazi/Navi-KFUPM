@@ -114,7 +114,7 @@ const busRoutes = [
         ]
     }
 ];
-export default function BusRoutesPage() {
+export function BusRoutesPage() {
     const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map(r => r.id));
     const [selectedRoute, setSelectedRoute] = useState(null);
     const toggleRoute = (routeId) => {
