@@ -10,6 +10,7 @@ import { BusRoutesPage } from "./Pages/BusRoutesPage";
 import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
 // import { ComplaintsPage } from "./Pages/ComplaintsPage";
 import { AboutPage } from "./Pages/AboutPage";
+import { AccountPage } from "./Pages/AccountPage";
 // import { AccountPage } from "./Pages/AccountPage";
 // import { AdminDashboard } from "./Pages/AdminDashboard";
 // import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
@@ -33,7 +34,7 @@ function AppContent() {
           <Route path="/announcements" element={<AnnouncementsPage />} />
           <Route path="/complaints" element={<div>Complaints Page</div>} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/account" element={<div>Account Page</div>} />
+          <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<div>Staff Dashboard</div>} />
           <Route path="/kfupm-admin" element={<div>KFUPM Admin Dashboard</div>} />
         </Routes>
