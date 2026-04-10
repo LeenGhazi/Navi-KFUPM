@@ -17,7 +17,7 @@ import { AboutPage } from "./Pages/AboutPage";
 import { AccountPage } from "./Pages/AccountPage";
 import { AdminDashboard } from "./Pages/AdminDashboard";
 import { AdminComplaintsManagement } from "./Pages/AdminComplaintsManagement";
-import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
+//import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 
 
 

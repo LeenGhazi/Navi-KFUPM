@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Label } from '@/app/components/ui/label';
-import { Textarea } from '@/app/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
-import { Badge } from '@/app/components/ui/badge';
+import { useAuth } from '../../AuthContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Input } from '../Components/ui/input';
+import { Label } from '../Components/ui/label';
+import { Textarea } from '../Components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
+import { Badge } from '../Components/ui/badge';
 import { toast } from 'sonner';
 import { MessageSquare, Send, CheckCircle, Clock } from 'lucide-react';
 const mockComplaints = [
@@ -53,8 +53,7 @@ export function AdminComplaintsManagement() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [responseText, setResponseText] = useState('');
-
-    const filteredComplaints = complaints.filter((complaint) => {  {
+    const filteredComplaints = complaints.filter((complaint) => {
         const matchesStatus = filterStatus === 'all' || complaint.status === filterStatus;
         const matchesSearch = searchQuery === '' ||
             complaint.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -62,23 +61,21 @@ export function AdminComplaintsManagement() {
             complaint.description.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
     });
-
-
     const handleUpdateStatus = (complaintId, newStatus) => {
         setComplaints(complaints.map((c) => c.id === complaintId ? { ...c, status: newStatus } : c));
         toast.success(`Complaint status updated to ${newStatus}`);
     };
-
-
     const handleSubmitResponse = (complaintId) => {
-        
+        if (!responseText.trim()) {
+            toast.error('Please write a response');
+            return;
+        }
         setComplaints(complaints.map((c) => c.id === complaintId
             ? { ...c, adminResponse: responseText, status: 'In Progress' }
             : c));
         setResponseText('');
         toast.success('Response sent to user successfully');
     };
-
     const getStatusIcon = (status) => {
         switch (status) {
             case 'Submitted':
@@ -89,7 +86,6 @@ export function AdminComplaintsManagement() {
                 return <CheckCircle className="w-4 h-4"/>;
         }
     };
-
     const getStatusColor = (status) => {
         switch (status) {
             case 'Submitted':
@@ -100,7 +96,6 @@ export function AdminComplaintsManagement() {
                 return 'bg-green-100 text-green-800';
         }
     };
-
     return (<div className="container mx-auto px-4 py-8 h-full overflow-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Complaints Management</h1>
@@ -109,7 +104,7 @@ export function AdminComplaintsManagement() {
         </p>
       </div>
 
-      
+      {/* Filters */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="text-base">Filters</CardTitle>
@@ -118,7 +113,6 @@ export function AdminComplaintsManagement() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="status-filter">Filter by Status</Label>
-
               <Select value={filterStatus} onValueChange={setFilterStatus}>
                 <SelectTrigger id="status-filter">
                   <SelectValue />
@@ -140,40 +134,33 @@ export function AdminComplaintsManagement() {
         </CardContent>
       </Card>
 
-      
+      {/* Complaints List */}
       <div className="space-y-4">
         {filteredComplaints.length === 0 ? (<Card>
             <CardContent className="py-12 text-center">
               <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4"/>
               <p className="text-muted-foreground">No complaints found</p>
             </CardContent>
-
           </Card>) : (filteredComplaints.map((complaint) => (<Card key={complaint.id}>
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-lg">{complaint.title}</CardTitle>
-
                     <CardDescription className="mt-1">
                       {complaint.type} • By {complaint.userName} ({complaint.userEmail})
                     </CardDescription>
-
                     <CardDescription className="text-xs">
                       Submitted on {new Date(complaint.createdAt).toLocaleString()}
                     </CardDescription>
                   </div>
-
-                  <Badge className={`gap-1 ${getStatusColor(complaint.status)}`}> 
+                  <Badge className={`gap-1 ${getStatusColor(complaint.status)}`}>
                     {getStatusIcon(complaint.status)}
                     {complaint.status}
                   </Badge>
-
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-
-
-                
+                {/* Complaint Description */}
                 <div>
                   <Label className="text-sm font-semibold">Description</Label>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -181,7 +168,7 @@ export function AdminComplaintsManagement() {
                   </p>
                 </div>
 
-                
+                {/* Admin Response (if exists) */}
                 {complaint.adminResponse && (<div className="bg-muted/50 p-4 rounded-lg">
                     <Label className="text-sm font-semibold flex items-center gap-2 mb-2">
                       <MessageSquare className="w-4 h-4"/>
@@ -190,7 +177,7 @@ export function AdminComplaintsManagement() {
                     <p className="text-sm">{complaint.adminResponse}</p>
                   </div>)}
 
-                
+                {/* Response Form */}
                 <div className="space-y-3 pt-2 border-t">
                   <div className="space-y-2">
                     <Label>Respond to User</Label>
@@ -203,7 +190,6 @@ export function AdminComplaintsManagement() {
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <Label className="text-sm">Update Status:</Label>
-                      
                       <Select value={complaint.status} onValueChange={(value) => handleUpdateStatus(complaint.id, value)}>
                         <SelectTrigger className="w-40">
                           <SelectValue />

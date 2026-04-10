@@ -1,8 +1,8 @@
 import React from "react";
-import { useAuth } from "../Contexts/AuthContext";
+import { useAuth } from "../../AuthContext";
 import { Navigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
 import { FileText, Filter, MessageSquare, Bell, Users, } from 'lucide-react';
 
 
@@ -96,4 +96,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export { AdminDashboard }; //
