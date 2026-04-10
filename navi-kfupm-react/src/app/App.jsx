@@ -8,7 +8,7 @@ import { BusRoutesPage } from "./Pages/BusRoutesPage";
 // Import these as you build them
 // import { HomePage } from "./Pages/HomePage";
 import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
-// import { ComplaintsPage } from "./Pages/ComplaintsPage";
+import { ComplaintsPage } from "./Pages/ComplaintsPage";
 import { AboutPage } from "./Pages/AboutPage";
 import { AccountPage } from "./Pages/AccountPage";
 // import { AccountPage } from "./Pages/AccountPage";
@@ -32,7 +32,7 @@ function AppContent() {
           <Route path="/" element={<div>Home Page</div>} />
           <Route path="/bus-routes" element={<BusRoutesPage />} />
           <Route path="/announcements" element={<AnnouncementsPage />} />
-          <Route path="/complaints" element={<div>Complaints Page</div>} />
+          <Route path="/complaints" element={<ComplaintsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<div>Staff Dashboard</div>} />
