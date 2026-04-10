@@ -54,7 +54,7 @@ export function AdminComplaintsManagement() {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [responseText, setResponseText] = useState('');
 
-    const filteredComplaints = complaints.filter((complaint) => {
+    const filteredComplaints = complaints.filter((complaint) => {  {
         const matchesStatus = filterStatus === 'all' || complaint.status === filterStatus;
         const matchesSearch = searchQuery === '' ||
             complaint.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
