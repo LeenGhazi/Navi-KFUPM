@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../src/AuthContext';
 import { useNavigate } from 'react-router';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Label } from '@/app/components/ui/label';
-import { Badge } from '@/app/components/ui/badge';
-import { Separator } from '@/app/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Input } from '../Components/ui/input';
+import { Label } from '../Components/ui/label';
+import { Badge } from '../Components/ui/badge';
+import { Separator } from '../Components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
 import { UserCircle, Mail, Phone, MapPin, Shield, Edit, Save, X, Key, Activity, Award, Route, MessageSquare, Trash2, Star, } from 'lucide-react';
 import { toast } from 'sonner';
 // Mock data for community paths
