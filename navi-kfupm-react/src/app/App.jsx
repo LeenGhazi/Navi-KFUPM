@@ -9,7 +9,7 @@ import { BusRoutesPage } from "./Pages/BusRoutesPage";
 // import { HomePage } from "./Pages/HomePage";
 // import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
 // import { ComplaintsPage } from "./Pages/ComplaintsPage";
-// import { AboutPage } from "./Pages/AboutPage";
+import { AboutPage } from "./Pages/AboutPage";
 // import { AccountPage } from "./Pages/AccountPage";
 // import { AdminDashboard } from "./Pages/AdminDashboard";
 // import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
