@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { mockLocations, mockBusRoutes, mockMainPaths } from '@/data/mockData';
-import { Button } from '@/app/components/ui/button';
-import { Badge } from '@/app/components/ui/badge';
-import { Card } from '@/app/components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Badge } from '../Components/ui/badge';
+import { Card } from '../Components/ui/card';
 import { ZoomIn, ZoomOut, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, searchQuery, onLocationClick, routeFrom, routeTo, showMultipleRoutes, movingBuildingId, onBuildingMoved, }) {
