@@ -15,7 +15,6 @@ import { AccountPage } from "./Pages/AccountPage";
 // import { AdminDashboard } from "./Pages/AdminDashboard";
 // import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Separate inner component so it can use useAuth hook
 function AppContent() {
@@ -42,20 +41,6 @@ function AppContent() {
           <Route path="/kfupm-admin" element={<div>KFUPM Admin Dashboard</div>} />
         </Routes>
       </main>
-      <Routes>
-        <Route path="/" element={<BusRoutesPage />} />
-         {/* Admin routes */}
-        <Route path="/kfupm-admin" element={<h1>Admin Dashboard</h1>} />
-        <Route path="/kfupm-admin/requests" element={<h1>Requests Page</h1>} />
-        <Route path="/kfupm-admin/complaints" element={<h1>Complaints Page</h1>} />
-        <Route path="/kfupm-admin/paths" element={<h1>Paths Page</h1>} />
-          {/* Technical Admin routes */}
-        <Route path="/admin" element={<h1>Technical Dashboard</h1>} />
-        <Route path="/admin/requests" element={<h1>Technical Requests</h1>} />
-        <Route path="/admin/filters" element={<h1>Filter Page</h1>} />
-        <Route path="/admin/announcements" element={<h1>Announcements Page</h1>} />
-
-      </Routes>
 
       {showLoginPopup && (
         <div className="popup-overlay">
