@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { mockLocations } from '@/data/mockData';
+import { mockLocations } from '../../mockData';
 import { Button } from '@/app/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { MapPin, Navigation } from 'lucide-react';
-import { Badge } from '@/app/components/ui/badge';
+import { Badge } from './ui/badge';
 export function NearestLocationFinder({ onLocationSelect }) {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [nearestLocations, setNearestLocations] = useState([]);

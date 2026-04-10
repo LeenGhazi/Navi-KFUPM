@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "@/app/components/ui/dialog";
-import { Button } from "@/app/components/ui/button";
-import { Card } from "@/app/components/ui/card";
-import { Badge } from "@/app/components/ui/badge";
-import { ScrollArea } from "@/app/components/ui/scroll-area";
+import { useAuth } from "../../AuthContext";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { ScrollArea } from "./ui/scroll-area";
 import { Star, Navigation, MapPin, TrendingUp, } from "lucide-react";
 import { toast } from "sonner";
 // Mock community paths data

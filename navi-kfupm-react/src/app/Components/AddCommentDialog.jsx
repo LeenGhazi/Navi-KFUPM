@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { mockLocations } from '@/data/mockData';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '@/app/components/ui/dialog';
-import { Button } from '@/app/components/ui/button';
-import { Textarea } from '@/app/components/ui/textarea';
-import { Label } from '@/app/components/ui/label';
+import { useAuth } from "../../AuthContext";
+import { mockLocations } from '../../mockData';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '../Components/ui/dialog';
+import { Button } from './ui/button';
+import { Textarea } from './ui/textarea';
+import { Label } from './ui/label';
 import { Star } from 'lucide-react';
 import { toast } from 'sonner';
 export function AddCommentDialog({ open, onOpenChange, locationId }) {

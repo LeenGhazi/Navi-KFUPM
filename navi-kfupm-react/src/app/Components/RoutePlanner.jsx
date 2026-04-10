@@ -1,8 +1,8 @@
 import React from 'react';
-import { mockLocations } from '@/data/mockData';
-import { Button } from '@/app/components/ui/button';
-import { Label } from '@/app/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
+import { mockLocations } from '../../mockData';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { ArrowRight, X } from 'lucide-react';
 export function RoutePlanner({ routeFrom, routeTo, onRouteFromChange, onRouteToChange, onClear }) {
     // Group locations by category

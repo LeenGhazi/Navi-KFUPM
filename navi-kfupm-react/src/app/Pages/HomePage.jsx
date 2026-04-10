@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { CampusMap } from '@/app/components/CampusMap';
-import { LocationDetailsDialog } from '@/app/components/LocationDetailsDialog';
-import { AddCommentDialog } from '@/app/components/AddCommentDialog';
-import { SubmitComplaintDialog } from '@/app/components/SubmitComplaintDialog';
-import { CommunityPathsDialog } from '@/app/components/CommunityPathsDialog';
-import { CreatePathDialog } from '@/app/components/CreatePathDialog';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Label } from '@/app/components/ui/label';
-import { ScrollArea } from '@/app/components/ui/scroll-area';
-import { Separator } from '@/app/components/ui/separator';
-import { Checkbox } from '@/app/components/ui/checkbox';
+import { useAuth } from '../../AuthContext';
+import { CampusMap } from '../Components/CampusMap';
+import { LocationDetailsDialog } from '../Components/LocationDetailsDialog';
+import { AddCommentDialog } from '../Components/AddCommentDialog';
+import { SubmitComplaintDialog } from '../Components/SubmitComplaintDialog';
+import { CommunityPathsDialog } from '../Components/CommunityPathsDialog';
+import { CreatePathDialog } from '../Components/CreatePathDialog';
+import { Button } from '../Components/ui/button';
+import { Input } from '../Components/ui/input';
+import { Label } from '../Components/ui/label';
+import { ScrollArea } from '../Components/ui/scroll-area';
+import { Separator } from '../Components/ui/separator';
+import { Checkbox } from '../Components/ui/checkbox';
 import { Search, Route as RouteIcon, Move, } from 'lucide-react';
 const categories = [
     { value: 'academic', label: 'Academic Buildings' },
