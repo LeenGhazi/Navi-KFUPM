@@ -1,15 +1,27 @@
 import { useState } from "react";
-import BusRoutesPage from "./Pages/BusRoutesPage";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navigation } from "./Components/Navigation";
 import { AuthProvider, useAuth } from "../AuthContext";
 import { ThemeProvider } from '../ThemeContext';
+import { BusRoutesPage } from "./Pages/BusRoutesPage";
+
+// Import these as you build them
+// import { HomePage } from "./Pages/HomePage";
+import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
+// import { ComplaintsPage } from "./Pages/ComplaintsPage";
+import { AboutPage } from "./Pages/AboutPage";
+import { AccountPage } from "./Pages/AccountPage";
+// import { AccountPage } from "./Pages/AccountPage";
+// import { AdminDashboard } from "./Pages/AdminDashboard";
+// import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Separate inner component so it can use useAuth hook
 function AppContent() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showSignupPopup, setShowSignupPopup] = useState(false);
-  const { login, signup } = useAuth(); 
+  const { login, signup } = useAuth();
 
   return (
     <>
@@ -17,6 +29,19 @@ function AppContent() {
         onLoginClick={() => setShowLoginPopup(true)}
         onRegisterClick={() => setShowSignupPopup(true)}
       />
+
+      <main className="flex-1 overflow-auto">
+        <Routes>
+          <Route path="/" element={<div>Home Page</div>} />
+          <Route path="/bus-routes" element={<BusRoutesPage />} />
+          <Route path="/announcements" element={<AnnouncementsPage />} />
+          <Route path="/complaints" element={<div>Complaints Page</div>} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/admin" element={<div>Staff Dashboard</div>} />
+          <Route path="/kfupm-admin" element={<div>KFUPM Admin Dashboard</div>} />
+        </Routes>
+      </main>
       <Routes>
         <Route path="/" element={<BusRoutesPage />} />
          {/* Admin routes */}
@@ -37,15 +62,9 @@ function AppContent() {
           <div className="popup-box">
             <h2>Login to Navi-KFUPM</h2>
             <p>Select your account type to continue</p>
-            <button onClick={() => { login("user"); setShowLoginPopup(false); }}>
-              Log in as User
-            </button>
-            <button onClick={() => { login("admin"); setShowLoginPopup(false); }}>
-              Log in as KFUPM Administrator
-            </button>
-            <button onClick={() => { login("technical"); setShowLoginPopup(false); }}>
-              Log in as Technical Admin
-            </button>
+            <button onClick={() => { login("user"); setShowLoginPopup(false); }}>Log in as User</button>
+            <button onClick={() => { login("admin"); setShowLoginPopup(false); }}>Log in as KFUPM Administrator</button>
+            <button onClick={() => { login("technical"); setShowLoginPopup(false); }}>Log in as Technical Admin</button>
             <button onClick={() => setShowLoginPopup(false)}>X</button>
           </div>
         </div>
@@ -56,12 +75,8 @@ function AppContent() {
           <div className="popup-box">
             <h2>Register for Navi-KFUPM</h2>
             <p>Create an account to access personalized features.</p>
-            <button onClick={() => { signup(); setShowSignupPopup(false); }}>
-              Register
-            </button>
-            <button onClick={() => { setShowSignupPopup(false); setShowLoginPopup(true); }}>
-              Login Instead
-            </button>
+            <button onClick={() => { signup(); setShowSignupPopup(false); }}>Register</button>
+            <button onClick={() => { setShowSignupPopup(false); setShowLoginPopup(true); }}>Login Instead</button>
             <button onClick={() => setShowSignupPopup(false)}>X</button>
           </div>
         </div>
@@ -70,10 +85,9 @@ function AppContent() {
   );
 }
 
-
 function App() {
   return (
-    <BrowserRouter>       
+    <BrowserRouter>
       <AuthProvider>
         <ThemeProvider>
           <AppContent />
