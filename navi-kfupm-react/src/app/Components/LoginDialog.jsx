@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { mockUsers } from '../../mockData';
 import { User, Shield, Wrench, ArrowLeft } from 'lucide-react';
 export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
+    console.log('LoginDialog rendered, open:', open);
     const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -66,7 +67,8 @@ export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
         }
     };
     return (<Dialog open={open} onOpenChange={handleDialogChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      
+      <DialogContent className="sm:max-w-[425px]" style={{zIndex: 99999}}>
         <DialogHeader>
           <DialogTitle>Login to Navi-KFUPM</DialogTitle>
           <DialogDescription>

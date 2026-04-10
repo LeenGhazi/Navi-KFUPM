@@ -25,6 +25,7 @@ function AppContent() {
 
   return (
     <>
+      
       <Navigation
         onLoginClick={() => setLoginOpen(true)}
         onRegisterClick={() => setRegisterOpen(true)}
@@ -56,7 +57,7 @@ function AppContent() {
           <Route path="/kfupm-admin/verify-comments" element={<div>AdminVerifyComments</div>}/>
         </Routes>
       </main>
-
+      
       {/* Login & Register Dialogs */}
       <LoginDialog
         open={loginOpen}
@@ -84,7 +85,7 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
           <AppContent />
-          <Toaster position="top-right" />
+          <Toaster />
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
