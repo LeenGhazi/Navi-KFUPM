@@ -5,7 +5,9 @@ import { AuthProvider, useAuth } from "../AuthContext";
 import { ThemeProvider } from '../ThemeContext';
 import { BusRoutesPage } from "./Pages/BusRoutesPage";
 import { EditMapPage } from "./Pages/EditMapPageNew";
-
+import { LoginDialog } from './Components/LoginDialog';
+import { Toaster } from './Components/ui/sonner';
+import { RegisterDialog } from './Components/RegisterDialog';
 // Import these as you build them
 // import { HomePage } from "./Pages/HomePage";
 import { AnnouncementsPage } from "./Pages/AnnouncementsPage";
@@ -18,16 +20,17 @@ import { AdminDashboard } from "./Pages/AdminDashboard";
 
 // Separate inner component so it can use useAuth hook
 function AppContent() {
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [showSignupPopup, setShowSignupPopup] = useState(false);
-  const { login, signup } = useAuth();
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [registerOpen, setRegisterOpen] = useState(false);
 
   return (
     <>
       <Navigation
-        onLoginClick={() => setShowLoginPopup(true)}
-        onRegisterClick={() => setShowSignupPopup(true)}
+        onLoginClick={() => setLoginOpen(true)}
+        onRegisterClick={() => setRegisterOpen(true)}
       />
+
+
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <Routes>
@@ -54,30 +57,23 @@ function AppContent() {
         </Routes>
       </main>
 
-      {showLoginPopup && (
-        <div className="popup-overlay">
-          <div className="popup-box">
-            <h2>Login to Navi-KFUPM</h2>
-            <p>Select your account type to continue</p>
-            <button onClick={() => { login("user"); setShowLoginPopup(false); }}>Log in as User</button>
-            <button onClick={() => { login("admin"); setShowLoginPopup(false); }}>Log in as KFUPM Administrator</button>
-            <button onClick={() => { login("technical"); setShowLoginPopup(false); }}>Log in as Technical Admin</button>
-            <button onClick={() => setShowLoginPopup(false)}>X</button>
-          </div>
-        </div>
-      )}
-
-      {showSignupPopup && (
-        <div className="popup-overlay">
-          <div className="popup-box">
-            <h2>Register for Navi-KFUPM</h2>
-            <p>Create an account to access personalized features.</p>
-            <button onClick={() => { signup(); setShowSignupPopup(false); }}>Register</button>
-            <button onClick={() => { setShowSignupPopup(false); setShowLoginPopup(true); }}>Login Instead</button>
-            <button onClick={() => setShowSignupPopup(false)}>X</button>
-          </div>
-        </div>
-      )}
+      {/* Login & Register Dialogs */}
+      <LoginDialog
+        open={loginOpen}
+        onOpenChange={setLoginOpen}
+        onSwitchToRegister={() => {
+          setLoginOpen(false);
+          setRegisterOpen(true);
+        }}
+      />
+      <RegisterDialog
+        open={registerOpen}
+        onOpenChange={setRegisterOpen}
+        onSwitchToLogin={() => {
+          setRegisterOpen(false);
+          setLoginOpen(true);
+        }}
+      />
     </>
   );
 }
@@ -88,6 +84,7 @@ function App() {
       <AuthProvider>
         <ThemeProvider>
           <AppContent />
+          <Toaster position="top-right" />
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
@@ -95,3 +92,4 @@ function App() {
 }
 
 export default App;
+
