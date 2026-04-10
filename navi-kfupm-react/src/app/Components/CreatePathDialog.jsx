@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { mockLocations } from '@/data/mockData';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '@/app/components/ui/dialog';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Label } from '@/app/components/ui/label';
-import { Textarea } from '@/app/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
+import { useAuth } from "../../AuthContext";
+import { mockLocations } from '../../mockData';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from './ui/dialog';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { MapPin, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 export function CreatePathDialog({ open, onOpenChange }) {

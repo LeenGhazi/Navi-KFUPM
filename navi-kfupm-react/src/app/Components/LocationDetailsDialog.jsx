@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { mockComments, mockStories } from '@/data/mockData';
-import { useAuth } from '@/contexts/AuthContext';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, } from '@/app/components/ui/dialog';
-import { Badge } from '@/app/components/ui/badge';
-import { Button } from '@/app/components/ui/button';
-import { Separator } from '@/app/components/ui/separator';
-import { ScrollArea } from '@/app/components/ui/scroll-area';
-import { Card } from '@/app/components/ui/card';
-import { Textarea } from '@/app/components/ui/textarea';
-import { Input } from '@/app/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
+import { mockComments, mockStories } from '../../mockData';
+import { useAuth } from '../../AuthContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, } from './ui/dialog';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Separator } from './ui/separator';
+import { ScrollArea } from './ui/scroll-area';
+import { Card } from './ui/card';
+import { Textarea } from './ui/textarea';
+import { Input } from './ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { toast } from 'sonner';
 import { MapPin, Clock, Users, Star, MessageSquare, Heart, Printer, FlaskConical, DoorOpen, BookOpen, Users2, Trash2, Edit, Save, X, Plus, Move, Eye, EyeOff, Shield, } from 'lucide-react';
 export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitComment, onSubmitComplaint, onStartMoveBuilding, }) {
