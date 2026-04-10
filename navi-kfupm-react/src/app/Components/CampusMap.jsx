@@ -269,7 +269,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
                 <rect x={buildingX + 3} y={buildingY + 3} width={shape.width} height={shape.height} fill="rgba(0,0,0,0.2)" rx="4"/>
                 
                 {/* Building */}
-                <rect x={buildingX} y={buildingY} width={shape.width} height={shape.height} fill={isMoving ? '#3B82F6' : color} stroke={isMoving ? '#FCD34D' : isRoutePoint ? '#FCD34D' : isHovered ? 'white' : '#E5E7EB'} strokeWidth={isMoving ? '5' : isRoutePoint ? '4' : isHovered ? '3' : '2'} opacity={isMoving ? '0.7' : '1'} opacity={isHovered ? '1' : '0.85'} rx="4" className="transition-all" filter={isHovered ? 'url(#shadow)' : undefined}/>
+                <rect x={buildingX} y={buildingY} width={shape.width} height={shape.height} fill={isMoving ? '#3B82F6' : color} stroke={isMoving ? '#FCD34D' : isRoutePoint ? '#FCD34D' : isHovered ? 'white' : '#E5E7EB'} strokeWidth={isMoving ? '5' : isRoutePoint ? '4' : isHovered ? '3' : '2'} opacity={isMoving ? '0.7' : isHovered ? '1' : '0.85'} rx="4" className="transition-all" filter={isHovered ? 'url(#shadow)' : undefined}/>
                 
                 {/* Building name */}
                 <text x={location.coordinates.x} y={location.coordinates.y} textAnchor="middle" dominantBaseline="middle" className="fill-white font-bold text-shadow" style={{
