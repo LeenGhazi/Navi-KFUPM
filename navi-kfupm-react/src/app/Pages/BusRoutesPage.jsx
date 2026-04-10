@@ -7,112 +7,230 @@ import { Separator } from '../Components/ui/separator';
 import { Checkbox } from '../Components/ui/checkbox';
 import { Bus, Clock, MapPin } from 'lucide-react';
 const busRoutes = [
-    {
-        id: 'route-1',
-        name: 'Main Campus Loop',
-        color: '#3B82F6', // Blue
-        description: 'Connects main academic buildings, library, and student center',
-        frequency: 'Every 15 minutes',
-        operatingHours: '7:00 AM - 10:00 PM',
-        stops: [
-            { id: 's1', name: 'Main Gate', coordinates: { x: 100, y: 100 }, arrivalTime: '7:00' },
-            { id: 's2', name: 'Engineering Complex', coordinates: { x: 200, y: 150 }, arrivalTime: '7:05' },
-            { id: 's3', name: 'Science Building', coordinates: { x: 300, y: 200 }, arrivalTime: '7:10' },
-            { id: 's4', name: 'Library', coordinates: { x: 400, y: 250 }, arrivalTime: '7:15' },
-            { id: 's5', name: 'Student Center', coordinates: { x: 500, y: 300 }, arrivalTime: '7:20' },
-            { id: 's6', name: 'Administration', coordinates: { x: 400, y: 350 }, arrivalTime: '7:25' },
-        ],
-        path: [
-            { x: 100, y: 100 }, { x: 200, y: 150 }, { x: 300, y: 200 },
-            { x: 400, y: 250 }, { x: 500, y: 300 }, { x: 400, y: 350 },
-            { x: 300, y: 380 }, { x: 200, y: 350 }, { x: 100, y: 300 }, { x: 100, y: 100 }
-        ]
-    },
-    {
-        id: 'route-2',
-        name: 'Dormitory Express',
-        color: '#EF4444', // Red
-        description: 'Quick service between dormitories and academic areas',
-        frequency: 'Every 10 minutes',
-        operatingHours: '6:30 AM - 11:00 PM',
-        stops: [
-            { id: 'd1', name: 'Dorm A', coordinates: { x: 150, y: 450 }, arrivalTime: '6:30' },
-            { id: 'd2', name: 'Dorm B', coordinates: { x: 250, y: 480 }, arrivalTime: '6:35' },
-            { id: 'd3', name: 'Dorm C', coordinates: { x: 350, y: 500 }, arrivalTime: '6:40' },
-            { id: 'd4', name: 'Cafeteria', coordinates: { x: 450, y: 400 }, arrivalTime: '6:45' },
-            { id: 'd5', name: 'Engineering Complex', coordinates: { x: 200, y: 150 }, arrivalTime: '6:50' },
-            { id: 'd6', name: 'Library', coordinates: { x: 400, y: 250 }, arrivalTime: '6:55' },
-        ],
-        path: [
-            { x: 150, y: 450 }, { x: 250, y: 480 }, { x: 350, y: 500 },
-            { x: 450, y: 400 }, { x: 400, y: 300 }, { x: 300, y: 200 },
-            { x: 200, y: 150 }, { x: 300, y: 180 }, { x: 400, y: 250 },
-            { x: 350, y: 350 }, { x: 250, y: 400 }, { x: 150, y: 450 }
-        ]
-    },
-    {
-        id: 'route-3',
-        name: 'Sports & Recreation',
-        color: '#10B981', // Green
-        description: 'Connects sports facilities, gym, and recreation areas',
-        frequency: 'Every 20 minutes',
-        operatingHours: '8:00 AM - 9:00 PM',
-        stops: [
-            { id: 'r1', name: 'Main Gate', coordinates: { x: 100, y: 100 }, arrivalTime: '8:00' },
-            { id: 'r2', name: 'Stadium', coordinates: { x: 600, y: 150 }, arrivalTime: '8:08' },
-            { id: 'r3', name: 'Sports Complex', coordinates: { x: 650, y: 250 }, arrivalTime: '8:15' },
-            { id: 'r4', name: 'Swimming Pool', coordinates: { x: 620, y: 350 }, arrivalTime: '8:22' },
-            { id: 'r5', name: 'Gym', coordinates: { x: 550, y: 400 }, arrivalTime: '8:28' },
-            { id: 'r6', name: 'Student Center', coordinates: { x: 500, y: 300 }, arrivalTime: '8:35' },
-        ],
-        path: [
-            { x: 100, y: 100 }, { x: 200, y: 120 }, { x: 400, y: 130 },
-            { x: 600, y: 150 }, { x: 650, y: 250 }, { x: 620, y: 350 },
-            { x: 550, y: 400 }, { x: 500, y: 350 }, { x: 500, y: 300 },
-            { x: 400, y: 250 }, { x: 200, y: 180 }, { x: 100, y: 100 }
-        ]
-    },
-    {
-        id: 'route-4',
-        name: 'Shopping & Dining',
-        color: '#F59E0B', // Amber
-        description: 'Covers all cafeterias, restaurants, and shopping areas',
-        frequency: 'Every 12 minutes',
-        operatingHours: '10:00 AM - 10:00 PM',
-        stops: [
-            { id: 'f1', name: 'Main Cafeteria', coordinates: { x: 450, y: 400 }, arrivalTime: '10:00' },
-            { id: 'f2', name: 'Coffee Shop', coordinates: { x: 350, y: 320 }, arrivalTime: '10:05' },
-            { id: 'f3', name: 'Food Court', coordinates: { x: 280, y: 280 }, arrivalTime: '10:10' },
-            { id: 'f4', name: 'Bookstore', coordinates: { x: 380, y: 200 }, arrivalTime: '10:15' },
-            { id: 'f5', name: 'Campus Mall', coordinates: { x: 520, y: 180 }, arrivalTime: '10:20' },
-            { id: 'f6', name: 'Student Center', coordinates: { x: 500, y: 300 }, arrivalTime: '10:25' },
-        ],
-        path: [
-            { x: 450, y: 400 }, { x: 350, y: 320 }, { x: 280, y: 280 },
-            { x: 380, y: 200 }, { x: 520, y: 180 }, { x: 550, y: 220 },
-            { x: 500, y: 300 }, { x: 450, y: 400 }
-        ]
-    },
-    {
-        id: 'route-5',
-        name: 'Night Service',
-        color: '#8B5CF6', // Purple
-        description: 'Limited night service for late-night activities',
-        frequency: 'Every 30 minutes',
-        operatingHours: '8:00 PM - 2:00 AM',
-        stops: [
-            { id: 'n1', name: 'Library', coordinates: { x: 400, y: 250 }, arrivalTime: '20:00' },
-            { id: 'n2', name: 'Study Halls', coordinates: { x: 320, y: 300 }, arrivalTime: '20:10' },
-            { id: 'n3', name: '24h Cafeteria', coordinates: { x: 280, y: 380 }, arrivalTime: '20:20' },
-            { id: 'n4', name: 'Dorm Complex', coordinates: { x: 250, y: 480 }, arrivalTime: '20:30' },
-            { id: 'n5', name: 'Security Office', coordinates: { x: 150, y: 200 }, arrivalTime: '20:40' },
-        ],
-        path: [
-            { x: 400, y: 250 }, { x: 320, y: 300 }, { x: 280, y: 380 },
-            { x: 250, y: 480 }, { x: 200, y: 400 }, { x: 150, y: 200 },
-            { x: 300, y: 180 }, { x: 400, y: 250 }
-        ]
-    }
+  {
+    id: 'route-purple',
+    name: 'Purple Route',
+    color: '#7E3AF2',
+    description: 'Female student shuttle route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { id: '900', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
+      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
+      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+      { id: '900-end', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+    ],
+    path: [
+      { x: 640, y: 1119 },
+      { x: 662, y: 1060 },
+      { x: 688, y: 995 },
+      { x: 710, y: 955 },
+      { x: 724, y: 921 },
+
+      { x: 690, y: 900 },
+      { x: 622, y: 860 },
+      { x: 525, y: 817 },
+
+      { x: 452, y: 760 },
+      { x: 390, y: 700 },
+      { x: 325, y: 635 },
+
+      { x: 420, y: 720 },
+      { x: 525, y: 817 },
+
+      { x: 610, y: 740 },
+      { x: 690, y: 650 },
+      { x: 730, y: 560 },
+      { x: 740, y: 470 },
+      { x: 742, y: 380 },
+      { x: 760, y: 312 },
+
+      { x: 720, y: 250 },
+      { x: 676, y: 186 },
+
+      { x: 706, y: 235 },
+      { x: 744, y: 294 },
+
+      { x: 720, y: 355 },
+      { x: 680, y: 430 },
+      { x: 632, y: 490 },
+
+      { x: 560, y: 540 },
+      { x: 470, y: 590 },
+      { x: 325, y: 635 },
+
+      { x: 420, y: 720 },
+      { x: 525, y: 817 },
+
+      { x: 610, y: 838 },
+      { x: 702, y: 863 },
+
+      { x: 690, y: 940 },
+      { x: 668, y: 1015 },
+      { x: 640, y: 1119 },
+    ]
+  },
+
+  {
+    id: 'route-pink',
+    name: 'Pink Route',
+    color: '#EC4899',
+    description: 'Female student shuttle route',
+    frequency: 'Shuttle basis',
+    operatingHours: '7:30 AM - 5:30 PM',
+    stops: [
+      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
+      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+    ],
+    path: [
+      { x: 325, y: 635 },
+      { x: 420, y: 720 },
+      { x: 525, y: 817 },
+
+      { x: 610, y: 740 },
+      { x: 690, y: 650 },
+      { x: 730, y: 560 },
+      { x: 740, y: 470 },
+      { x: 742, y: 380 },
+      { x: 760, y: 312 },
+
+      { x: 720, y: 250 },
+      { x: 676, y: 186 },
+
+      { x: 706, y: 235 },
+      { x: 744, y: 294 },
+
+      { x: 720, y: 355 },
+      { x: 680, y: 430 },
+      { x: 632, y: 490 },
+
+      { x: 560, y: 540 },
+      { x: 470, y: 590 },
+      { x: 325, y: 635 },
+
+      { x: 420, y: 720 },
+      { x: 525, y: 817 },
+
+      { x: 610, y: 838 },
+      { x: 702, y: 863 },
+    ]
+  },
+
+  {
+    id: 'route-orange',
+    name: 'Orange Route',
+    color: '#F59E0B',
+    description: 'Female student shuttle route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { id: '700', name: 'Station 700', coordinates: { x: 760, y: 312 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
+      { id: '22', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '312', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+      { id: '700-end', name: 'Station 700', coordinates: { x: 760, y: 312 } },
+    ],
+    path: [
+      { x: 760, y: 312 },
+      { x: 720, y: 250 },
+      { x: 676, y: 186 },
+
+      { x: 706, y: 235 },
+      { x: 744, y: 294 },
+
+      { x: 720, y: 355 },
+      { x: 680, y: 430 },
+      { x: 632, y: 490 },
+
+      { x: 600, y: 610 },
+      { x: 560, y: 720 },
+      { x: 525, y: 817 },
+
+      { x: 452, y: 760 },
+      { x: 390, y: 700 },
+      { x: 325, y: 635 },
+
+      { x: 470, y: 700 },
+      { x: 610, y: 790 },
+      { x: 702, y: 863 },
+
+      { x: 720, y: 760 },
+      { x: 740, y: 620 },
+      { x: 748, y: 470 },
+      { x: 760, y: 312 },
+    ]
+  },
+
+  {
+    id: 'route-red',
+    name: 'Red Route',
+    color: '#EF4444',
+    description: 'Female student shuttle route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { id: '900-a', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
+      { id: '900-b', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+    ],
+    path: [
+      { x: 640, y: 1119 },
+      { x: 662, y: 1060 },
+      { x: 688, y: 995 },
+      { x: 710, y: 955 },
+      { x: 724, y: 921 },
+
+      { x: 700, y: 1005 },
+      { x: 670, y: 1080 },
+      { x: 640, y: 1119 },
+    ]
+  },
+
+  {
+    id: 'route-brown',
+    name: 'Brown Route',
+    color: '#A16207',
+    description: 'Female student shuttle route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { id: '800', name: 'Station 800', coordinates: { x: 632, y: 490 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '800-end', name: 'Station 800', coordinates: { x: 632, y: 490 } },
+    ],
+    path: [
+      { x: 632, y: 490 },
+      { x: 650, y: 400 },
+      { x: 662, y: 300 },
+      { x: 676, y: 186 },
+
+      { x: 706, y: 235 },
+      { x: 744, y: 294 },
+
+      { x: 700, y: 360 },
+      { x: 660, y: 430 },
+      { x: 632, y: 490 },
+    ]
+  }
 ];
 export function BusRoutesPage() {
     const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map(r => r.id));
@@ -192,8 +310,21 @@ export function BusRoutesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[calc(100%-5rem)]">
-            <div className="relative w-full h-full bg-background rounded-lg border overflow-hidden">
-              <svg viewBox="0 0 700 600" className="w-full h-full" style={{ minHeight: '500px' }}>
+            <div className="relative w-full h-full">
+              
+  
+              {/* Map image */}
+              <img
+                src="../../../../map.jpg"
+                alt="KFUPM Map"
+                className="w-full h-full object-contain"
+              />
+
+              {/* SVG overlay */}
+              <svg
+              viewBox="0 0 1061 1280"
+              className="absolute inset-0 w-full h-full"
+              >
                 {/* Draw all selected route paths */}
                 {busRoutes
             .filter(route => selectedRoutes.includes(route.id))
