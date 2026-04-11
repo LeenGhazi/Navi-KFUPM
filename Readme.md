@@ -57,5 +57,4 @@ npm run dev
 4️⃣ Open in Browser
 ```
 Open http://localhost:PORT
-
 ```
