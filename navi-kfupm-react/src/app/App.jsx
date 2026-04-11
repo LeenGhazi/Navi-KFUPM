@@ -20,6 +20,7 @@ import { AdminRequestsPage } from './Pages/AdminRequestsPage';
 import { AdminComplaintsManagement } from "./Pages/AdminComplaintsManagement";
 import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 import { FilterManagementPage } from './Pages/FilterManagementPage';
+import { FeedbackManagementPage } from './Pages/FeedbackManagementPage';
 
 
 
@@ -49,7 +50,7 @@ function AppContent() {
           <Route path="/admin" element={<AdminDashboard />}/>
           <Route path="/admin/requests" element={<AdminRequestsPage/>}/>
           <Route path="/admin/filters" element={<FilterManagementPage/>}/>
-          <Route path="/admin/feedback" element={<div>FeedbackManagementPage</div>}/>
+          <Route path="/admin/feedback" element={<FeedbackManagementPage/>}/>
           <Route path="/admin/announcements" element={<AdminAnnouncementsPage />}/>
           <Route path="/admin/comments" element={<div>AdminCommentsPage</div>}/>
           <Route path="/admin/edit-map" element={<EditMapPage />}/>
