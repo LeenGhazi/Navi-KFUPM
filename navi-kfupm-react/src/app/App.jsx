@@ -19,6 +19,7 @@ import { AdminDashboard } from "./Pages/AdminDashboard";
 import { AdminRequestsPage } from './Pages/AdminRequestsPage';
 import { AdminComplaintsManagement } from "./Pages/AdminComplaintsManagement";
 import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
+import { FilterManagementPage } from './Pages/FilterManagementPage';
 
 
 
@@ -47,7 +48,7 @@ function AppContent() {
           {/* Staff Dashboard Routes */}
           <Route path="/admin" element={<AdminDashboard />}/>
           <Route path="/admin/requests" element={<AdminRequestsPage/>}/>
-          <Route path="/admin/filters" element={<div>FilterManagementPage</div>}/>
+          <Route path="/admin/filters" element={<FilterManagementPage/>}/>
           <Route path="/admin/feedback" element={<div>FeedbackManagementPage</div>}/>
           <Route path="/admin/announcements" element={<AdminAnnouncementsPage />}/>
           <Route path="/admin/comments" element={<div>AdminCommentsPage</div>}/>
