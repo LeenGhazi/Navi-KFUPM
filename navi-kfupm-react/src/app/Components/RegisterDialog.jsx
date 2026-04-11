@@ -5,6 +5,10 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from './ui/dialog';
 import { toast } from 'sonner';
+// This dialog allows new users to register for an account. 
+// It collects their name, email, and password, and uses the AuthContext's 
+// register function to create the account. 
+// It also provides a button to switch to the login dialog if they already have an account.
 export function RegisterDialog({ open, onOpenChange, onSwitchToLogin }) {
     const { register } = useAuth();
     const [email, setEmail] = useState('');
