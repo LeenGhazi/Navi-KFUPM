@@ -22,6 +22,9 @@ import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 import { FilterManagementPage } from './Pages/FilterManagementPage';
 import { FeedbackManagementPage } from './Pages/FeedbackManagementPage';
 import { AdminCommentsPage } from './Pages/AdminCommentsPage';
+import { AdminRequestsToTechPage } from './Pages/AdminRequestsToTechPage';
+import { AdminCommunityPathsReview } from './Pages/AdminCommunityPathsReview';
+import { AdminVerifyComments } from './Pages/AdminVerifyComments';
 
 
 
@@ -57,10 +60,10 @@ function AppContent() {
           <Route path="/admin/edit-map" element={<EditMapPage />}/>
           {/* KFUPM Admin Dashboard Routes */}
           <Route path="/kfupm-admin" element={<KFUPMAdminDashboard/>}/>
-          <Route path="/kfupm-admin/requests-to-tech" element={<div>AdminRequestsToTechPage</div>}/>
+          <Route path="/kfupm-admin/requests-to-tech" element={<AdminRequestsToTechPage/>}/>
           <Route path="/kfupm-admin/complaints-management" element={<AdminComplaintsManagement />}/>
-          <Route path="/kfupm-admin/community-paths-review" element={<div>AdminCommunityPathsReview</div>}/>
-          <Route path="/kfupm-admin/verify-comments" element={<div>AdminVerifyComments</div>}/>
+          <Route path="/kfupm-admin/community-paths-review" element={<AdminCommunityPathsReview/>}/>
+          <Route path="/kfupm-admin/verify-comments" element={<AdminVerifyComments/>}/>
         </Routes>
       </main>
       
