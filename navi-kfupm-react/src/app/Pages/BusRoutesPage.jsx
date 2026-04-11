@@ -22,7 +22,7 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: []
+    stops: [1,2,3]
   },
   {
     id: 'route-pink',
@@ -32,7 +32,7 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '7:30 AM - 5:30 PM',
-    stops: []
+    stops: [1,2,3]
   },
   {
     id: 'route-orange',
@@ -42,7 +42,7 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: []
+    stops: [1,2,3]
   },
   {
     id: 'route-red',
@@ -52,7 +52,7 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: []
+    stops: [1,2,3]
   },
   {
     id: 'route-brown',
@@ -62,7 +62,7 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: []
+    stops: [1,2,3]
   }
 ];
 export function BusRoutesPage() {
