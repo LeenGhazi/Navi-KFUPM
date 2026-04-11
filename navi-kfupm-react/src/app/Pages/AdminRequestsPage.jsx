@@ -51,6 +51,8 @@ const mockRequests = [
         status: 'Completed',
     },
 ];
+
+{/* AdminRequestsPage component allows maintenance staff to view and manage update requests submitted by KFUPM administrators. */  }
 export function AdminRequestsPage() {
     const { user } = useAuth();
     const [requests, setRequests] = useState(mockRequests);
@@ -60,11 +62,13 @@ export function AdminRequestsPage() {
     if (!user || user.role !== 'maintenance_staff') {
         return <Navigate to="/" replace/>;
     }
+    {/* Function to handle viewing the details of a specific request.  */  }
     const handleViewDetails = (request) => {
         setSelectedRequest(request);
         setNotes(request.notes || '');
         setShowDetailsDialog(true);
     };
+    {/* Function to handle changing the status of a request. It updates the status in the local state and shows a success toast notification. */  }
     const handleStatusChange = (requestId, newStatus) => {
         setRequests(prev => prev.map(req => req.id === requestId
             ? { ...req, status: newStatus, notes: newStatus !== 'Pending' ? notes : req.notes }
@@ -72,6 +76,7 @@ export function AdminRequestsPage() {
         toast.success(`Request status updated to ${newStatus}`);
         setShowDetailsDialog(false);
     };
+    {/* Function to get the badge variant based on the request status. */  }
     const getStatusBadge =(status) => {
         const variants = {
             'Pending': { variant: 'outline', className: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
@@ -81,6 +86,7 @@ export function AdminRequestsPage() {
         };
         return variants[status];
     };
+    {/* Function to get the icon based on the request status. */  }
     const getStatusIcon =(status) => {
         const icons = {
             'Pending': Clock,
@@ -91,14 +97,16 @@ export function AdminRequestsPage() {
         const Icon = icons[status];
         return <Icon className="w-4 h-4"/>;
     };
+    {/* Function to filter requests by status. */  }
     const filterRequestsByStatus = (status) => {
         if (!status)
             return requests;
         return requests.filter(req => req.status === status);
     };
+    {/* RequestCard component represents a single request card in the list. It displays the request title, type, status, description, and submission details. Clicking on the card opens the details dialog. */  }
     const RequestCard = ({ request }) => (
     <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleViewDetails(request)}>
-      <CardHeader>
+      <CardHeader>{/* Header section of the request card. It includes the request title, type, and a badge indicating the current status of the request. */  }
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <CardTitle className="text-lg mb-2">{request.title}</CardTitle>
@@ -113,7 +121,7 @@ export function AdminRequestsPage() {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent>{/* Content section of the request card. It includes a brief description of the request and details about who submitted it and when. */  }
         <p className="text-sm mb-3 line-clamp-2">{request.description}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>Submitted by: {request.submittedBy}</span>
@@ -122,7 +130,7 @@ export function AdminRequestsPage() {
       </CardContent>
     </Card>);
     return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8">{/* Main container for the admin requests page with responsive padding. */  }
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Administrator Requests</h1>
         <p className="text-muted-foreground">
@@ -130,7 +138,7 @@ export function AdminRequestsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="all" className="space-y-6">
+      <Tabs defaultValue="all" className="space-y-6">{/* Tabs component to filter requests by their status. It includes triggers for "All Requests", "Pending", "In Progress", and "Completed". */  }
         <TabsList>
           <TabsTrigger value="all">
             All Requests ({requests.length})
@@ -146,7 +154,7 @@ export function AdminRequestsPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="space-y-4">
+        <TabsContent value="all" className="space-y-4">{/* Content for the "All Requests" tab. It maps over all requests and renders a RequestCard for each one. */  }
           {requests.map(request => (<RequestCard key={request.id} request={request}/>))}
         </TabsContent>
 
@@ -163,7 +171,7 @@ export function AdminRequestsPage() {
         </TabsContent>
       </Tabs>
 
-      
+      {/* Dialog component to show the details of a selected request. It includes the request title, description, submission details, current status, and a section for admin notes and status updates. */  }
       {selectedRequest && (
         <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
           <DialogContent className="sm:max-w-[600px]">
@@ -177,7 +185,8 @@ export function AdminRequestsPage() {
               </DialogDescription>
             </DialogHeader>
 
-            <ScrollArea className="max-h-[60vh]">
+            <ScrollArea className="max-h-[60vh]">{/* Scrollable area for the request details. It includes sections for the request description, submission information, current status, 
+            admin notes, and buttons to update the status of the request. */  }
               <div className="space-y-4">
                 <div>
                   <Label>Request Type</Label>
@@ -219,7 +228,7 @@ export function AdminRequestsPage() {
 
                 <div className="space-y-2 pt-4">
                   <Label>Update Status</Label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2">{/* Buttons to update the status of the request. */  }
                     {selectedRequest.status === 'Pending' && (<Button onClick={() => handleStatusChange(selectedRequest.id, 'In Progress')} className="w-full">
                         Start Processing
                       </Button>)}
