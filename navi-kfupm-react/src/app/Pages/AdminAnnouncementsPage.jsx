@@ -44,7 +44,7 @@ const mockAnnouncements = [
         priority: 'Low',
     },
 ];
-export function AdminAnnouncementsPage() {
+export function AdminAnnouncementsPage() { {/* This page allows maintenance staff to manage campus announcements. */  }
     const { user } = useAuth();
     const [announcements, setAnnouncements] = useState(mockAnnouncements);
     const [showAddDialog, setShowAddDialog] = useState(false);
@@ -56,14 +56,17 @@ export function AdminAnnouncementsPage() {
         content: '',
         priority: 'Medium',
     });
+    {/* Only maintenance staff can access this page. Redirect others to home. */  }
     if (!user || user.role !== 'maintenance_staff') {
         return <Navigate to="/" replace/>;
     }
+    {/* Handlers for adding, editing, and deleting announcements. These update the local state and show success/error toasts. */  }
     const handleAddAnnouncement = () => {
         if (!formData.title.trim() || !formData.content.trim()) {
             toast.error('Please fill in all fields');
             return;
         }
+        {/* Create a new announcement object with a unique ID and current date. */  }
         const newAnnouncement = {
             id: `ann${Date.now()}`,
             title: formData.title,
@@ -72,16 +75,19 @@ export function AdminAnnouncementsPage() {
             author: user.name,
             priority: formData.priority,
         };
+        {/* Add the new announcement to the top of the list and show a success message. */  }
         setAnnouncements([newAnnouncement, ...announcements]);
         toast.success('Announcement published successfully!');
         resetForm();
         setShowAddDialog(false);
     };
+    {/* When editing, we check if an announcement is selected and if the form fields are filled. We then update the announcement in the list and show a success message. */  }
     const handleEditAnnouncement = () => {
         if (!selectedAnnouncement || !formData.title.trim() || !formData.content.trim()) {
             toast.error('Please fill in all fields');
             return;
         }
+        {/* Update the selected announcement with the new form data. */  }
         setAnnouncements(prev => prev.map(ann => ann.id === selectedAnnouncement.id
             ? { ...ann, title: formData.title, content: formData.content, priority: formData.priority }
             : ann));
@@ -90,6 +96,7 @@ export function AdminAnnouncementsPage() {
         setShowEditDialog(false);
         setSelectedAnnouncement(null);
     };
+    {/* For deletion, we confirm that an announcement is selected, then remove it from the list and show a success message. */  }
     const handleDeleteAnnouncement = () => {
         if (!selectedAnnouncement)
             return;
@@ -98,6 +105,7 @@ export function AdminAnnouncementsPage() {
         setShowDeleteDialog(false);
         setSelectedAnnouncement(null);
     };
+    
     const openEditDialog = (announcement) => {
         setSelectedAnnouncement(announcement);
         setFormData({
@@ -107,13 +115,16 @@ export function AdminAnnouncementsPage() {
         });
         setShowEditDialog(true);
     };
+    {/* When the delete button is clicked, we set the selected announcement and open the delete confirmation dialog. */  }
     const openDeleteDialog = (announcement) => {
         setSelectedAnnouncement(announcement);
         setShowDeleteDialog(true);
     };
+    {/* This function resets the form data to its initial state. It's called after adding or editing an announcement to clear the form fields. */  }
     const resetForm = () => {
-        setFormData({ title: '', content: '', priority: 'Medium' });
+        setFormData({ title: '', content: '', priority: '' });
     };
+    {/* This function returns the appropriate badge styles based on the announcement's priority level.  */  }
     const getPriorityBadge = (priority) => {
         const variants = {
             'Low': { className: 'bg-gray-100 text-gray-700' },
@@ -122,7 +133,8 @@ export function AdminAnnouncementsPage() {
         };
         return variants[priority];
     };
-    return (<div className="container mx-auto px-4 py-8">
+    return (
+    <div className="container mx-auto px-4 py-8">{/* Header section with title, description, and add announcement button. */  }
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold mb-2">Announcements Management</h1>
@@ -136,10 +148,10 @@ export function AdminAnnouncementsPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4">{/* List of announcements displayed as cards. Each card shows the title, content, author, date, and priority. */  }
         {announcements.map((announcement) => (<Card key={announcement.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between">{/* Left side of the card header with announcement title and priority. */  }
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <Bell className="w-5 h-5 text-primary"/>
@@ -155,7 +167,7 @@ export function AdminAnnouncementsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2">{}
                   <Button size="icon" variant="ghost" onClick={() => openEditDialog(announcement)}>
                     <Edit className="w-4 h-4"/>
                   </Button>
@@ -165,7 +177,7 @@ export function AdminAnnouncementsPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent>{/* Announcement content and author information. */  }
               <p className="text-sm">{announcement.content}</p>
               <p className="text-xs text-muted-foreground mt-3">
                 Posted by: {announcement.author}
@@ -175,9 +187,9 @@ export function AdminAnnouncementsPage() {
       </div>
 
       {/* Add Announcement Dialog */}
-      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>{/* This dialog contains a form for adding a new announcement.  */  }
         <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
+          <DialogHeader>{/* Dialog header with title and description. */  }
             <DialogTitle className="flex items-center gap-2">
               <Plus className="w-5 h-5"/>
               Add New Announcement
@@ -187,27 +199,30 @@ export function AdminAnnouncementsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
+          <div className="space-y-4">{/* Form fields for announcement title, content, and priority. */  }
             <div className="space-y-2">
               <Label htmlFor="title">Announcement Title *</Label>
+              {/* Input field for the announcement title. The value is linked to formData.title and updates on change. */  }
               <Input id="title" placeholder="e.g., Campus Maintenance Schedule" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })}/>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="content">Announcement Content *</Label>
+              {/* Textarea for the announcement content. The value is linked to formData.content and updates on change. */  }
               <Textarea id="content" placeholder="Enter the announcement details..." value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} rows={5}/>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="priority">Priority</Label>
               <div className="flex gap-2">
+                {/* Priority buttons for selecting the announcement priority. */  }
                 {['Low', 'Medium', 'High'].map((priority) => (<Button key={priority} type="button" variant={formData.priority === priority ? 'default' : 'outline'} onClick={() => setFormData({ ...formData, priority })} className="flex-1">
                     {priority}
                   </Button>))}
               </div>
             </div>
 
-            <div className="flex gap-2 pt-4">
+            <div className="flex gap-2 pt-4">{/* Action buttons for publishing the announcement or canceling. */  }
               <Button onClick={handleAddAnnouncement} className="flex-1">
                 Publish Announcement
               </Button>
@@ -223,7 +238,7 @@ export function AdminAnnouncementsPage() {
       </Dialog>
 
       {/* Edit Announcement Dialog */}
-      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>{/* This dialog is similar to the add dialog but is pre-filled with the selected announcement's data for editing. */  }
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -255,14 +270,14 @@ export function AdminAnnouncementsPage() {
               </div>
             </div>
 
-            <div className="flex gap-2 pt-4">
+            <div className="flex gap-2 pt-4">{/* Action buttons for saving changes or canceling the edit. */  }
               <Button onClick={handleEditAnnouncement} className="flex-1">
                 Save Changes
               </Button>
               <Button variant="outline" onClick={() => {
-            resetForm();
-            setShowEditDialog(false);
-            setSelectedAnnouncement(null);
+            resetForm();{/* Reset the form data to clear the fields. */  }
+            setShowEditDialog(false);{/* Close the edit dialog. */  }
+            setSelectedAnnouncement(null);{/* Clear the selected announcement because if we did not it would still be selected. */  }
         }}>
                 Cancel
               </Button>
@@ -272,19 +287,20 @@ export function AdminAnnouncementsPage() {
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>{/* This dialog confirms if the user really wants to delete the selected announcement.it is similar to the edit dialog but with a delete action. */  }
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Trash2 className="w-5 h-5 text-red-600"/>
               Delete Announcement
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription>{/* Warning message about deletion. */ }
               Are you sure you want to delete this announcement? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-
-          {selectedAnnouncement && (<div className="space-y-4">
+          {/* Display the selected announcement's title and content for confirmation before deletion. */ }
+          {selectedAnnouncement && (
+            <div className="space-y-4">
               <Card className="p-4 bg-muted">
                 <h4 className="font-semibold mb-2">{selectedAnnouncement.title}</h4>
                 <p className="text-sm text-muted-foreground line-clamp-2">
