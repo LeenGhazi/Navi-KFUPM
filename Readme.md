@@ -2,7 +2,7 @@
 
 Navi-KFUPM is a web-based campus navigation and information system designed to support the KFUPM community, including students, faculty members, visitors, and university administrators. The primary goal of the system is to simplify navigation across the university campus and provide centralized access to essential campus services and information.
 
-# Overview
+
 Navi-KFUPM aims to simplify navigation inside the KFUPM campus by offering:
 
 - Interactive campus map include search and filter for building and facilities
@@ -14,3 +14,28 @@ Navi-KFUPM aims to simplify navigation inside the KFUPM campus by offering:
 
 This project is developed as part of the SWE363 Web Engineering course.
 
+
+# Web Overview
+### 🏠 Home Page
+Entry point of the application where all the pages are visible in the navigation bar. The user can also select the login pop-up page to login and signup. Additionally, a theme toggle is added for more personalized experience.
+
+### 👤 Account / User Page
+Displays a user-specific features, access to navigation tools especifically in the map page. More personalized experience
+
+### 🗺️ Map Page
+This is the core feature of the system where the user can display campus buildings, restaurants, cafes, parking, etc. It provides a filtering service and path navigation displayed on the map.
+
+### 🛠️ Admin Page
+For KFUPM administrators
+Manage:
+Locations
+Services
+Updates to the map
+⚙️ Technical Team Page
+For developers/maintainers
+System monitoring and updates
+ℹ️ About Page
+Provides information about:
+Project idea
+Team members
+Purpose of the system
