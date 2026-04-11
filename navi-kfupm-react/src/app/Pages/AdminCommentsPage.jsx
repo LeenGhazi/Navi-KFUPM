@@ -63,17 +63,18 @@ const mockComments = [
         date: '2026-02-22',
     },
 ];
-export function AdminCommentsPage() {
+export function AdminCommentsPage() {{/* this function is the main component for the admin comments page. it allows maintenance staff to view, search, filter, hide/show, and delete user comments on buildings. */  }
     const { user } = useAuth();
     const [comments, setComments] = useState(mockComments);
-    const [selectedLocation, setSelectedLocation] = useState('all');
+    const [selectedLocation, setSelectedLocation] = useState('all');{/* State to track the selected location filter. Default is 'all' to show comments from all locations. */  }
     const [searchQuery, setSearchQuery] = useState('');
-    const [showHiddenFilter, setShowHiddenFilter] = useState('all');
-    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [selectedComment, setSelectedComment] = useState(null);
+    const [showHiddenFilter, setShowHiddenFilter] = useState('all');{/* State to track the hidden status filter. Default is 'all' to show both hidden and visible comments. */  }
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);{/* State to control the visibility of the delete confirmation dialog. */  }
+    const [selectedComment, setSelectedComment] = useState(null);{/* State to store the comment that is currently selected for deletion. */  }
     if (!user || user.role !== 'maintenance_staff') {
         return <Navigate to="/" replace/>;
     }
+    {/* Function to toggle the hidden status of a comment. It updates the comments state and shows a toast notification indicating whether the comment is now hidden or visible. */  }
     const handleToggleHidden = (commentId) => {
         setComments(prev => prev.map(c => c.id === commentId
             ? { ...c, hidden: !c.hidden }
@@ -81,6 +82,7 @@ export function AdminCommentsPage() {
         const comment = comments.find(c => c.id === commentId);
         toast.success(comment?.hidden ? 'Comment is now visible to users' : 'Comment hidden from users');
     };
+    {/* Function to handle the deletion of a comment. It removes the selected comment from the comments state, shows a success toast notification. */  }
     const handleDeleteComment = () => {
         if (!selectedComment)
             return;
@@ -89,10 +91,12 @@ export function AdminCommentsPage() {
         setShowDeleteDialog(false);
         setSelectedComment(null);
     };
+    {/* Function to open the delete confirmation dialog. It sets the selected comment that the user intends to delete and shows the dialog. */  }
     const openDeleteDialog = (comment) => {
         setSelectedComment(comment);
         setShowDeleteDialog(true);
     };
+    {/* Function to filter comments based on the selected location, search query, and hidden status filter. It returns the filtered list of comments to be displayed. */  }
     const filterComments = () => {
         let filtered = comments;
         // Filter by location
@@ -112,8 +116,9 @@ export function AdminCommentsPage() {
         }
         return filtered;
     };
+    {/* Component to render each comment card. It displays the comment details and provides buttons to toggle visibility and delete the comment. */  }
     const CommentCard = ({ comment }) => (<Card className="hover:shadow-md transition-shadow">
-      <CardHeader>
+      <CardHeader>{/* Header section of the comment card, showing the location name, date, and action buttons. */  }
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -138,15 +143,16 @@ export function AdminCommentsPage() {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent>{/* Content section of the comment card, showing the comment text and user information. */  }
         <p className="text-sm mb-3">{comment.comment}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>{comment.userName}</span>
+          <span>{comment.userName}</span>{/* Display the user's name and email using span so they are in the same line */  }
           <span>{comment.userEmail}</span>
         </div>
       </CardContent>
     </Card>);
-    return (<div className="container mx-auto px-4 py-8 h-full overflow-auto">
+    return (
+    <div className="container mx-auto px-4 py-8 h-full overflow-auto">{/* Main container for the admin comments page. It includes the header, filters, comment list, and delete confirmation dialog. */  }
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Comments Moderation</h1>
         <p className="text-muted-foreground">
@@ -163,11 +169,11 @@ export function AdminCommentsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="location-filter">Filter by Building</Label>
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger id="location-filter">
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>{/* Select component to filter comments by building location. It uses the mockLocations data to populate the options. */  }
+                <SelectTrigger id="location-filter">{/* Trigger for the location filter select dropdown. It displays the currently selected location or "All Buildings" if no specific location is selected. */  }
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent>{}
                   <SelectItem value="all">All Buildings</SelectItem>
                   {mockLocations.map((location) => (<SelectItem key={location.id} value={location.id}>
                       {location.name}
@@ -176,7 +182,7 @@ export function AdminCommentsPage() {
               </Select>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2">{/* Search input to filter comments by user name, building name, or comment content. It updates the searchQuery state on change. */  }
               <Label htmlFor="search">Search Comments</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"/>

@@ -12,7 +12,7 @@ export function AboutPage() {    {/* this page provides an overview of the Navi-
             Your comprehensive campus navigation companion
           </p>
         </div>
-        {/* Introduction Section */}
+        
 
         <Card> {/* this card is for the introduction section */}
           <CardHeader>

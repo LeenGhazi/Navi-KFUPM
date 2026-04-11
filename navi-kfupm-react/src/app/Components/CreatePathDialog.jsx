@@ -9,12 +9,16 @@ import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { MapPin, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
+// create path dialog allows users to submit a new path between two locations, 
+// which admins can review and approve for publication in the app's community paths section.
+// until the backend is implemented, this will just show a success message and reset the form without actually send the data to the backend.
 export function CreatePathDialog({ open, onOpenChange }) {
     const { user } = useAuth();
     const [title, setTitle] = useState('');
     const [fromLocation, setFromLocation] = useState('');
     const [toLocation, setToLocation] = useState('');
     const [description, setDescription] = useState('');
+    // handle the creat path submission
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!user) {
@@ -29,7 +33,7 @@ export function CreatePathDialog({ open, onOpenChange }) {
             toast.error('Start and destination must be different locations');
             return;
         }
-        // In a real app, this would submit to the backend
+        // mock the path submission.
         toast.success('Path submitted for admin approval!');
         // Reset form
         setTitle('');
@@ -40,7 +44,9 @@ export function CreatePathDialog({ open, onOpenChange }) {
     };
     if (!user)
         return null;
-    // Get unique building names for the select options
+    // Get unique building names for the select options, more about the data will be 
+    // implemented in the backend, for now we will just use the mock data and extract 
+    // the building names from the locations.
     const buildings = mockLocations.map(loc => loc.name).sort();
     return (<Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">

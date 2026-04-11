@@ -254,7 +254,7 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
                   </div>
                 </div>
 
-                <div>{}
+                <div>
                   <Label className="text-sm font-semibold">Description</Label>
                   <p className="text-sm text-muted-foreground mt-1">
                     {path.description}
