@@ -125,7 +125,6 @@ export function HomePage() {
       </div>
 
       {/* Dialogs */}
-      <LocationDetailsDialog location={selectedLocation} onStartMoveBuilding={handleStartMoveBuilding} open={showLocationDetails} onOpenChange={setShowLocationDetails} onSubmitComment={handleSubmitComment} onSubmitComplaint={handleSubmitComplaint}/>
 
       {selectedLocationForAction && (<>
           <AddCommentDialog locationId={selectedLocationForAction} open={showCommentDialog} onOpenChange={setShowCommentDialog}/>
