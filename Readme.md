@@ -41,6 +41,8 @@ Follow these steps to run the project locally:
 
 ```
 git clone https://github.com/LeenGhazi/Navi-KFUPM.git
+```
+```
 cd Navi-KFUPM/navi-kfupm-react
 ```
 
@@ -62,3 +64,53 @@ npm run dev
 ```
 Open http://localhost:PORT
 ```
+
+# ▶️ Usage Instructions & Examples
+
+### 🔹 How to Use the Application
+
+1. Open the application in your browser using:
+```
+http://localhost:5173
+```
+
+2. From the Home Page:
+- Use the navigation bar to explore different pages  
+- Click login to access your account or sign up  
+
+3. Use the Map Page:
+- View campus buildings and services  
+- Apply filters to find specific locations  
+- Select locations to view details  
+
+4. Explore additional features:
+- Admin and Technical pages (restricted access)  
+- About page for project details  
+
+---
+
+### 💡 Example Use Cases
+
+**📍 Finding a Building**
+- Open the Map Page  
+- Use search or filters  
+- Click on the building to view details  
+
+**🧭 Navigating Between Locations**
+- Select a starting point  
+- Select a destination  
+- View the generated route  
+
+**👤 Using the System as a Registered User**
+- Login or signup  
+- Access personalized features  
+
+---
+
+# 👥 Team Members & Roles
+
+| Name | Role | Responsibilities |
+|------|------|------------------|
+| Leen AlMjnouni | Frontend Developer | Developed map features and UI components, implemented About page, and handled admin/technical interface updates |
+| Asma Alghamdi | Frontend Developer | Implemented bus routes, announcements, complaints, authentication (login/signup), and user profile features |
+| Rawan Alzahrani | Frontend Developer | Developed admin and technical dashboards including requests, complaints management, path approvals, filters, and user management |
