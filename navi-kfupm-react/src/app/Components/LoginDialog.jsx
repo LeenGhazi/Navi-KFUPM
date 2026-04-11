@@ -7,14 +7,16 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } 
 import { toast } from 'sonner';
 import { mockUsers } from '../../mockData';
 import { User, Shield, Wrench, ArrowLeft } from 'lucide-react';
+// This component handles login for all user types: (students, admins, maintenance staff) with role-based validation
 export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
     const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginType, setLoginType] = useState(null);
+    // loginType can be 'user', 'admin', or 'technical_admin'
     const handleLogin = (e) => {
         e.preventDefault();
-        // Find the user by email
+        // Find the user by email. Until we implement real authentication in the backend, mock data is used to validate role-based login
         const foundUser = mockUsers.find((u) => u.email === email);
         if (!foundUser) {
             toast.error('Invalid credentials');
@@ -35,11 +37,12 @@ export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
             expectedRole = 'maintenance_staff';
             loginTypeLabel = 'Technical Admin';
         }
+        // validate role login
         if (foundUser.role !== expectedRole) {
             toast.error(`These credentials do not have ${loginTypeLabel} access. Please use the correct login option.`);
             return;
         }
-        // Proceed with login
+        // Login attempts
         if (login(email, password)) {
             toast.success('Login successful!');
             onOpenChange(false);
@@ -51,11 +54,13 @@ export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
             toast.error('Invalid credentials');
         }
     };
+    // Handle going back to login type selection
     const handleBack = () => {
         setLoginType(null);
         setEmail('');
         setPassword('');
     };
+    // Reset state when dialog closes to ensure a fresh start when reopened
     const handleDialogChange = (open) => {
         onOpenChange(open);
         if (!open) {
