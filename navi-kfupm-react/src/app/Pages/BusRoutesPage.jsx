@@ -6,230 +6,63 @@ import { ScrollArea } from '../Components/ui/scroll-area';
 import { Separator } from '../Components/ui/separator';
 import { Checkbox } from '../Components/ui/checkbox';
 import { Bus, Clock, MapPin } from 'lucide-react';
+import mapImage from '../../assets/map.jpg';
+import purpleRoute from '../../assets/1-Purple Route.png';
+import pinkRoute from '../../assets/2-Pink Route.png';
+import orangeRoute from '../../assets/3-Orange Route.png';
+import redRoute from '../../assets/4-Red Route.png';
+import brownRoute from '../../assets/5-Brown Route.png';
+
 const busRoutes = [
   {
     id: 'route-purple',
     name: 'Purple Route',
     color: '#7E3AF2',
+    image: purpleRoute,
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '900', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
-      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
-      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
-      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
-      { id: '900-end', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
-    ],
-    path: [
-      { x: 640, y: 1119 },
-      { x: 662, y: 1060 },
-      { x: 688, y: 995 },
-      { x: 710, y: 955 },
-      { x: 724, y: 921 },
-
-      { x: 690, y: 900 },
-      { x: 622, y: 860 },
-      { x: 525, y: 817 },
-
-      { x: 452, y: 760 },
-      { x: 390, y: 700 },
-      { x: 325, y: 635 },
-
-      { x: 420, y: 720 },
-      { x: 525, y: 817 },
-
-      { x: 610, y: 740 },
-      { x: 690, y: 650 },
-      { x: 730, y: 560 },
-      { x: 740, y: 470 },
-      { x: 742, y: 380 },
-      { x: 760, y: 312 },
-
-      { x: 720, y: 250 },
-      { x: 676, y: 186 },
-
-      { x: 706, y: 235 },
-      { x: 744, y: 294 },
-
-      { x: 720, y: 355 },
-      { x: 680, y: 430 },
-      { x: 632, y: 490 },
-
-      { x: 560, y: 540 },
-      { x: 470, y: 590 },
-      { x: 325, y: 635 },
-
-      { x: 420, y: 720 },
-      { x: 525, y: 817 },
-
-      { x: 610, y: 838 },
-      { x: 702, y: 863 },
-
-      { x: 690, y: 940 },
-      { x: 668, y: 1015 },
-      { x: 640, y: 1119 },
-    ]
+    stops: []
   },
-
   {
     id: 'route-pink',
     name: 'Pink Route',
     color: '#EC4899',
+    image: pinkRoute,
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '7:30 AM - 5:30 PM',
-    stops: [
-      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
-      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
-    ],
-    path: [
-      { x: 325, y: 635 },
-      { x: 420, y: 720 },
-      { x: 525, y: 817 },
-
-      { x: 610, y: 740 },
-      { x: 690, y: 650 },
-      { x: 730, y: 560 },
-      { x: 740, y: 470 },
-      { x: 742, y: 380 },
-      { x: 760, y: 312 },
-
-      { x: 720, y: 250 },
-      { x: 676, y: 186 },
-
-      { x: 706, y: 235 },
-      { x: 744, y: 294 },
-
-      { x: 720, y: 355 },
-      { x: 680, y: 430 },
-      { x: 632, y: 490 },
-
-      { x: 560, y: 540 },
-      { x: 470, y: 590 },
-      { x: 325, y: 635 },
-
-      { x: 420, y: 720 },
-      { x: 525, y: 817 },
-
-      { x: 610, y: 838 },
-      { x: 702, y: 863 },
-    ]
+    stops: []
   },
-
   {
     id: 'route-orange',
     name: 'Orange Route',
     color: '#F59E0B',
+    image: orangeRoute,
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '700', name: 'Station 700', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
-      { id: '22', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '312', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
-      { id: '700-end', name: 'Station 700', coordinates: { x: 760, y: 312 } },
-    ],
-    path: [
-      { x: 760, y: 312 },
-      { x: 720, y: 250 },
-      { x: 676, y: 186 },
-
-      { x: 706, y: 235 },
-      { x: 744, y: 294 },
-
-      { x: 720, y: 355 },
-      { x: 680, y: 430 },
-      { x: 632, y: 490 },
-
-      { x: 600, y: 610 },
-      { x: 560, y: 720 },
-      { x: 525, y: 817 },
-
-      { x: 452, y: 760 },
-      { x: 390, y: 700 },
-      { x: 325, y: 635 },
-
-      { x: 470, y: 700 },
-      { x: 610, y: 790 },
-      { x: 702, y: 863 },
-
-      { x: 720, y: 760 },
-      { x: 740, y: 620 },
-      { x: 748, y: 470 },
-      { x: 760, y: 312 },
-    ]
+    stops: []
   },
-
   {
     id: 'route-red',
     name: 'Red Route',
     color: '#EF4444',
+    image: redRoute,
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '900-a', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
-      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
-      { id: '900-b', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
-    ],
-    path: [
-      { x: 640, y: 1119 },
-      { x: 662, y: 1060 },
-      { x: 688, y: 995 },
-      { x: 710, y: 955 },
-      { x: 724, y: 921 },
-
-      { x: 700, y: 1005 },
-      { x: 670, y: 1080 },
-      { x: 640, y: 1119 },
-    ]
+    stops: []
   },
-
   {
     id: 'route-brown',
     name: 'Brown Route',
     color: '#A16207',
+    image: brownRoute,
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '800', name: 'Station 800', coordinates: { x: 632, y: 490 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '800-end', name: 'Station 800', coordinates: { x: 632, y: 490 } },
-    ],
-    path: [
-      { x: 632, y: 490 },
-      { x: 650, y: 400 },
-      { x: 662, y: 300 },
-      { x: 676, y: 186 },
-
-      { x: 706, y: 235 },
-      { x: 744, y: 294 },
-
-      { x: 700, y: 360 },
-      { x: 660, y: 430 },
-      { x: 632, y: 490 },
-    ]
+    stops: []
   }
 ];
 export function BusRoutesPage() {
@@ -310,50 +143,24 @@ export function BusRoutesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="h-[calc(100%-5rem)]">
-            <div className="relative w-full h-full">
-              
-  
-              {/* Map image */}
-              <img
-                src="../../../../map.jpg"
-                alt="KFUPM Map"
-                className="w-full h-full object-contain"
+          <div className="relative w-full h-full bg-background rounded-lg border overflow-hidden">
+            <img
+              src={mapImage}
+              alt="KFUPM Map"
+              className="w-full h-full object-contain"
               />
 
-              {/* SVG overlay */}
-              <svg
-              viewBox="0 0 1061 1280"
-              className="absolute inset-0 w-full h-full"
-              >
-                {/* Draw all selected route paths */}
-                {busRoutes
+            {busRoutes
             .filter(route => selectedRoutes.includes(route.id))
-            .map((route) => (<g key={route.id}>
-                      {/* Route path */}
-                      <path d={`M ${route.path.map(p => `${p.x},${p.y}`).join(' L ')}`} stroke={route.color} strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
-                      
-                      {/* Bus stops */}
-                      {route.stops.map((stop) => (<g key={stop.id}>
-                          <circle cx={stop.coordinates.x} cy={stop.coordinates.y} r="8" fill="white" stroke={route.color} strokeWidth="3"/>
-                          <circle cx={stop.coordinates.x} cy={stop.coordinates.y} r="4" fill={route.color}/>
-                        </g>))}
-                    </g>))}
-
-                {/* Legend */}
-                <g transform="translate(20, 20)">
-                  <rect x="0" y="0" width="200" height={busRoutes.length * 25 + 40} fill="white" stroke="#e5e7eb" strokeWidth="1" rx="4" opacity="0.95"/>
-                  <text x="10" y="20" fontSize="12" fontWeight="bold" fill="#374151">
-                    Bus Routes Legend
-                  </text>
-                  {busRoutes.map((route, index) => (<g key={route.id} transform={`translate(10, ${35 + index * 25})`}>
-                      <line x1="0" y1="0" x2="20" y2="0" stroke={route.color} strokeWidth="3" opacity={selectedRoutes.includes(route.id) ? 1 : 0.3}/>
-                      <text x="25" y="4" fontSize="11" fill="#374151" opacity={selectedRoutes.includes(route.id) ? 1 : 0.5}>
-                        {route.name}
-                      </text>
-                    </g>))}
-                </g>
-              </svg>
-            </div>
+            .map(route => (
+              <img
+                key={route.id}
+                src={route.image}
+                alt={route.name}
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10"
+              />
+             ))}
+          </div>
           </CardContent>
         </Card>
       </div>
