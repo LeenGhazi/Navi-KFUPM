@@ -4,6 +4,10 @@ import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { ArrowRight, X } from 'lucide-react';
+// This component allows users to select a starting point and destination for route planning. 
+// It groups locations by category for easier navigation. 
+// If both points are selected, it shows a clear button to reset the selection. 
+// It also prevents selecting the same location as both start and end.
 export function RoutePlanner({ routeFrom, routeTo, onRouteFromChange, onRouteToChange, onClear }) {
     // Group locations by category
     const locationsByCategory = mockLocations.reduce((acc, loc) => {
@@ -13,6 +17,7 @@ export function RoutePlanner({ routeFrom, routeTo, onRouteFromChange, onRouteToC
         acc[loc.category].push(loc);
         return acc;
     }, {});
+    // Check if both route points are selected
     const hasRoute = routeFrom && routeTo;
     return (<div className="space-y-3">
       <div className="space-y-2">
