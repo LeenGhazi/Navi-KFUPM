@@ -22,7 +22,20 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [1,2,3]
+    stops: [
+      { id: '900', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
+      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
+      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+      { id: '900-end', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+    ]
   },
   {
     id: 'route-pink',
@@ -32,7 +45,17 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '7:30 AM - 5:30 PM',
-    stops: [1,2,3]
+    stops: [
+      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
+      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+    ]
   },
   {
     id: 'route-orange',
@@ -42,7 +65,16 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [1,2,3]
+    stops: [
+      { id: '700', name: 'Station 700', coordinates: { x: 760, y: 312 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
+      { id: '22', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '312', name: 'Station 312', coordinates: { x: 325, y: 635 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+      { id: '700-end', name: 'Station 700', coordinates: { x: 760, y: 312 } },
+    ]
   },
   {
     id: 'route-red',
@@ -52,7 +84,11 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [1,2,3]
+    stops: [
+      { id: '900-a', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
+      { id: '900-b', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+    ]
   },
   {
     id: 'route-brown',
@@ -62,7 +98,12 @@ const busRoutes = [
     description: 'Female student shuttle route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
-    stops: [1,2,3]
+    stops: [
+      { id: '800', name: 'Station 800', coordinates: { x: 632, y: 490 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
+      { id: '800-end', name: 'Station 800', coordinates: { x: 632, y: 490 } },
+    ]
   }
 ];
 export function BusRoutesPage() {
