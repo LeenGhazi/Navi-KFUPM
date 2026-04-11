@@ -49,10 +49,10 @@ const mockPaths = [
         reviewNotes: 'Safety concerns with pedestrian traffic through active parking area.',
     },
 ];
-export function AdminCommunityPathsReview() {
+export function AdminCommunityPathsReview() { {/* Main component for the admin community paths review page. It allows admins to view, filter, search, and review student-submitted community paths. */  }
     const { user } = useAuth();
-    const [paths, setPaths] = useState(mockPaths);
-    const [filterStatus, setFilterStatus] = useState('all');
+    const [paths, setPaths] = useState(mockPaths);{}
+    const [filterStatus, setFilterStatus] = useState('all');{/}
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedPath, setSelectedPath] = useState(null);
     const [reviewNotes, setReviewNotes] = useState('');
@@ -66,7 +66,7 @@ export function AdminCommunityPathsReview() {
             path.endLocation.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
     });
-
+    {/* Handler function to approve a community path. It updates the path's status to "Approved" and adds review notes if provided. It also shows a success toast notification. */  }
     const handleApprove = (pathId) => {
         
         setPaths(paths.map((p) => p.id === pathId
@@ -81,7 +81,6 @@ export function AdminCommunityPathsReview() {
         toast.success('Community path approved! Request sent to technical team.');
     };
 
-
     const handleReject = (pathId) => {
         
         setPaths(paths.map((p) => p.id === pathId
@@ -95,8 +94,7 @@ export function AdminCommunityPathsReview() {
         setSelectedPath(null);
         toast.success('Community path rejected. User has been notified.');
     };
-
-
+    {/* function to get the appropriate icon based on the path's status. It returns a clock icon for pending paths, a check circle for approved paths, and an X circle for rejected paths. */  }
     const getStatusIcon = (status) => {
         switch (status) {
             case 'Pending':
@@ -107,6 +105,7 @@ export function AdminCommunityPathsReview() {
                 return <XCircle className="w-4 h-4"/>;
         }
     };
+    {/* function to get the appropriate badge color based on the path's status. It returns yellow for pending paths, green for approved paths, and red for rejected paths. */  }
     const getStatusColor = (status) => {
         switch (status) {
             case 'Pending':
@@ -117,8 +116,7 @@ export function AdminCommunityPathsReview() {
                 return 'bg-red-100 text-red-800';
         }
     };
-
-
+    {/* Calculate statistics for the dashboard cards, counting the number of paths in each status category. */  }
     const stats = {
         pending: paths.filter((p) => p.status === 'Pending').length,
         approved: paths.filter((p) => p.status === 'Approved').length,
@@ -126,7 +124,8 @@ export function AdminCommunityPathsReview() {
     };
 
 
-    return (<div className="container mx-auto px-4 py-8 h-full overflow-auto">
+    return (
+    <div className="container mx-auto px-4 py-8 h-full overflow-auto">{/* Main container for the admin community paths review page. It includes the header, statistics cards, filters, and the list of community paths for review. */  }
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Community Paths Review</h1>
         <p className="text-muted-foreground">
@@ -137,7 +136,7 @@ export function AdminCommunityPathsReview() {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
-        <Card>
+        <Card>{/* Card component to display the number of pending reviews. It shows the title "Pending Review" and the count of pending paths. */  }
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Pending Review
@@ -148,7 +147,7 @@ export function AdminCommunityPathsReview() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card>{/* Card component to display the number of approved paths. It shows the title "Approved" and the count of approved paths in green color. */  }
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Approved
@@ -160,7 +159,7 @@ export function AdminCommunityPathsReview() {
         </Card>
 
 
-        <Card>
+        <Card>{/* Card component to display the number of rejected paths. It shows the title "Rejected" and the count of rejected paths in red color. */  }
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Rejected
@@ -173,7 +172,7 @@ export function AdminCommunityPathsReview() {
       </div>
 
       
-      <Card className="mb-6">
+      <Card className="mb-6">{/* Card component for the filters section. It allows admins to filter community paths by status and search by title, user, or location. */  }
         <CardHeader>
           <CardTitle className="text-base">Filters</CardTitle>
         </CardHeader>
@@ -182,7 +181,7 @@ export function AdminCommunityPathsReview() {
             <div className="space-y-2">
               <Label htmlFor="status-filter">Filter by Status</Label>
 
-              <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <Select value={filterStatus} onValueChange={setFilterStatus}>{/* Select component to filter community paths by their review status. It includes options for "All Paths", "Pending", "Approved", and "Rejected". */  }
                 <SelectTrigger id="status-filter">
                   <SelectValue />
                 </SelectTrigger>
@@ -195,7 +194,7 @@ export function AdminCommunityPathsReview() {
               </Select>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2">{/* Search input to filter community paths by title, user name, start location, or end location. It updates the searchQuery state on change. */  }
               <Label htmlFor="search">Search Paths</Label>
               <Input id="search" placeholder="Search by title, user, or location..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}/>
             </div>
@@ -204,12 +203,14 @@ export function AdminCommunityPathsReview() {
       </Card>
 
       
-      <div className="space-y-4">
-        {filteredPaths.length === 0 ? (<Card>
+      <div className="space-y-4">{/* Conditional rendering to display either a message when no community paths are found based on the filters, or a list of cards for each filtered community path. Each card displays the path details and review actions if the path is pending. */  }
+        {filteredPaths.length === 0 ? (
+          <Card>{/* Card component to display a message when no community paths are found based on the current filters. It shows an icon and the text "No community paths found". */  }
             <CardContent className="py-12 text-center">
               <Route className="w-12 h-12 text-muted-foreground mx-auto mb-4"/>
               <p className="text-muted-foreground">No community paths found</p>
             </CardContent>
+            {/* This card is shown when there are no community paths that match the current filter and search criteria. It provides feedback to the admin that there are no paths to review. */  }
           </Card>) : (filteredPaths.map((path) => (<Card key={path.id}>
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -234,7 +235,7 @@ export function AdminCommunityPathsReview() {
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4">{/* Content section of the community path card. It displays the start and end locations with icons, the description of the path, any review notes if available, and action buttons for pending paths. */  }
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
@@ -253,14 +254,14 @@ export function AdminCommunityPathsReview() {
                   </div>
                 </div>
 
-                <div>
+                <div>{/}
                   <Label className="text-sm font-semibold">Description</Label>
                   <p className="text-sm text-muted-foreground mt-1">
                     {path.description}
                   </p>
                 </div>
 
-                
+                {/* If there are review notes available for the path, display them in a separate section with a muted background. This is shown for both approved and rejected paths to provide feedback to the user. */  }
                 {path.reviewNotes && (<div className="bg-muted/50 p-4 rounded-lg">
                     <Label className="text-sm font-semibold mb-2 block">
                       Review Notes
@@ -268,7 +269,7 @@ export function AdminCommunityPathsReview() {
                     <p className="text-sm">{path.reviewNotes}</p>
                   </div>)}
 
-                
+                {/* If the path is still pending review, display a section with a textarea for the admin to add review notes and buttons to approve or reject the path. The textarea is pre-filled with any existing review notes if the admin has already started writing them. */  }
                 {path.status === 'Pending' && (<div className="space-y-3 pt-2 border-t">
                     <div className="space-y-2">
                       <Label>Review Notes (Optional)</Label>
