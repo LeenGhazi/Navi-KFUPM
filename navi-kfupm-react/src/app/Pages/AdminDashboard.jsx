@@ -38,7 +38,7 @@ const AdminDashboard = () => {
       title: "Complaints",
       description: "Manage complaints",
       icon: MessageSquare,
-      path: "/admin/complaints",
+      path: "/admin/feedback",
       color: "text-orange-600",
       bgColor: "bg-orange-50",
     },
