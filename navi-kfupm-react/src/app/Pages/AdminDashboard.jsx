@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth } from "../../AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
 import { FileText, Filter, MessageSquare, Bell, Users, } from 'lucide-react';
@@ -8,9 +8,13 @@ import { FileText, Filter, MessageSquare, Bell, Users, } from 'lucide-react';
 
 
 
+
 const AdminDashboard = () => {
   const { user } = useAuth();
-  if (!user || user.role !== "admin") {
+
+
+  const navigate = useNavigate();
+  if (!user || user.role !== "maintenance_staff") {
     return <Navigate to="/" replace />;
   }
    const adminOptions = [
