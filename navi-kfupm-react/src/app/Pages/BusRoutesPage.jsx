@@ -66,6 +66,10 @@ const busRoutes = [
   }
 ];
 export function BusRoutesPage() {
+    
+const [showRoutesPanel, setShowRoutesPanel] = useState(false);
+const [showDetailsPanel, setShowDetailsPanel] = useState(false);
+
     const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map(r => r.id));
     const [selectedRoute, setSelectedRoute] = useState(null);
     const toggleRoute = (routeId) => {
@@ -79,9 +83,26 @@ export function BusRoutesPage() {
     const deselectAllRoutes = () => {
         setSelectedRoutes([]);
     };
-    return (<div className="h-full flex">
+    return (<div className="h-full flex lg:flex-row relative">
+      {(showRoutesPanel || showDetailsPanel) && (
+  <div
+    className="fixed inset-0 bg-black/30 z-30 lg:hidden"
+    onClick={() => {
+      setShowRoutesPanel(false);
+      setShowDetailsPanel(false);
+    }}
+  />
+)}
       {/* Left Sidebar - Route List */}
-      <div className="w-80 border-r bg-background">
+
+      <div
+        className={`
+          fixed inset-y-0 left-0 z-40 w-[85%] max-w-xs bg-background border-r shadow-lg
+          transform transition-transform duration-300
+          ${showRoutesPanel ? 'translate-x-0' : '-translate-x-full'}
+          lg:static lg:translate-x-0 lg:shadow-none lg:w-80
+        `}
+        >
         <ScrollArea className="h-full">
           <div className="p-4 space-y-4">
             <div>
@@ -104,7 +125,12 @@ export function BusRoutesPage() {
 
             {/* Route Checkboxes */}
             <div className="space-y-3">
-              {busRoutes.map((route) => (<Card key={route.id} className={`cursor-pointer transition-all ${selectedRoute?.id === route.id ? 'ring-2 ring-primary' : ''}`} onClick={() => setSelectedRoute(route)}>
+              {busRoutes.map((route) => (<Card key={route.id} className={`cursor-pointer transition-all ${selectedRoute?.id === route.id ? 'ring-2 ring-primary' : ''}`} 
+              onClick={() => {
+                setSelectedRoute(route);
+                setShowDetailsPanel(true);
+                setShowRoutesPanel(false);
+              }}>
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       <Checkbox checked={selectedRoutes.includes(route.id)} onCheckedChange={() => toggleRoute(route.id)} onClick={(e) => e.stopPropagation()}/>
@@ -135,6 +161,20 @@ export function BusRoutesPage() {
 
       {/* Middle - Map View */}
       <div className="flex-1 p-6 overflow-auto bg-muted/30">
+      <div className="lg:hidden absolute top-10 left-80 z-50 flex gap-2">
+  <button
+    onClick={() => {
+      setShowRoutesPanel(true);
+      setShowDetailsPanel(false);
+    }}
+    className="bg-white shadow-md rounded-lg px-3 py-2 text-sm"
+    
+  >
+    Routes
+  </button>
+
+
+</div>
         <Card className="h-full">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -166,8 +206,27 @@ export function BusRoutesPage() {
       </div>
 
       {/* Right Sidebar - Route Details */}
-      <div className="w-80 border-l bg-background">
+      <div
+        className={`
+          fixed inset-y-0 right-0 z-40 w-[85%] max-w-xs bg-background border-l shadow-lg
+          transform transition-transform duration-300
+          ${showDetailsPanel ? 'translate-x-0' : 'translate-x-full'}
+          lg:static lg:translate-x-0 lg:shadow-none lg:w-80
+        `}
+        >
         <ScrollArea className="h-full">
+          <div className="lg:hidden flex gap-2 mb-4">
+  <button
+    onClick={() => {
+      setShowDetailsPanel(false);
+      setShowRoutesPanel(true);
+    }}
+    className="text-sm px-3 py-1 rounded-md border"
+  >
+    Back
+  </button>
+
+</div>
           <div className="p-4">
             {selectedRoute ? (<div className="space-y-4">
                 <div>
