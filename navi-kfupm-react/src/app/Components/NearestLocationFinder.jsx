@@ -5,16 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { MapPin, Navigation } from 'lucide-react';
 import { Badge } from './ui/badge';
+// This component allows users to find the nearest locations 
+// of a selected category based on a mock user location. 
+// It calculates distances and displays the top 5 nearest locations in a card.
 export function NearestLocationFinder({ onLocationSelect }) {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [nearestLocations, setNearestLocations] = useState([]);
-    // Default user location (can be replaced with actual GPS later)
+    // Default user location (can be replaced with actual GPS later when nbackend is implemented) - for demo purposes, we use a fixed point on the map
     const userLocation = { x: 400, y: 350 };
+    // Simple distance calculation (Euclidean) - 
+    // with the backend implementation, this would be more complex and take 
+    // into account actual paths and obstacles
     const calculateDistance = (loc) => {
         const dx = loc.coordinates.x - userLocation.x;
         const dy = loc.coordinates.y - userLocation.y;
         return Math.sqrt(dx * dx + dy * dy);
     };
+    // Finds the nearest locations of the selected category and updates state to display them
     const findNearest = () => {
         if (!selectedCategory)
             return;
