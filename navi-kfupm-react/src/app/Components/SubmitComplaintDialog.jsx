@@ -8,6 +8,11 @@ import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { toast } from 'sonner';
+// This component allows users to submit complaints about specific locations on campus. 
+// It includes a form with fields for selecting the issue category and providing a detailed 
+// description. The form validates that the user is logged in and that all required fields 
+// are filled before allowing submission. Upon successful submission, a confirmation message 
+// is shown, and the form is reset.
 export function SubmitComplaintDialog({ open, onOpenChange, locationId, }) {
     const { user } = useAuth();
     const [category, setCategory] = useState('');
@@ -19,7 +24,7 @@ export function SubmitComplaintDialog({ open, onOpenChange, locationId, }) {
             toast.error('Please login to submit complaints');
             return;
         }
-        // Mock submit - in real app would save to database
+        // Mock submission until the backend is implemented
         toast.success('Complaint submitted successfully! You can track its status in the Complaints tab.');
         setCategory('');
         setDescription('');
