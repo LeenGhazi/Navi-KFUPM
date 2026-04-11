@@ -12,7 +12,7 @@ import pinkRoute from '../../assets/2-Pink Route.png';
 import orangeRoute from '../../assets/3-Orange Route.png';
 import redRoute from '../../assets/4-Red Route.png';
 import brownRoute from '../../assets/5-Brown Route.png';
-
+import { useTheme } from '../../ThemeContext';
 const busRoutes = [
   {
     id: 'route-purple',
@@ -69,6 +69,9 @@ export function BusRoutesPage() {
     
 const [showRoutesPanel, setShowRoutesPanel] = useState(false);
 const [showDetailsPanel, setShowDetailsPanel] = useState(false);
+
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
 
     const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map(r => r.id));
     const [selectedRoute, setSelectedRoute] = useState(null);
@@ -188,6 +191,11 @@ const [showDetailsPanel, setShowDetailsPanel] = useState(false);
               src={mapImage}
               alt="KFUPM Map"
               className="w-full h-full object-contain"
+                style={{
+                  filter: isDark
+                  ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
+                  : "none"
+                }}
               />
 
             {busRoutes

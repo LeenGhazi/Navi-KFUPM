@@ -6,6 +6,8 @@ import { Card } from './ui/card';
 import { ZoomIn, ZoomOut, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 import mapImage from '../../assets/map.jpg';
+import { useTheme } from '../../ThemeContext';
+
 // this is the main campus map component in the map page, it supports: zooming, 
 // panning, routes, bus routes, paths
 export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, searchQuery, onLocationClick, routeFrom, routeTo, showMultipleRoutes, movingBuildingId, onBuildingMoved, }) {
@@ -18,6 +20,8 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     const [userLocation] = useState({ x: 400, y: 350 });
     const [locations, setLocations] = useState(mockLocations);
     const mapRef = useRef(null);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     // Filter locations based on the selected categories and search text (scrolled down options?)
     const filteredLocations = locations.filter((location) => {
         const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(location.category);
@@ -221,6 +225,11 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
           
             <image
     href={mapImage}
+    style={{
+      filter: isDark
+      ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
+        : "none"
+      }}
     x="0"
     y="-100"
     width="100%"
