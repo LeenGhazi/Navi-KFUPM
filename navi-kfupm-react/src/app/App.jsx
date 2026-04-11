@@ -21,6 +21,7 @@ import { AdminComplaintsManagement } from "./Pages/AdminComplaintsManagement";
 import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 import { FilterManagementPage } from './Pages/FilterManagementPage';
 import { FeedbackManagementPage } from './Pages/FeedbackManagementPage';
+import { AdminCommentsPage } from './Pages/AdminCommentsPage';
 
 
 
@@ -52,7 +53,7 @@ function AppContent() {
           <Route path="/admin/filters" element={<FilterManagementPage/>}/>
           <Route path="/admin/feedback" element={<FeedbackManagementPage/>}/>
           <Route path="/admin/announcements" element={<AdminAnnouncementsPage />}/>
-          <Route path="/admin/comments" element={<div>AdminCommentsPage</div>}/>
+          <Route path="/admin/comments" element={<AdminCommentsPage/>}/>
           <Route path="/admin/edit-map" element={<EditMapPage />}/>
           {/* KFUPM Admin Dashboard Routes */}
           <Route path="/kfupm-admin" element={<div>KFUPMAdminDashboard</div>}/>
