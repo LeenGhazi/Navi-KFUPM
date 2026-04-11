@@ -66,19 +66,22 @@ const mockUserComments = [
         submittedDate: '2026-02-22',
     },
 ];
-export function AccountPage() {
-    const { user, logout } = useAuth();
+
+export function AccountPage() {   {/* this page allows users to view and edit their account information*/ }
+    const { user, logout } = useAuth(); {/* Get current user data and logout function */ }
     const navigate = useNavigate();
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedUser, setEditedUser] = useState(user);
+    const [isEditing, setIsEditing] = useState(false); {/* Track edit mode */}
+    const [editedUser, setEditedUser] = useState(user);{/* Store edited user data */}
+    {/* Password form state */}
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
         confirmPassword: '',
     });
+    {/* User paths */}
     const [userPaths, setUserPaths] = useState(mockUserPaths);
-    const [userComments, setUserComments] = useState(mockUserComments);
-    // Redirect if not logged in
+    const [userComments, setUserComments] = useState(mockUserComments);{/* User comments */}
+    {/* Check authentication on load */}
     useEffect(() => {
         console.log('AccountPage - User:', user);
         if (!user) {
@@ -86,19 +89,24 @@ export function AccountPage() {
             navigate('/');
         }
     }, [user, navigate]);
+    {/* If no user, don't render */}
     if (!user) {
         return null;
     }
+
     console.log('AccountPage rendering for user:', user.name);
+    {/* Save profile changes */}
     const handleSaveProfile = () => {
         // In a real app, this would make an API call
         toast.success('Profile updated successfully!');
         setIsEditing(false);
     };
+    {/* Cancel editing */}
     const handleCancelEdit = () => {
         setEditedUser(user);
         setIsEditing(false);
     };
+    {/* Handle password change if new passwords match and meet criteria */}
     const handlePasswordChange = () => {
         if (passwordData.newPassword !== passwordData.confirmPassword) {
             toast.error('New passwords do not match!');
@@ -108,7 +116,7 @@ export function AccountPage() {
             toast.error('Password must be at least 6 characters!');
             return;
         }
-        // In a real app, this would make an API call
+        
         toast.success('Password changed successfully!');
         setPasswordData({
             currentPassword: '',
@@ -116,6 +124,7 @@ export function AccountPage() {
             confirmPassword: '',
         });
     };
+    {/* Get badge color based on role */}
     const getRoleBadgeColor = (role) => {
         switch (role) {
             case 'admin':
@@ -128,6 +137,7 @@ export function AccountPage() {
                 return 'bg-gray-500 hover:bg-gray-600';
         }
     };
+    {/* Render status badge */}
     const getStatusBadge = (status) => {
         switch (status) {
             case 'Approved':
@@ -140,16 +150,19 @@ export function AccountPage() {
                 return <Badge variant="outline">{status}</Badge>;
         }
     };
+    {/* Delete path  if confirmed */}
     const handleDeletePath = (pathId) => {
         toast.success('Path deleted successfully!');
         // In real app, would delete from database
         setUserPaths(userPaths.filter((path) => path.id !== pathId));
     };
+      {/* Delete comment if confirmed */}
     const handleDeleteComment = (commentId) => {
         toast.success('Comment deleted successfully!');
         // In real app, would delete from database
         setUserComments(userComments.filter((comment) => comment.id !== commentId));
     };
+      
     const renderStars = (rating) => {
         return (<div className="flex gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (<Star key={star} className={`w-4 h-4 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}/>))}
@@ -162,7 +175,9 @@ export function AccountPage() {
         { date: '2026-02-06', action: 'Liked story', details: 'Library memories' },
         { date: '2026-02-05', action: 'Viewed map', details: 'Searched for Study Rooms' },
     ];
-    return (<div className="container mx-auto py-6 px-4 h-full overflow-auto">
+    return (
+      
+    <div className="container mx-auto py-6 px-4 h-full overflow-auto">{/* Main container */}
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header Section */}
         <div className="flex items-start justify-between">
@@ -172,6 +187,7 @@ export function AccountPage() {
               Manage your account information and preferences
             </p>
           </div>
+          {/* Logout button */}
           <Button variant="outline" onClick={logout}>
             Logout
           </Button>
@@ -180,19 +196,27 @@ export function AccountPage() {
         {/* Profile Overview Card */}
         <Card>
           <CardHeader className="pb-4">
+            {/* User avatar + info */}
             <div className="flex items-center gap-4">
               <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
                 <UserCircle className="w-12 h-12 text-primary"/>
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3">
+                  {/* User name */}
                   <CardTitle className="text-2xl">{user.name}</CardTitle>
+                  {/* Role badge */}
                   <Badge className={`${getRoleBadgeColor(user.role)} text-white capitalize`}>
                     {user.role.replace('_', ' ')}
                   </Badge>
                 </div>
-                <CardDescription className="text-base mt-1">{user.email}</CardDescription>
-                {user.role === 'student' && user.studentId && (<p className="text-sm text-muted-foreground mt-1">
+                 {/* Email */}
+                <CardDescription className="text-base mt-1">
+                  {user.email}
+                </CardDescription>
+                 {/* Student ID (only for students) */}
+                {user.role === 'student' && user.studentId && (
+                  <p className="text-sm text-muted-foreground mt-1">
                     Student ID: {user.studentId}
                   </p>)}
               </div>
@@ -202,8 +226,11 @@ export function AccountPage() {
 
         {/* Tabs for different sections */}
         <Tabs defaultValue={user.role === 'student' ? 'paths' : 'profile'} className="space-y-4">
+          {/* Tabs Navigation */}
           <TabsList className={`grid w-full ${user.role === 'student' ? 'grid-cols-2' : 'grid-cols-5'}`}>
-            {user.role !== 'student' && (<>
+             {/* Non-student tabs */}
+            {user.role !== 'student' && (
+              <>
                 <TabsTrigger value="profile" className="gap-2">
                   <UserCircle className="w-4 h-4"/>
                   Profile
@@ -216,8 +243,11 @@ export function AccountPage() {
                   <Activity className="w-4 h-4"/>
                   Activity
                 </TabsTrigger>
-              </>)}
-            {user.role === 'student' && (<>
+              </>
+            )}
+            {/* Student tabs */}
+            {user.role === 'student' && (
+              <>
                 <TabsTrigger value="paths" className="gap-2">
                   <Route className="w-4 h-4"/>
                   My Paths
@@ -226,22 +256,27 @@ export function AccountPage() {
                   <MessageSquare className="w-4 h-4"/>
                   My Comments
                 </TabsTrigger>
-              </>)}
+              </>
+            )}
           </TabsList>
 
-          {/* Profile Tab - Only for non-students */}
-          {user.role !== 'student' && (<TabsContent value="profile" className="space-y-4">
-              <Card>
+          {/* Profile Tab */}
+          {user.role !== 'student' && (
+            <TabsContent value="profile" className="space-y-4">
+              <Card> {/* Card for editing personal info */}
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle>Personal Information</CardTitle>
                       <CardDescription>Update your personal details</CardDescription>
                     </div>
-                    {!isEditing ? (<Button onClick={() => setIsEditing(true)} variant="outline" className="gap-2">
+                    {/* Edit / Save / Cancel buttons */}
+                    {!isEditing ? (
+                      <Button onClick={() => setIsEditing(true)} variant="outline" className="gap-2">
                         <Edit className="w-4 h-4"/>
                         Edit Profile
-                      </Button>) : (<div className="flex gap-2">
+                      </Button>) : (
+                        <div className="flex gap-2">
                         <Button onClick={handleSaveProfile} className="gap-2">
                           <Save className="w-4 h-4"/>
                           Save
@@ -253,14 +288,14 @@ export function AccountPage() {
                       </div>)}
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4"> {/* Form fields for user info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Full Name */}
                     <div className="space-y-2">
                       <Label htmlFor="name" className="flex items-center gap-2">
                         <UserCircle className="w-4 h-4"/>
                         Full Name
-                      </Label>
+                      </Label>{/* Name input field, disabled when not editing */}
                       <Input id="name" value={editedUser?.name || ''} onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })} disabled={!isEditing}/>
                     </div>
 
@@ -269,7 +304,7 @@ export function AccountPage() {
                       <Label htmlFor="email" className="flex items-center gap-2">
                         <Mail className="w-4 h-4"/>
                         Email Address
-                      </Label>
+                      </Label>{/* Email input field, disabled when not editing */}
                       <Input id="email" type="email" value={editedUser?.email || ''} onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })} disabled={!isEditing}/>
                     </div>
 
@@ -278,7 +313,7 @@ export function AccountPage() {
                         <Label htmlFor="studentId" className="flex items-center gap-2">
                           <Award className="w-4 h-4"/>
                           Student ID
-                        </Label>
+                        </Label>{/* Student ID field, always disabled since it's not editable */}
                         <Input id="studentId" value={user.studentId || ''} disabled/>
                       </div>)}
 
@@ -287,7 +322,7 @@ export function AccountPage() {
                       <Label htmlFor="role" className="flex items-center gap-2">
                         <Shield className="w-4 h-4"/>
                         Role
-                      </Label>
+                      </Label>{/* Role field, always disabled since it's not editable */}
                       <Input id="role" value={user.role.replace('_', ' ').toUpperCase()} disabled/>
                     </div>
 
@@ -296,7 +331,7 @@ export function AccountPage() {
                       <Label htmlFor="phone" className="flex items-center gap-2">
                         <Phone className="w-4 h-4"/>
                         Phone Number
-                      </Label>
+                      </Label>{/* Phone input field, disabled when not editing */}
                       <Input id="phone" placeholder="+966 XXX XXX XXXX" disabled={!isEditing}/>
                     </div>
 
@@ -305,12 +340,12 @@ export function AccountPage() {
                         <Label htmlFor="department" className="flex items-center gap-2">
                           <MapPin className="w-4 h-4"/>
                           Department
-                        </Label>
-                        <Select disabled={!isEditing}>
+                        </Label>{/* Department field, disabled when not editing */}
+                        <Select disabled={!isEditing}>{/*select dropdown for department, disabled when not editing */}
                           <SelectTrigger id="department">
                             <SelectValue placeholder="Select department"/>
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent>{/* Department options */}
                             <SelectItem value="engineering">Engineering</SelectItem>
                             <SelectItem value="science">Science</SelectItem>
                             <SelectItem value="business">Business</SelectItem>
@@ -320,23 +355,24 @@ export function AccountPage() {
                       </div>)}
                   </div>
 
-                  <Separator />
+                  <Separator />{/* Separator between form and stats */}
 
                   {/* Account Stats */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <Card>
                       <CardContent className="p-4 text-center">
+                        {/* Number of comments */}
                         <div className="text-2xl font-bold text-primary">12</div>
                         <div className="text-xs text-muted-foreground mt-1">Comments</div>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card>{/* Number of stories */}
                       <CardContent className="p-4 text-center">
                         <div className="text-2xl font-bold text-primary">5</div>
                         <div className="text-xs text-muted-foreground mt-1">Stories</div>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card>{/* Role-specific stat (complaints for students, resolved for staff, total users for admins) */}
                       <CardContent className="p-4 text-center">
                         <div className="text-2xl font-bold text-primary">
                           {user.role === 'student' ? '3' : user.role === 'maintenance_staff' ? '8' : '45'}
@@ -346,7 +382,7 @@ export function AccountPage() {
                         </div>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card>{/* Likes Given */}
                       <CardContent className="p-4 text-center">
                         <div className="text-2xl font-bold text-primary">24</div>
                         <div className="text-xs text-muted-foreground mt-1">Likes Given</div>
@@ -359,24 +395,24 @@ export function AccountPage() {
 
           {/* Security Tab */}
           <TabsContent value="security" className="space-y-4">
-            <Card>
+            <Card>{/* Card for changing password */}
               <CardHeader>
                 <CardTitle>Change Password</CardTitle>
                 <CardDescription>Update your password to keep your account secure</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
+                <div className="space-y-2">{/* Current password field */}
                   <Label htmlFor="currentPassword">Current Password</Label>
                   <Input id="currentPassword" type="password" value={passwordData.currentPassword} onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}/>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2">{/* New password field */}
                   <Label htmlFor="newPassword">New Password</Label>
                   <Input id="newPassword" type="password" value={passwordData.newPassword} onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}/>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2">{/* Confirm new password field */}
                   <Label htmlFor="confirmPassword">Confirm New Password</Label>
                   <Input id="confirmPassword" type="password" value={passwordData.confirmPassword} onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}/>
-                </div>
+                </div>{/* Button to trigger password change */}
                 <Button onClick={handlePasswordChange} className="gap-2">
                   <Key className="w-4 h-4"/>
                   Change Password
@@ -384,7 +420,7 @@ export function AccountPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card>{/* Card for account information */}
               <CardHeader>
                 <CardTitle>Account Information</CardTitle>
                 <CardDescription>View your account details</CardDescription>
