@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Badge } from '@/app/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
-import { ScrollArea } from '@/app/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '@/app/components/ui/dialog';
-import { Label } from '@/app/components/ui/label';
-import { Textarea } from '@/app/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Badge } from '../Components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Components/ui/tabs';
+import { ScrollArea } from '../Components/ui/scroll-area';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '../Components/ui/dialog';
+import { Label } from '../Components/ui/label';
+import { Textarea } from '../Components/ui/textarea';
 import { MessageSquare, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 const mockFeedback = [
