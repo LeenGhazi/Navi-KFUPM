@@ -50,14 +50,6 @@ const AdminDashboard = () => {
       color: "text-red-600",
       bgColor: "bg-red-50",
     },
-    {
-      title: "Users",
-      description: "Manage users",
-      icon: Users,
-      path: "/admin/users",
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-50",
-    },
   ];
   return (
     <div className="p-6">
