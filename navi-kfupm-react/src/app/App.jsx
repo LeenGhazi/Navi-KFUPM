@@ -16,6 +16,7 @@ import { ComplaintsPage } from "./Pages/ComplaintsPage";
 import { AboutPage } from "./Pages/AboutPage";
 import { AccountPage } from "./Pages/AccountPage";
 import { AdminDashboard } from "./Pages/AdminDashboard";
+import { AdminRequestsPage } from './Pages/AdminRequestsPage';
 import { AdminComplaintsManagement } from "./Pages/AdminComplaintsManagement";
 import { KFUPMAdminDashboard } from "./Pages/KFUPMAdminDashboard";
 
@@ -45,7 +46,7 @@ function AppContent() {
           <Route path="/account" element={<AccountPage />} />
           {/* Staff Dashboard Routes */}
           <Route path="/admin" element={<AdminDashboard />}/>
-          <Route path="/admin/requests" element={<div>AdminRequestsPage</div>}/>
+          <Route path="/admin/requests" element={<AdminRequestsPage/>}/>
           <Route path="/admin/filters" element={<div>FilterManagementPage</div>}/>
           <Route path="/admin/feedback" element={<div>FeedbackManagementPage</div>}/>
           <Route path="/admin/announcements" element={<AdminAnnouncementsPage />}/>
