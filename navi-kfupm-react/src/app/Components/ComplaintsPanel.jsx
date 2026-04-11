@@ -12,6 +12,9 @@ import { Label } from '../Components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
 import { AlertCircle, Clock, CheckCircle, User, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+// complaints panel for all users to view and manage their complaints. 
+// Admins can view all complaints and assign them to maintenance staff. 
+// Maintenance staff can update the status of assigned complaints.
 export function ComplaintsPanel() {
     const { user } = useAuth();
     const [complaints, setComplaints] = useState(mockComplaints);
@@ -24,6 +27,7 @@ export function ComplaintsPanel() {
         category: '',
         description: '',
     });
+    // filter complaints from the users
     const userComplaints = user
         ? complaints.filter((c) => c.userId === user.id)
         : [];
@@ -33,6 +37,7 @@ export function ComplaintsPanel() {
     const allComplaintsForAdmin = user && user.role === 'admin'
         ? complaints
         : [];
+    // return icon based on the complaint status
     const getStatusIcon = (status) => {
         switch (status) {
             case 'pending':
@@ -45,6 +50,7 @@ export function ComplaintsPanel() {
                 return <Clock className="w-4 h-4"/>;
         }
     };
+    // based on teh complaint status return badge variant
     const getStatusBadgeVariant = (status) => {
         switch (status) {
             case 'pending':
@@ -57,6 +63,9 @@ export function ComplaintsPanel() {
                 return 'secondary';
         }
     };
+    // this is for maintenance staff to update the status of a complaint and add notes. 
+    // It updates the complaints state with the new status and notes, and shows a success toast message. 
+    // After updating, it clears the selected complaint and notes.
     const handleUpdateStatus = (complaintId, newStatus) => {
         setComplaints((prev) => prev.map((c) => c.id === complaintId
             ? { ...c, status: newStatus, notes, updatedAt: new Date().toISOString() }
@@ -65,12 +74,16 @@ export function ComplaintsPanel() {
         setSelectedComplaint(null);
         setNotes('');
     };
+    // assigning complaints to a staff member.
     const handleAssignComplaint = (complaintId, staffId) => {
         setComplaints((prev) => prev.map((c) => c.id === complaintId
             ? { ...c, assignedTo: staffId, updatedAt: new Date().toISOString() }
             : c));
         toast.success('Complaint assigned successfully');
     };
+    // handle complaint submission by students. 
+    // It validates the input fields, creates a new complaint object, 
+    // and updates the complaints state.
     const handleSubmitComplaint = (e) => {
         e.preventDefault();
         if (!user || !newComplaint.locationId || !newComplaint.category || !newComplaint.description) {
@@ -99,6 +112,9 @@ export function ComplaintsPanel() {
         setShowAddComplaint(false);
         toast.success('Complaint submitted successfully!');
     };
+    // UI component to display individual complaint details in a card format. 
+    // It shows the location, category, description, user who submitted it, 
+    // and the status with an icon.
     const ComplaintCard = ({ complaint }) => (<Card>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
@@ -131,6 +147,8 @@ export function ComplaintsPanel() {
           </Button>)}
       </CardContent>
     </Card>);
+    // only logged in usrs can submit and view complaints. 
+    // If the user is not logged in, show a message prompting them to log in.
     if (!user || user.role === 'guest') {
         return (<Card className="h-full">
         <CardHeader>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// UI Components adn icons
 import { useAuth } from "../../AuthContext";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "./ui/dialog";
 import { Button } from "./ui/button";
@@ -7,7 +8,7 @@ import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
 import { Star, Navigation, MapPin, TrendingUp, } from "lucide-react";
 import { toast } from "sonner";
-// Mock community paths data
+// this is a mock community paths data, this will change when we integrate with the backend
 const mockPaths = [
     {
         id: "path1",
@@ -65,6 +66,11 @@ const mockPaths = [
         status: "Approved",
     },
 ];
+// display the paths created by the community and allow users to rate them. 
+// Only students can rate paths, and they can only rate each path once. 
+// Admins can see the average rating but cannot rate paths themselves.
+// Paths are sorted by average rating, and users can click a button to create a new path 
+// (which will open the CreatePathDialog).
 export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
     const { user } = useAuth();
     const [paths, setPaths] = useState(mockPaths.sort((a, b) => b.rating - a.rating));
@@ -95,6 +101,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
         }));
         toast.success("Rating submitted successfully!");
     };
+    // render star ratings.
     const renderStars = (pathId, currentRating, userRating) => {
         const isStudent = user?.role === "student";
         return (<div className="flex items-center gap-1">
@@ -117,11 +124,12 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
         </span>
       </div>);
     };
+    // sorting paths base on the selected category.
     const sortedPaths = [...paths].sort((a, b) => {
         if (sortBy === "rating") {
             return b.rating - a.rating;
         }
-        return 0; // For 'recent' we'd sort by date
+        return 0;
     });
     return (<Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh]">

@@ -4,7 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { CalendarDays, Bell, AlertTriangle } from 'lucide-react';
+// This panel component is used to display university announcements in a scrollable list
 export function AnnouncementsPanel() {
+  // categorize priority using red, green, yelow, and grey
     const getPriorityColor = (priority) => {
         switch (priority) {
             case 'high':
@@ -17,6 +19,7 @@ export function AnnouncementsPanel() {
                 return 'bg-gray-500';
         }
     };
+    // category icon based on announcement category
     const getCategoryIcon = (category) => {
         switch (category) {
             case 'academic':
@@ -27,6 +30,7 @@ export function AnnouncementsPanel() {
                 return <Bell className="w-4 h-4"/>;
         }
     };
+    // Sort announcements by date
     const sortedAnnouncements = [...mockAnnouncements].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     return (<Card className="h-full">
       <CardHeader>
