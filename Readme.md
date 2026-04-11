@@ -26,16 +26,11 @@ Displays a user-specific features, access to navigation tools especifically in t
 This is the core feature of the system where the user can display campus buildings, restaurants, cafes, parking, etc. It provides a filtering service and path navigation displayed on the map.
 
 ### 🛠️ Admin Page
-For KFUPM administrators
-Manage:
-Locations
-Services
-Updates to the map
-⚙️ Technical Team Page
-For developers/maintainers
-System monitoring and updates
-ℹ️ About Page
-Provides information about:
-Project idea
-Team members
-Purpose of the system
+For KFUPM administrators, they can manage locations, services, and complaints related to the content displayed on the web.
+
+### ⚙️ Technical Team Page
+For developers/maintainers, they can monitor, update the system, mand communicate with the KFUPM Administrators.
+
+### ℹ️ About Page
+Provides information about the project idea and detailed information about the purpsose of the system.
+
