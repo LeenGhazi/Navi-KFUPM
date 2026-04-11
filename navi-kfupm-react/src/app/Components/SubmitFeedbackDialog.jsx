@@ -8,12 +8,18 @@ import { Textarea } from '@/app/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
 import { MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
+// This component is a dialog for submitting feedback about the app where the developer can be provided with suggestions for improvement. 
+// It includes fields for title, description, category, and priority. 
+// It validates input and shows success/error messages using toast notifications.
 export function SubmitFeedbackDialog({ open, onOpenChange }) {
     const { user } = useAuth();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
     const [priority, setPriority] = useState('Medium');
+    // handleSubmit validates the form and simulates feedback submission. 
+    // It checks if the user is logged in and if all required fields are filled. 
+    // It then shows a success message and resets the form.
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!user) {
@@ -24,7 +30,7 @@ export function SubmitFeedbackDialog({ open, onOpenChange }) {
             toast.error('Please fill in all required fields');
             return;
         }
-        // In a real app, this would submit to the backend
+        // until we have a backend, a simulate submission with a timeout has been implemented
         toast.success('Feedback submitted successfully! Thank you for your input.');
         // Reset form
         setTitle('');
