@@ -24,6 +24,8 @@ const categories = [
     { value: 'library', label: 'Library' },
     { value: 'sports', label: 'Sports Facilities' },
 ];
+{/* HomePage component is the main landing page of the application.
+   It includes a sidebar for filtering locations by category and a search bar, as well as a main map area that displays the campus map with various locations. The component also manages state for selected categories, search query, selected location, and dialogs for location details, comments, complaints, and community paths. */  }
 export function HomePage() {
     const { user } = useAuth();
     const [selectedCategories, setSelectedCategories] = useState([]);
@@ -41,38 +43,38 @@ export function HomePage() {
             ? prev.filter((c) => c !== category)
             : [...prev, category]);
     };
+    {/* Handler function for when a location on the map is clicked. It sets the selected location and opens the location details dialog. */  }
     const handleLocationClick = (location) => {
         setSelectedLocation(location);
         setShowLocationDetails(true);
     };
+    {/* Handler function for when the user submits a comment for a location. It sets the selected location for action and opens the comment dialog. */  }
     const handleSubmitComment = (locationId) => {
         setSelectedLocationForAction(locationId);
         setShowCommentDialog(true);
     };
+    {/* Handler function for when the user submits a complaint for a location. It sets the selected location for action and opens the complaint dialog. */  }
     const handleSubmitComplaint = (locationId) => {
         setSelectedLocationForAction(locationId);
         setShowComplaintDialog(true);
     };
-    const handleStartMoveBuilding = () => {
-        if (selectedLocation) {
-            setMovingBuildingId(selectedLocation.id);
-        }
-    };
-    const handleCancelMoveBuilding = () => {
-        setMovingBuildingId(null);
-    };
+    
+    
     const [showSidebar, setShowSidebar] = useState(true);
-    return (<div className="flex h-[calc(100vh-4rem)]">
+    return (
+    <div className="flex h-[calc(100vh-4rem)]">
       {/* Left Sidebar */}
       {showSidebar && (
       <div className="absolute z-40 w-[85%] max-w-xs h-full bg-background border-r shadow-lg lg:static lg:w-80">
-        <ScrollArea className="h-full">
+        <ScrollArea className="h-full">{/* ScrollArea for the sidebar content, allowing it to be scrollable if the content exceeds the viewport height.
+         The sidebar includes a search input, category filters, and a button to open the community paths dialog. */  }
           <div className="p-4 space-y-6">
             {/* Search */}
             <div>
               <Label htmlFor="search">Search Locations</Label>
               <div className="relative mt-2">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"/>
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"/>{}
+                {/* Input field for searching locations on the map. It is controlled by the searchQuery state, and updates the state on change. */  }
                 <Input id="search" placeholder="Search buildings..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-9"/>
               </div>
             </div>
@@ -108,6 +110,7 @@ export function HomePage() {
         </ScrollArea>
       </div>
       )}
+
       {showSidebar && (
         <div
           className="fixed inset-0 bg-black/30 z-30 lg:hidden"
@@ -115,13 +118,15 @@ export function HomePage() {
         />
       )}
       {/* Main Map Area */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative">{/* Button to toggle the visibility of the sidebar on smaller screens. It is positioned absolutely at the top left of the main map area.
+       Clicking the button will toggle the showSidebar state, which controls the visibility of the sidebar. */  }
         <button
           onClick={() => setShowSidebar(!showSidebar)}
           className="absolute top-3 left-50 z-50 bg-white shadow-md rounded-lg w-10 h-10 flex items-center justify-center lg:hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           ☰
         </button>
+        {}
         <CampusMap selectedCategories={selectedCategories} showBusRoutes={false} showMainPaths={false} searchQuery={searchQuery} onLocationClick={handleLocationClick} routeFrom={null} routeTo={null} showMultipleRoutes={false} movingBuildingId={movingBuildingId} onBuildingMoved={handleCancelMoveBuilding}/>
         {movingBuildingId && (<div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3">
             <Move className="w-5 h-5"/>

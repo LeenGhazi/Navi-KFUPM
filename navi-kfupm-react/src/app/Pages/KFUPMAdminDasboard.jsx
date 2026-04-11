@@ -4,6 +4,10 @@ import { useAuth } from '../../AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
 import { FileText, MessageSquare, Route, CheckCircle, } from 'lucide-react';
+{/* KFUPMAdminDashboard component is the main dashboard for KFUPM administrators. 
+  It provides to submitting requests to the technical team, managing complaints,
+   reviewing community paths, and verifying building comments. The dashboard displays these features as cards that the admin can click 
+   on to navigate to the respective management pages. */  }
 export function KFUPMAdminDashboard() {
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -13,6 +17,8 @@ export function KFUPMAdminDashboard() {
             navigate('/');
         }
     }, [user, navigate]);
+    {/* Array of features available to the KFUPM administrator. Each feature includes a title, description, icon, navigation path, 
+      and styling classes for color and background. */  }
     const adminFeatures = [
         {
             title: 'Submit Request to Technical Team',
@@ -47,7 +53,9 @@ export function KFUPMAdminDashboard() {
             bgColor: 'bg-green-50',
         },
     ];
-    return (<div className="w-full px-8 py-8 h-full overflow-auto">
+    return (
+    <div className="w-full px-8 py-8 h-full overflow-auto">{/* Main container for the admin dashboard with padding and full width.
+     It includes a header section with a title and description, followed by a grid of feature cards. */  }
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">KFUPM Administrator Dashboard</h1>
         <p className="text-muted-foreground">
@@ -56,7 +64,11 @@ export function KFUPMAdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        {adminFeatures.map((feature) => {
+
+{/* Mapping over the adminFeatures array to render a card for each feature. Each card is clickable and navigates to the specified path when clicked.
+ The card includes an icon, title, description, and a button to open the respective management page. */  }
+
+        {adminFeatures.map((feature) => { 
             const Icon = feature.icon;
             return (<Card key={feature.path} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(feature.path)}>
               <CardHeader>
