@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { Card } from './ui/card';
 import { ZoomIn, ZoomOut, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
+import mapImage from '../../assets/map.jpg';
 export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, searchQuery, onLocationClick, routeFrom, routeTo, showMultipleRoutes, movingBuildingId, onBuildingMoved, }) {
     const [zoom, setZoom] = useState(1);
     const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -138,7 +139,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
         : [];
     return (<div className="relative w-full h-full bg-gray-100 dark:bg-gray-900 overflow-hidden rounded-lg border">
       {/* Map Controls */}
-      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+      <div className="absolute top-4 right-4 z-50 flex flex-col gap-2">
         <Button size="icon" variant="secondary" onClick={handleZoomIn}>
           <ZoomIn className="w-4 h-4"/>
         </Button>
@@ -148,7 +149,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
       </div>
 
       {/* Legend */}
-      <Card className="absolute bottom-4 left-4 z-10 p-3 max-w-xs shadow-lg">
+      <Card className="absolute bottom-4 left-4 z-50 p-3 max-w-xs shadow-lg">
         <div className="text-sm mb-2">Legend</div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="flex items-center gap-1">
@@ -179,7 +180,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
       </Card>
 
       {/* Route Info */}
-      {calculatedRoutes.length > 0 && (<Card className="absolute top-4 left-4 z-10 p-3 max-w-md shadow-lg">
+      {calculatedRoutes.length > 0 && (<Card className="absolute top-4 left-4 z-50 p-3 max-w-md shadow-lg">
           <div className="text-sm mb-2">Available Routes</div>
           <div className="space-y-2">
             {calculatedRoutes.map((route) => (<div key={route.id} className="flex items-center gap-2 text-xs">
@@ -194,7 +195,8 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
 
       {/* Map Canvas */}
       <div ref={mapRef} className="w-full h-full cursor-grab active:cursor-grabbing relative" onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
-        <svg width="100%" height="100%" className="absolute inset-0 bg-[#E8EDE7]" style={{
+        
+        <svg width="100%" height="100%" className="absolute inset-0 z-10" style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: 'center',
         }} onClick={handleMapClick}>
@@ -208,22 +210,14 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             </filter>
           </defs>
           
-          {/* Background Grid */}
-          <rect width="1000" height="1000" fill="url(#grid)"/>
-          
-          {/* Campus Roads */}
-          <rect x="0" y="340" width="1000" height="20" fill="#9CA3AF" opacity="0.5"/>
-          <rect x="390" y="0" width="20" height="1000" fill="#9CA3AF" opacity="0.5"/>
-          <rect x="200" y="0" width="15" height="1000" fill="#9CA3AF" opacity="0.3"/>
-          <rect x="600" y="0" width="15" height="1000" fill="#9CA3AF" opacity="0.3"/>
-          <rect x="0" y="150" width="1000" height="15" fill="#9CA3AF" opacity="0.3"/>
-          <rect x="0" y="550" width="1000" height="15" fill="#9CA3AF" opacity="0.3"/>
-          
-          {/* Green Spaces */}
-          <circle cx="200" cy="200" r="40" fill="#86EFAC" opacity="0.4"/>
-          <circle cx="700" cy="200" r="40" fill="#86EFAC" opacity="0.4"/>
-          <circle cx="100" cy="400" r="40" fill="#86EFAC" opacity="0.4"/>
-          <rect x="350" y="150" width="100" height="100" fill="#86EFAC" opacity="0.3" rx="10"/>
+            <image
+    href={mapImage}
+    x="0"
+    y="-100"
+    width="100%"
+    height="110%"
+    preserveAspectRatio="xMidYMin slice"
+  />
 
           {/* Main Paths */}
           {showMainPaths &&
