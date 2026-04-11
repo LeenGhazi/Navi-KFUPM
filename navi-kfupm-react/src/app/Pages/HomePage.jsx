@@ -57,14 +57,8 @@ export function HomePage() {
         setSelectedLocationForAction(locationId);
         setShowComplaintDialog(true);
     };
-    const handleStartMoveBuilding = () => {
-        if (selectedLocation) {
-            setMovingBuildingId(selectedLocation.id);
-        }
-    };
-    const handleCancelMoveBuilding = () => {
-        setMovingBuildingId(null);
-    };
+    
+    
     const [showSidebar, setShowSidebar] = useState(true);
     return (<div className="flex h-[calc(100vh-4rem)]">
       {/* Left Sidebar */}
@@ -126,17 +120,8 @@ export function HomePage() {
         >
           ☰
         </button>
-        <CampusMap selectedCategories={selectedCategories} showBusRoutes={false} showMainPaths={false} searchQuery={searchQuery} onLocationClick={handleLocationClick} routeFrom={null} routeTo={null} showMultipleRoutes={false} movingBuildingId={movingBuildingId} onBuildingMoved={handleCancelMoveBuilding}/>
-        {movingBuildingId && (<div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3">
-            <Move className="w-5 h-5"/>
-            <div>
-              <div className="font-semibold">Moving Building Mode</div>
-              <div className="text-xs">Click on the map to place the building at a new location</div>
-            </div>
-            <Button size="sm" variant="secondary" onClick={handleCancelMoveBuilding} className="ml-2">
-              Cancel
-            </Button>
-          </div>)}
+        <CampusMap selectedCategories={selectedCategories} showBusRoutes={false} showMainPaths={false} searchQuery={searchQuery} onLocationClick={handleLocationClick} routeFrom={null} routeTo={null} showMultipleRoutes={false} />
+        
       </div>
 
       {/* Dialogs */}
