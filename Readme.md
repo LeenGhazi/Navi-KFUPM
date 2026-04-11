@@ -34,3 +34,28 @@ For developers/maintainers, they can monitor, update the system, mand communicat
 ### ℹ️ About Page
 Provides information about the project idea and detailed information about the purpsose of the system.
 
+# ⚙️ Installation & Setup
+Follow these steps to run the project locally:
+
+1️⃣ Clone the Repository
+
+```
+git clone https://github.com/LeenGhazi/Navi-KFUPM.git
+cd Navi-KFUPM/navi-kfupm-react
+```
+
+2️⃣ Install Dependencies
+```
+npm install
+npm install -D tailwindcss @tailwindcss/vite
+npm install @radix-ui/react-dialog
+```
+3️⃣ Run the Development Server
+```
+npm run dev
+```
+4️⃣ Open in Browser
+```
+Open http://localhost:PORT
+
+```
