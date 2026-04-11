@@ -96,10 +96,10 @@ http://localhost:5173
 - Use search or filters  
 - Click on the building to view details  
 
-**🧭 Navigating Between Locations**
-- Select a starting point  
-- Select a destination  
-- View the generated route  
+**🚌 Using Bus Routes**
+- Open the Bus Routes page  
+- Select a route  
+- View route details and stops on the map  
 
 **👤 Using the System as a Registered User**
 - Login or signup  
