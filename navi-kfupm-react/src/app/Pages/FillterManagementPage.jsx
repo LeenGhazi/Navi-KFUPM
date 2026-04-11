@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
-import { mockLocations } from './src/mockData';
+import { mockLocations } from '../../mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
 import { Input } from '../Components/ui/input';

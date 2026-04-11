@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Label } from '@/app/components/ui/label';
-import { Textarea } from '@/app/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '@/app/components/ui/select';
-import { Badge } from '@/app/components/ui/badge';
+import { useAuth } from '../../AuthContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Input } from '../Components/ui/input';
+import { Label } from '../Components/ui/label';
+import { Textarea } from '../Components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
+import { Badge } from '../Components/ui/badge';
 import { toast } from 'sonner';
 import { Route, CheckCircle, XCircle, Clock, MapPin, User } from 'lucide-react';
 const mockPaths = [
