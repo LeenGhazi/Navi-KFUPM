@@ -41,8 +41,6 @@ Follow these steps to run the project locally:
 
 ```
 git clone https://github.com/LeenGhazi/Navi-KFUPM.git
-```
-```
 cd Navi-KFUPM/navi-kfupm-react
 ```
 

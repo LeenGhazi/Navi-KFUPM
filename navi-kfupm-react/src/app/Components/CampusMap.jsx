@@ -5,7 +5,6 @@ import { Badge } from './ui/badge';
 import { Card } from './ui/card';
 import { ZoomIn, ZoomOut, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
-import mapImage from '../../assets/map.jpg';
 export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, searchQuery, onLocationClick, routeFrom, routeTo, showMultipleRoutes, movingBuildingId, onBuildingMoved, }) {
     const [zoom, setZoom] = useState(1);
     const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -195,13 +194,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
 
       {/* Map Canvas */}
       <div ref={mapRef} className="w-full h-full cursor-grab active:cursor-grabbing relative" onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
-        <img
-  src={mapImage}
-  alt="KFUPM Map"
-  className="absolute inset-0 w-full h-full object-cover z-0"
-  style={{ objectPosition: '50% 20%' }}
-/>
-        <svg width="100%" height="100%" className="absolute inset-0 z-10" style={{
+        <svg width="100%" height="100%" className="absolute inset-0 bg-[#E8EDE7]" style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: 'center',
         }} onClick={handleMapClick}>
@@ -215,7 +208,22 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             </filter>
           </defs>
           
-
+          {/* Background Grid */}
+          <rect width="1000" height="1000" fill="url(#grid)"/>
+          
+          {/* Campus Roads */}
+          <rect x="0" y="340" width="1000" height="20" fill="#9CA3AF" opacity="0.5"/>
+          <rect x="390" y="0" width="20" height="1000" fill="#9CA3AF" opacity="0.5"/>
+          <rect x="200" y="0" width="15" height="1000" fill="#9CA3AF" opacity="0.3"/>
+          <rect x="600" y="0" width="15" height="1000" fill="#9CA3AF" opacity="0.3"/>
+          <rect x="0" y="150" width="1000" height="15" fill="#9CA3AF" opacity="0.3"/>
+          <rect x="0" y="550" width="1000" height="15" fill="#9CA3AF" opacity="0.3"/>
+          
+          {/* Green Spaces */}
+          <circle cx="200" cy="200" r="40" fill="#86EFAC" opacity="0.4"/>
+          <circle cx="700" cy="200" r="40" fill="#86EFAC" opacity="0.4"/>
+          <circle cx="100" cy="400" r="40" fill="#86EFAC" opacity="0.4"/>
+          <rect x="350" y="150" width="100" height="100" fill="#86EFAC" opacity="0.3" rx="10"/>
 
           {/* Main Paths */}
           {showMainPaths &&
