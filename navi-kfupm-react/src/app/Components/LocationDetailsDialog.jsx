@@ -12,6 +12,10 @@ import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { toast } from 'sonner';
 import { MapPin, Clock, Users, Star, MessageSquare, Heart, Printer, FlaskConical, DoorOpen, BookOpen, Users2, Trash2, Edit, Save, X, Plus, Move, Eye, EyeOff, Shield, } from 'lucide-react';
+// The purpose of this component is to display detailed information about a location,
+//  including its description, facilities, user comments, and stories. 
+// It also allows users to add comments and stories 
+// For maintenance staff: to edit building details and manage comments.
 export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitComment, onSubmitComplaint, onStartMoveBuilding, }) {
     const { user } = useAuth();
     const [stories, setStories] = useState(mockStories);
@@ -24,6 +28,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
     const [editCommentRating, setEditCommentRating] = useState(5);
+    // the edit form is activated when the location changes to load the new location data into the form
     useEffect(() => {
         if (location) {
             setEditForm({ ...location });
@@ -36,15 +41,17 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     const locationComments = comments
         .filter((c) => c.locationId === location.id)
         .filter((c) => {
-        // Staff can see all comments, others only see non-hidden ones
+        // only maintainence staff can see all comments, others only see non-hidden ones
         if (user?.role === 'maintenance_staff')
             return true;
         return !c.hidden;
     });
+    // storaies relaetd to a certain location are filtered based on location id
     const locationStories = stories.filter((s) => s.locationId === location.id);
     const avgRating = locationComments.length > 0
         ? locationComments.reduce((sum, c) => sum + c.rating, 0) / locationComments.length
         : 0;
+    // this is a helper function to map location categories to badge labels 
     const getCategoryBadge = (category) => {
         const categoryMap = {
             academic: { label: 'Academic', variant: 'default' },
@@ -59,12 +66,14 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         };
         return categoryMap[category] || { label: category, variant: 'outline' };
     };
+    // delete a comment (only maintainence staff can do this)
     const handleDeleteComment = (commentId) => {
         if (!user || user.role !== 'maintenance_staff')
             return;
         setComments(prevComments => prevComments.filter(c => c.id !== commentId));
         toast.success('Comment deleted successfully');
     };
+    // hide/unhide a comment (only maintainence staff can do this)
     const handleToggleHideComment = (commentId) => {
         if (!user || user.role !== 'maintenance_staff')
             return;
@@ -74,6 +83,9 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         const comment = comments.find(c => c.id === commentId);
         toast.success(comment?.hidden ? 'Comment is now visible to users' : 'Comment hidden from public view');
     };
+    // edit a comment (only maintainence staff can do this, 
+    // ethically this should be used to correct misinformation or 
+    // remove inappropriate content, not to alter user opinions)
     const handleStartEditComment = (comment) => {
         if (!user || user.role !== 'maintenance_staff')
             return;
@@ -95,41 +107,50 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         setEditCommentText('');
         setEditCommentRating(5);
     };
+    // like or unlike a comment (only students can do this))
     const handleDeleteStory = (storyId) => {
         if (!user || user.role !== 'maintenance_staff')
             return;
         setStories(prevStories => prevStories.filter(s => s.id !== storyId));
         toast.success('Story deleted successfully');
     };
+    // edit building info
     const handleStartEditBuilding = () => {
         setIsEditingBuilding(true);
         setEditForm({ ...location });
     };
+    // cancel editing building info and reset form to original location data
     const handleCancelEditBuilding = () => {
         setIsEditingBuilding(false);
         setEditForm({ ...location });
     };
+    // save building info changes
     const handleSaveBuildingChanges = () => {
         toast.success('Building information updated successfully!');
         setIsEditingBuilding(false);
-        // In a real app, this would update the location data
+        // when the backend is implemented, this would update the location data
     };
+    // update building info
     const handleUpdateBuildingField = (field, value) => {
         setEditForm(prev => ({ ...prev, [field]: value }));
     };
+    // update services info
     const handleUpdateService = (index, field, value) => {
         const newServices = [...(editForm.services || [])];
         newServices[index] = { ...newServices[index], [field]: value };
         setEditForm(prev => ({ ...prev, services: newServices }));
     };
+    // add a new service to the services list
     const handleAddService = () => {
         const newServices = [...(editForm.services || []), { name: '', hours: '' }];
         setEditForm(prev => ({ ...prev, services: newServices }));
     };
+    // remove a service from the services list
     const handleRemoveService = (index) => {
         const newServices = (editForm.services || []).filter((_, i) => i !== index);
         setEditForm(prev => ({ ...prev, services: newServices }));
     };
+    // update facility numbers (printers, prayer rooms, etc.)
     const handleUpdateFacilityNumber = (field, value) => {
         setEditForm(prev => ({
             ...prev,
@@ -139,6 +160,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
             }
         }));
     };
+    // add a new lab to the labs list
     const handleAddLab = () => {
         const newLabs = [...(editForm.facilities?.labs || []), ''];
         setEditForm(prev => ({
@@ -149,6 +171,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
             }
         }));
     };
+    // update lab name in the labs list
     const handleUpdateLab = (index, value) => {
         const newLabs = [...(editForm.facilities?.labs || [])];
         newLabs[index] = value;
@@ -160,6 +183,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
             }
         }));
     };
+    // remove a lab from the labs list
     const handleRemoveLab = (index) => {
         const newLabs = (editForm.facilities?.labs || []).filter((_, i) => i !== index);
         setEditForm(prev => ({
@@ -170,6 +194,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
             }
         }));
     };
+    // like or unlike a story (only students can do this)
     const handleLikeStory = (storyId) => {
         if (!user || user.role !== 'student') {
             if (user && user.role !== 'student') {
@@ -190,6 +215,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
             return story;
         }));
     };
+    // add a new story related to the location
     const handleAddStory = () => {
         if (!user || !newStoryTitle.trim() || !newStoryText.trim())
             return;
