@@ -2,7 +2,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "../Components/ui/card";
 import { Badge } from "../Components/ui/badge";
 import { Map, Users, MessageSquare, Bus, Route, Search } from 'lucide-react';
-export function AboutPage() {
+
+export function AboutPage() {    {/* this page provides an overview of the Navi-KFUPM app, its features, user roles, and how to get started */ }
     return (<div className="container mx-auto py-6 px-4">
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
@@ -11,8 +12,9 @@ export function AboutPage() {
             Your comprehensive campus navigation companion
           </p>
         </div>
+        {/* Introduction Section */}
 
-        <Card>
+        <Card> {/* this card is for the introduction section */}
           <CardHeader>
             <CardTitle>What is Navi-KFUPM?</CardTitle>
           </CardHeader>
@@ -30,11 +32,11 @@ export function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card> {/* this card is for the key features section */}
           <CardHeader>
             <CardTitle>Key Features</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent>{/* this section is for the key features of the app, each feature will have an icon and a description */ }
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex gap-3">
                 <div className="mt-1">
@@ -117,11 +119,11 @@ export function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card> {/* this card is for the user roles section */}
           <CardHeader>
             <CardTitle>User Roles</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent>{/* this section outlines the different user roles and their permissions */ }
             <div className="space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
@@ -167,11 +169,11 @@ export function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card> {/* this card is for the building facilities section */}
           <CardHeader>
             <CardTitle>Building Facilities</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent>{/* this section provides information about the facilities available in each building */ }
             <p className="mb-4">
               Each building on our map provides detailed facility information to help you 
               find exactly what you need:
@@ -187,7 +189,7 @@ export function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card> {/* this card is for the technology section */}
           <CardHeader>
             <CardTitle>Technology</CardTitle>
           </CardHeader>
@@ -207,7 +209,7 @@ export function AboutPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card> {/* this card is for the getting started section */}
           <CardHeader>
             <CardTitle>Get Started</CardTitle>
           </CardHeader>
