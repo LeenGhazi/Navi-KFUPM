@@ -56,7 +56,7 @@ function AppContent() {
           <Route path="/admin/comments" element={<AdminCommentsPage/>}/>
           <Route path="/admin/edit-map" element={<EditMapPage />}/>
           {/* KFUPM Admin Dashboard Routes */}
-          <Route path="/kfupm-admin" element={<div>KFUPMAdminDashboard</div>}/>
+          <Route path="/kfupm-admin" element={<KFUPMAdminDashboard/>}/>
           <Route path="/kfupm-admin/requests-to-tech" element={<div>AdminRequestsToTechPage</div>}/>
           <Route path="/kfupm-admin/complaints-management" element={<AdminComplaintsManagement />}/>
           <Route path="/kfupm-admin/community-paths-review" element={<div>AdminCommunityPathsReview</div>}/>
