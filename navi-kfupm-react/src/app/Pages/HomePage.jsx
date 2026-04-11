@@ -61,9 +61,11 @@ export function HomePage() {
     const handleCancelMoveBuilding = () => {
         setMovingBuildingId(null);
     };
+    const [showSidebar, setShowSidebar] = useState(true);
     return (<div className="flex h-[calc(100vh-4rem)]">
       {/* Left Sidebar */}
-      <div className="w-80 border-r bg-background">
+      {showSidebar && (
+      <div className="absolute z-40 w-[85%] max-w-xs h-full bg-background border-r shadow-lg lg:static lg:w-80">
         <ScrollArea className="h-full">
           <div className="p-4 space-y-6">
             {/* Search */}
@@ -105,9 +107,21 @@ export function HomePage() {
           </div>
         </ScrollArea>
       </div>
-
+      )}
+      {showSidebar && (
+        <div
+          className="fixed inset-0 bg-black/30 z-30 lg:hidden"
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
       {/* Main Map Area */}
       <div className="flex-1 relative">
+        <button
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="absolute top-3 left-50 z-50 bg-white shadow-md rounded-lg w-10 h-10 flex items-center justify-center lg:hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          ☰
+        </button>
         <CampusMap selectedCategories={selectedCategories} showBusRoutes={false} showMainPaths={false} searchQuery={searchQuery} onLocationClick={handleLocationClick} routeFrom={null} routeTo={null} showMultipleRoutes={false} movingBuildingId={movingBuildingId} onBuildingMoved={handleCancelMoveBuilding}/>
         {movingBuildingId && (<div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3">
             <Move className="w-5 h-5"/>
