@@ -52,7 +52,7 @@ const mockPaths = [
 export function AdminCommunityPathsReview() { {/* Main component for the admin community paths review page. It allows admins to view, filter, search, and review student-submitted community paths. */  }
     const { user } = useAuth();
     const [paths, setPaths] = useState(mockPaths);{}
-    const [filterStatus, setFilterStatus] = useState('all');{/}
+    const [filterStatus, setFilterStatus] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedPath, setSelectedPath] = useState(null);
     const [reviewNotes, setReviewNotes] = useState('');
@@ -254,7 +254,7 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
                   </div>
                 </div>
 
-                <div>{/}
+                <div>
                   <Label className="text-sm font-semibold">Description</Label>
                   <p className="text-sm text-muted-foreground mt-1">
                     {path.description}

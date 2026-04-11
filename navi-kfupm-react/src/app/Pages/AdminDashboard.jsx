@@ -8,7 +8,7 @@ import { FileText, Filter, MessageSquare, Bell, Users, } from 'lucide-react';
 
 
 
-{// AdminDashboard component is the main dashboard for maintenance staff. */}
+const AdminDashboard = () => {// AdminDashboard component is the main dashboard for maintenance staff. */}
   const { user } = useAuth();
   const navigate = useNavigate();
   if (!user || user.role !== "maintenance_staff") {
