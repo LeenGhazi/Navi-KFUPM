@@ -13,6 +13,7 @@ import orangeRoute from '../../assets/3-Orange Route.png';
 import redRoute from '../../assets/4-Red Route.png';
 import brownRoute from '../../assets/5-Brown Route.png';
 import { useTheme } from '../../ThemeContext';
+
 const busRoutes = [
   {
     id: 'route-purple',
@@ -23,18 +24,18 @@ const busRoutes = [
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '900', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
-      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
-      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '900', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
+      { id: '27', name: 'Clinic 27', coordinates: { x: 590, y: 635 } },
+      { id: '312-a', name: 'Station 312', coordinates: { x: 360, y: 460 } },
+      { id: '22-a', name: 'Station 22', coordinates: { x: 480, y: 570 } },
       { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
-      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
-      { id: '900-end', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 540, y: 390 } },
+      { id: '312-b', name: 'Station 312', coordinates: { x: 360, y: 460 } },
+      { id: '22-b', name: 'Station 22', coordinates: { x: 480, y: 570 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 580, y: 590 } },
+      { id: '900-end', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
     ]
   },
   {
@@ -46,15 +47,15 @@ const busRoutes = [
     frequency: 'Shuttle basis',
     operatingHours: '7:30 AM - 5:30 PM',
     stops: [
-      { id: '312-a', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-a', name: 'Station 22', coordinates: { x: 525, y: 817 } },
+      { id: '312-a', name: 'Station 312', coordinates: { x: 360, y: 460 } },
+      { id: '22-a', name: 'Station 22', coordinates: { x: 480, y: 570 } },
       { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
-      { id: '312-b', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '22-b', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 540, y: 390 } },
+      { id: '312-b', name: 'Station 312', coordinates: { x: 360, y: 460 } },
+      { id: '22-b', name: 'Station 22', coordinates: { x: 480, y: 570 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 580, y: 590 } },
     ]
   },
   {
@@ -66,13 +67,13 @@ const busRoutes = [
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '700', name: 'Station 700', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 632, y: 490 } },
-      { id: '22', name: 'Station 22', coordinates: { x: 525, y: 817 } },
-      { id: '312', name: 'Station 312', coordinates: { x: 325, y: 635 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 702, y: 863 } },
+      { id: '700', name: 'Station 700', coordinates: { x: 600, y: 300 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
+      { id: '310', name: 'Station 310', coordinates: { x: 540, y: 390 } },
+      { id: '22', name: 'Station 22', coordinates: { x: 480, y: 570 } },
+      { id: '312', name: 'Station 312', coordinates: { x: 360, y: 460 } },
+      { id: '314', name: 'Station 314', coordinates: { x: 580, y: 590 } },
       { id: '700-end', name: 'Station 700', coordinates: { x: 760, y: 312 } },
     ]
   },
@@ -85,9 +86,9 @@ const busRoutes = [
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '900-a', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
-      { id: '27', name: 'Clinic 27', coordinates: { x: 724, y: 921 } },
-      { id: '900-b', name: 'Parking 900', coordinates: { x: 640, y: 1119 } },
+      { id: '900-a', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
+      { id: '27', name: 'Clinic 27', coordinates: { x: 590, y: 635 } },
+      { id: '900-b', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
     ]
   },
   {
@@ -99,10 +100,10 @@ const busRoutes = [
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '800', name: 'Station 800', coordinates: { x: 632, y: 490 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 676, y: 186 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 744, y: 294 } },
-      { id: '800-end', name: 'Station 800', coordinates: { x: 632, y: 490 } },
+      { id: '800', name: 'Station 800', coordinates: { x: 540, y: 390 } },
+      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
+      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
+      { id: '800-end', name: 'Station 800', coordinates: { x: 540, y: 390 } },
     ]
   }
 ];
@@ -127,6 +128,21 @@ const [showDetailsPanel, setShowDetailsPanel] = useState(false);
     const deselectAllRoutes = () => {
         setSelectedRoutes([]);
     };
+
+    const visibleStops = Array.from(
+  new Map(
+    busRoutes
+      .filter(route => selectedRoutes.includes(route.id))
+      .flatMap(route =>
+        route.stops.map(stop => [
+          `${stop.coordinates.x}-${stop.coordinates.y}`,
+          { ...stop, color: route.color }
+        ])
+      )
+  ).values()
+);
+
+
     return (<div className="h-full flex lg:flex-row relative">
       {(showRoutesPanel || showDetailsPanel) && (
   <div
@@ -228,28 +244,51 @@ const [showDetailsPanel, setShowDetailsPanel] = useState(false);
           </CardHeader>
           <CardContent className="h-[calc(100%-5rem)]">
           <div className="relative w-full h-full bg-background rounded-lg border overflow-hidden">
-            <img
-              src={mapImage}
-              alt="KFUPM Map"
-              className="w-full h-full object-contain"
-                style={{
-                  filter: isDark
-                  ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
-                  : "none"
-                }}
-              />
+  <img
+    src={mapImage}
+    alt="KFUPM Map"
+    className="w-full h-full object-contain"
+    style={{
+      filter: isDark
+        ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
+        : "none"
+    }}
+  />
 
-            {busRoutes
-            .filter(route => selectedRoutes.includes(route.id))
-            .map(route => (
-              <img
-                key={route.id}
-                src={route.image}
-                alt={route.name}
-                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10"
-              />
-             ))}
-          </div>
+  {busRoutes
+    .filter(route => selectedRoutes.includes(route.id))
+    .map(route => (
+      <img
+        key={route.id}
+        src={route.image}
+        alt={route.name}
+        className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10"
+      />
+    ))}
+
+  <svg
+    viewBox="0 0 1061 1280"
+    className="absolute inset-0 w-full h-full pointer-events-none z-20"
+  >
+    {visibleStops.map((stop) => (
+      <g key={`${stop.coordinates.x}-${stop.coordinates.y}`}>
+        <circle
+          cx={stop.coordinates.x}
+          cy={stop.coordinates.y}
+          r="9"
+          fill="white"
+          opacity="0.95"
+        />
+        <circle
+          cx={stop.coordinates.x}
+          cy={stop.coordinates.y}
+          r="5"
+          fill={stop.color}
+        />
+      </g>
+    ))}
+  </svg>
+</div>
           </CardContent>
         </Card>
       </div>
