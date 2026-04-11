@@ -63,12 +63,15 @@ const mockCommentsForVerification = [
         hidden: false,
     },
 ];
+{/* AdminVerifyComments component allows administrators to review and verify public comments on campus buildings. . */  }
 export function AdminVerifyComments() {
     const { user } = useAuth();
     const [comments, setComments] = useState(mockCommentsForVerification);
     const [filterVerified, setFilterVerified] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+
+    {/*filterComments function filters the comments based on verification status, selected building location, and search query. */  }
     const filteredComments = comments.filter((comment) => {
         const matchesVerification = filterVerified === 'all' ||
             (filterVerified === 'verified' && comment.verified) ||
@@ -80,6 +83,8 @@ export function AdminVerifyComments() {
             comment.locationName.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesVerification && matchesLocation && matchesSearch;
     });
+
+{/*handleVerifyComment function updates the state to mark a comment as verified, while handleUnverifyComment removes the verification.  */  }
     const handleVerifyComment = (commentId) => {
         setComments(comments.map((c) => c.id === commentId ? { ...c, verified: true } : c));
         toast.success('Comment verified! It now shows "Approved by administrators"');
@@ -88,12 +93,15 @@ export function AdminVerifyComments() {
         setComments(comments.map((c) => c.id === commentId ? { ...c, verified: false } : c));
         toast.success('Verification removed from comment');
     };
+    {/*stats object calculates the total number of comments, verified comments, and unverified comments . */  }
     const stats = {
         total: comments.length,
         verified: comments.filter((c) => c.verified).length,
         unverified: comments.filter((c) => !c.verified).length,
     };
-    return (<div className="container mx-auto px-4 py-8 h-full overflow-auto">
+    return (
+    <div className="container mx-auto px-4 py-8 h-full overflow-auto">{/* Main container for the admin verify comments page. It includes a header section with a title and description,
+     followed by statistics cards, filter options, and a list of comments to review. */  }
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Verify Building Comments</h1>
         <p className="text-muted-foreground">
@@ -109,12 +117,12 @@ export function AdminVerifyComments() {
               Total Comments
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent>{/* Displays the total number of comments. */  }
             <div className="text-2xl font-bold">{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3">{/* Displays the number of verified comments. */  }
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Verified
             </CardTitle>
@@ -124,7 +132,7 @@ export function AdminVerifyComments() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3">{/* Displays the number of unverified comments. */  }
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Unverified
             </CardTitle>
@@ -140,11 +148,11 @@ export function AdminVerifyComments() {
         <CardHeader>
           <CardTitle className="text-base">Filters</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4">{/* Filter options for verification status, building location, and search query. */  }
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="verified-filter">Filter by Verification</Label>
-              <Select value={filterVerified} onValueChange={setFilterVerified}>
+              <Select value={filterVerified} onValueChange={setFilterVerified}>{/* Select component to filter comments by their verification status (all, verified, unverified). */  }
                 <SelectTrigger id="verified-filter">
                   <SelectValue />
                 </SelectTrigger>
@@ -156,9 +164,9 @@ export function AdminVerifyComments() {
               </Select>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2">{/* Select component to filter comments by building location. It uses mockLocations to populate the options. */  }
               <Label htmlFor="location-filter">Filter by Building</Label>
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>{}
                 <SelectTrigger id="location-filter">
                   <SelectValue />
                 </SelectTrigger>
@@ -171,7 +179,7 @@ export function AdminVerifyComments() {
               </Select>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2">{/* Input field to search comments by user name, building name, or comment content. It updates the searchQuery state on change. */  }
               <Label htmlFor="search">Search Comments</Label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"/>
@@ -183,14 +191,16 @@ export function AdminVerifyComments() {
       </Card>
 
       {/* Comments List */}
-      <div className="space-y-4">
-        {filteredComments.length === 0 ? (<Card>
+      <div className="space-y-4">{/* Displays the list of comments to verify. Each comment is shown in a card with its details and verification options. */  }
+        {filteredComments.length === 0 ? (
+          <Card>{/* If no comments match the filters, display a message indicating that no comments were found. */  }
             <CardContent className="py-12 text-center">
               <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4"/>
               <p className="text-muted-foreground">No comments found</p>
             </CardContent>
-          </Card>) : (filteredComments.map((comment) => (<Card key={comment.id}>
-              <CardHeader>
+          </Card>) : 
+          (filteredComments.map((comment) => (<Card key={comment.id}>{/* Card for each comment, displaying the commenter's name, email, building location, comment text, rating, and verification status. */  }
+              <CardHeader>{/* Header section of the comment card, showing the location name, commenter details, and rating. If the comment is verified, it also shows a "Verified" badge. */  }
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -213,7 +223,7 @@ export function AdminVerifyComments() {
                     <span className="text-sm font-medium">{comment.rating}/5</span>
                   </div>
                 </div>
-              </CardHeader>
+              </CardHeader>{/* Content section of the comment card, showing the comment text and action buttons to verify or unverify the comment. */  }
               <CardContent className="space-y-4">
                 {/* Comment Text */}
                 <div>
@@ -233,7 +243,7 @@ export function AdminVerifyComments() {
                     </div>
                   </div>)}
 
-                {/* Action Button */}
+                {/* Action Buttons */}
                 <div className="flex justify-end pt-2 border-t">
                   {comment.verified ? (<Button variant="outline" onClick={() => handleUnverifyComment(comment.id)}>
                       Remove Verification
