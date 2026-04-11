@@ -47,7 +47,11 @@ cd Navi-KFUPM/navi-kfupm-react
 2️⃣ Install Dependencies
 ```
 npm install
+```
+```
 npm install -D tailwindcss @tailwindcss/vite
+```
+```
 npm install @radix-ui/react-dialog
 ```
 3️⃣ Run the Development Server
