@@ -6,6 +6,8 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from './ui/dropdown-menu';
 import { Sun, Moon, LogIn, LogOut, UserCircle, Map as MapIcon, Bell, AlertCircle, Info, Menu, Bus, Settings, } from 'lucide-react';
+// Navigation component that shows different links based on user role 
+// and highlights active link
 export function Navigation({ onLoginClick, onRegisterClick }) {
     const { user, logout } = useAuth();
     const { theme, setTheme } = useTheme();
@@ -19,7 +21,7 @@ export function Navigation({ onLoginClick, onRegisterClick }) {
         { path: '/complaints', label: 'Complaints', icon: AlertCircle },
         { path: '/about', label: 'About', icon: Info },
     ];
-    // Add Staff Dashboard to nav if user is maintenance_staff
+    // here, add Staff Dashboard to nav if user is maintenance_staff
     const staffNavLink = user?.role === 'maintenance_staff'
         ? [{ path: '/admin', label: 'Staff Dashboard', icon: Settings }]
         : [];
@@ -27,6 +29,7 @@ export function Navigation({ onLoginClick, onRegisterClick }) {
     const adminNavLink = user?.role === 'admin'
         ? [{ path: '/kfupm-admin', label: 'Admin Dashboard', icon: Settings }]
         : [];
+    // display the final nav links based on user role - regular users see basic links, maintenance staff see staff dashboard, admins see admin dashboard
     const allNavLinks = [...navLinks, ...staffNavLink, ...adminNavLink];
     return (<header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="container mx-auto px-4">
