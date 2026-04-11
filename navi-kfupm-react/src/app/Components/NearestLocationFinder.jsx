@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { mockLocations } from '../../mockData';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '../Components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { MapPin, Navigation } from 'lucide-react';
