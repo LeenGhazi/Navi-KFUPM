@@ -6,7 +6,10 @@ import { Card } from './ui/card';
 import { ZoomIn, ZoomOut, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 import mapImage from '../../assets/map.jpg';
+// this is the main campus map component in the map page, it supports: zooming, 
+// panning, routes, bus routes, paths
 export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, searchQuery, onLocationClick, routeFrom, routeTo, showMultipleRoutes, movingBuildingId, onBuildingMoved, }) {
+    // define the current values in the map displayed.
     const [zoom, setZoom] = useState(1);
     const [pan, setPan] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
@@ -15,12 +18,14 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     const [userLocation] = useState({ x: 400, y: 350 });
     const [locations, setLocations] = useState(mockLocations);
     const mapRef = useRef(null);
+    // Filter locations based on the selected categories and search text (scrolled down options?)
     const filteredLocations = locations.filter((location) => {
         const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(location.category);
         const matchesSearch = searchQuery === '' ||
             location.name.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
+    // change map zoom level
     const handleZoomIn = () => {
         setZoom((prev) => Math.min(prev + 0.2, 3));
     };
@@ -41,6 +46,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     const handleMouseUp = () => {
         setIsDragging(false);
     };
+    // handle clicks on the map )
     const handleMapClick = (e) => {
         if (movingBuildingId && mapRef.current) {
             const svg = e.currentTarget;
@@ -64,6 +70,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             }
         }
     };
+    // Define the colors on the categories on the map
     const getCategoryColor = (category) => {
         const colors = {
             academic: '#3B82F6',
@@ -79,6 +86,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
         };
         return colors[category] || '#6B7280';
     };
+    // routes example
     const generateRoutes = (from, to) => {
         if (!showMultipleRoutes) {
             return [
@@ -127,6 +135,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             },
         ];
     };
+    // show the route from one location to the other
     const calculatedRoutes = routeFrom && routeTo
         ? (() => {
             const fromLoc = mockLocations.find((l) => l.id === routeFrom);
