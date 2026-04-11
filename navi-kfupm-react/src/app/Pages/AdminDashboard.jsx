@@ -8,16 +8,17 @@ import { FileText, Filter, MessageSquare, Bell, Users, } from 'lucide-react';
 
 
 
-
-const AdminDashboard = () => {
+{// AdminDashboard component is the main dashboard for maintenance staff. */}
   const { user } = useAuth();
-
-
   const navigate = useNavigate();
   if (!user || user.role !== "maintenance_staff") {
     return <Navigate to="/" replace />;
   }
-   const adminOptions = [
+
+  {/* Array of options for the admin dashboard. Each option includes a title, description, icon, path for navigation, and styling classes for color and background. */  }
+
+
+  const adminOptions = [
     {
       title: "Requests",
       description: "Send requests to technical team",
@@ -52,13 +53,14 @@ const AdminDashboard = () => {
     },
   ];
   return (
-    <div className="p-6">
+    <div className="p-6">{/* Main container for the admin dashboard with padding. It includes a header section with a title and welcome message. */  }
 
       <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
       <p className="mb-6">Welcome, {user?.name}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+        {/* Mapping over the adminOptions array to render a card for each option. Each card is clickable and navigates to the specified path when clicked.
+         The card includes an icon, title, description, and a button to open the respective section. */  }
         {adminOptions.map((item, index) => {
           const Icon = item.icon;
 
