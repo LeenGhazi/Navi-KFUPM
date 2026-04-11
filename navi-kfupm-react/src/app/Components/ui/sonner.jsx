@@ -13,9 +13,16 @@ const Toaster = (props) => {
         "--normal-text": "var(--popover-foreground)",
         "--normal-border": "var(--border)",
       }}
-      {...props}
-    />
-  );
-};
+      toastOptions={{
+    style: {
+      fontSize: "22px",
+      padding: "16px 20px",
+      minWidth: "300px",
+      borderRadius: "10px",
+    },
+  }}
+  {...props}
+/>
+  );};
 
 export { Toaster };
