@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../AuthContext';
 import { Navigate } from 'react-router';
-import { mockLocations } from '@/data/mockData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Input } from '@/app/components/ui/input';
-import { Label } from '@/app/components/ui/label';
-import { Badge } from '@/app/components/ui/badge';
-import { ScrollArea } from '@/app/components/ui/scroll-area';
-import { Checkbox } from '@/app/components/ui/checkbox';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '@/app/components/ui/dialog';
+import { mockLocations } from './src/mockData';
+import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
+import { Input } from '../Components/ui/input';
+import { Label } from '../Components/ui/label';
+import { Badge } from '../Components/ui/badge';
+import { ScrollArea } from '../Components/ui/scroll-area';
+import { Checkbox } from '../Components/ui/checkbox';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '../Components/ui/dialog';
 import { Filter, Plus, Trash2, Edit, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 const initialCategories = [

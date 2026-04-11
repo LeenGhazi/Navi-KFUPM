@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
+import { useAuth } from '../AuthContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
+import { Button } from '../Components/ui/button';
 import { FileText, MessageSquare, Route, CheckCircle, } from 'lucide-react';
 export function KFUPMAdminDashboard() {
     const navigate = useNavigate();
