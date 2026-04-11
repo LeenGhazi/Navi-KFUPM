@@ -7,12 +7,16 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Star } from 'lucide-react';
 import { toast } from 'sonner';
+
+// This dialog component is used to submit a rating and comment for a selected location
 export function AddCommentDialog({ open, onOpenChange, locationId }) {
+  // take the comments from the state
     const { user } = useAuth();
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [hoveredRating, setHoveredRating] = useState(0);
     const location = mockLocations.find((l) => l.id === locationId);
+    // comment submission handler 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!user || user.role === 'guest') {
@@ -25,6 +29,7 @@ export function AddCommentDialog({ open, onOpenChange, locationId }) {
         setRating(5);
         onOpenChange(false);
     };
+    // in case the location is invalid, do not render anything
     if (!location)
         return null;
     return (<Dialog open={open} onOpenChange={onOpenChange}>
