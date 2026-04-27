@@ -125,6 +125,8 @@ export function HomePage() {
       </div>
 
       {/* Dialogs */}
+      {selectedLocation && (<LocationDetailsDialog location={selectedLocation} open={showLocationDetails} onOpenChange={setShowLocationDetails} onSubmitComment={handleSubmitComment} onSubmitComplaint={handleSubmitComplaint} />)}
+
 
       {selectedLocationForAction && (<>
           <AddCommentDialog locationId={selectedLocationForAction} open={showCommentDialog} onOpenChange={setShowCommentDialog}/>
