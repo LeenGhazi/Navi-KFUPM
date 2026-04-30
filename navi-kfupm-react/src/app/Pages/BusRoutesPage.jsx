@@ -262,7 +262,16 @@ export function BusRoutesPage() {
             .map((route) => (
               <img
                 key={route.routeId}
-                src={route.image}
+                src={
+                  route.routeId === "route-purple" ? purpleRoute :
+                  route.routeId === "route-pink" ? pinkRoute :
+                  route.routeId === "route-orange" ? orangeRoute :
+                  route.routeId === "route-brown" ? brownRoute :
+                  route.routeId === "route-red" ? redRoute :
+                  route.routeId === "route-blue" ? blueRoute :
+                  route.routeId === "route-cyan" ? cyanRoute :
+                  null
+                }
                 alt={route.name}
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 style={{ opacity: 0.85 }}
