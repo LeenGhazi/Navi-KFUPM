@@ -34,7 +34,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
         setZoom((prev) => Math.min(prev + 0.2, 3));
     };
     const handleZoomOut = () => {
-        setZoom((prev) => Math.max(prev - 0.2, 0.5));
+      setZoom((prev) => Math.max(prev - 0.2, 1));
     };
     const handleMouseDown = (e) => {
         if (!movingBuildingId) {
@@ -211,7 +211,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
         
         <svg width="100%" height="100%" className="absolute inset-0 z-10" style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-            transformOrigin: 'center',
+            transformOrigin: '0 0',
         }} onClick={handleMapClick}>
           {/* Campus Grid Pattern */}
           <defs>
@@ -224,18 +224,18 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
           </defs>
           
             <image
-    href={mapImage}
-    style={{
-      filter: isDark
-      ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
-        : "none"
-      }}
-    x="0"
-    y="-100"
-    width="100%"
-    height="110%"
-    preserveAspectRatio="xMidYMin slice"
-  />
+              href={mapImage}
+              style={{
+                filter: isDark
+                  ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
+                  : "none"
+              }}
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              preserveAspectRatio="xMidYMid slice"
+            />
 
           {/* Main Paths */}
           {showMainPaths &&
