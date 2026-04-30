@@ -187,19 +187,6 @@ export function BusRoutesPage() {
     setSelectedRoutes([]);
   };
 
-  const visibleStops = Array.from(
-    new Map(
-      busRoutes
-        .filter((route) => selectedRoutes.includes(route.id))
-        .flatMap((route) =>
-          route.stops.map((stop) => [
-            `${stop.coordinates.x}-${stop.coordinates.y}`,
-            { ...stop, color: route.color },
-          ])
-        )
-    ).values()
-  );
-
   return (
     <div className="relative w-full h-screen overflow-hidden bg-background">
       {(showRoutesPanel || showDetailsPanel) && (
@@ -408,20 +395,6 @@ export function BusRoutesPage() {
                 style={{ opacity: 0.85 }}
               />
             ))}
-
-          {/* Stop Markers */}
-          {visibleStops.map((stop) => (
-            <div
-              key={`${stop.id}-${stop.coordinates.x}-${stop.coordinates.y}`}
-              className="absolute w-4 h-4 rounded-full border-2 border-white shadow-md transform -translate-x-1/2 -translate-y-1/2"
-              style={{
-                left: `${stop.coordinates.x}px`,
-                top: `${stop.coordinates.y}px`,
-                backgroundColor: stop.color,
-              }}
-              title={stop.name}
-            />
-          ))}
         </div>
       </div>
 
