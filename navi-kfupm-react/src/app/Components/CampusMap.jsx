@@ -31,7 +31,11 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     });
     // change map zoom level
     const handleZoomIn = () => {
-      setZoom((prev) => Math.min(prev + 0.2, 3));
+      setZoom((prev) => {
+        const newZoom = Math.min(prev + 0.2, 3);
+        setPan((oldPan) => clampPan(oldPan, newZoom));
+        return newZoom;
+      });
     };
     const handleZoomOut = () => {
       setZoom((prev) => {
@@ -47,11 +51,16 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
         }
     };
     const clampPan = (newPan, currentZoom) => {
-      const mapWidth = 1000;
-      const mapHeight = 800;
+      if (!mapRef.current) return newPan;
 
-      const minX = mapWidth - mapWidth * currentZoom;
-      const minY = mapHeight - mapHeight * currentZoom;
+      const containerWidth = mapRef.current.clientWidth;
+      const containerHeight = mapRef.current.clientHeight;
+
+      const scaledWidth = containerWidth * currentZoom;
+      const scaledHeight = containerHeight * currentZoom;
+
+      const minX = containerWidth - scaledWidth;
+      const minY = containerHeight - scaledHeight;
 
       return {
         x: Math.min(0, Math.max(minX, newPan.x)),
@@ -255,8 +264,8 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
               x="0"
               y="0"
               width="1000"
-              height="800"
-              preserveAspectRatio="xMidYMid meet"
+              height="1000"
+              preserveAspectRatio="xMidYMid slice"
             />
 
           {/* Main Paths */}
