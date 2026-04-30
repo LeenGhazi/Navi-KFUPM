@@ -31,10 +31,14 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     });
     // change map zoom level
     const handleZoomIn = () => {
-        setZoom((prev) => Math.min(prev + 0.2, 3));
+      setZoom((prev) => Math.min(prev + 0.2, 3));
     };
     const handleZoomOut = () => {
-      setZoom((prev) => Math.max(prev - 0.2, 1));
+      setZoom((prev) => {
+        const newZoom = Math.max(prev - 0.2, 1);
+        setPan((oldPan) => clampPan(oldPan, newZoom));
+        return newZoom;
+      });
     };
     const handleMouseDown = (e) => {
         if (!movingBuildingId) {
@@ -42,10 +46,28 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
         }
     };
+    const clampPan = (newPan, currentZoom) => {
+      const mapWidth = 1000;
+      const mapHeight = 800;
+
+      const minX = mapWidth - mapWidth * currentZoom;
+      const minY = mapHeight - mapHeight * currentZoom;
+
+      return {
+        x: Math.min(0, Math.max(minX, newPan.x)),
+        y: Math.min(0, Math.max(minY, newPan.y)),
+      };
+    };
+
     const handleMouseMove = (e) => {
-        if (isDragging) {
-            setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
-        }
+      if (isDragging) {
+        const newPan = {
+          x: e.clientX - dragStart.x,
+          y: e.clientY - dragStart.y,
+        };
+
+        setPan(clampPan(newPan, zoom));
+      }
     };
     const handleMouseUp = () => {
         setIsDragging(false);
@@ -209,7 +231,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
       {/* Map Canvas */}
       <div ref={mapRef} className="w-full h-full cursor-grab active:cursor-grabbing relative" onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
         
-        <svg width="100%" height="100%" className="absolute inset-0 z-10" style={{
+        <svg width="100%" height="100%" viewBox="0 0 1000 1000" className="absolute inset-0 z-10" style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: '0 0',
         }} onClick={handleMapClick}>
@@ -232,9 +254,9 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
               }}
               x="0"
               y="0"
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid slice"
+              width="1000"
+              height="800"
+              preserveAspectRatio="xMidYMid meet"
             />
 
           {/* Main Paths */}
