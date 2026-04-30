@@ -16,151 +16,22 @@ import blueRoute from '../../assets/bus-routes/Blue Route.png';
 import cyanRoute from '../../assets/bus-routes/Cyan Route.png';
 import { useTheme } from '../../ThemeContext';
 
-const busRoutes = [
-  {
-    id: 'route-purple',
-    name: 'Purple Route',
-    type: 'female',
-    color: '#7E3AF2',
-    image: purpleRoute,
-    description: 'Female bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '900-a', name: 'Female Student Accommodation 900', coordinates: { x: 540, y: 730 } },
-      { id: '27', name: 'Clinic Parking 27', coordinates: { x: 590, y: 635 } },
-      { id: '312-a', name: 'Tower Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-a', name: 'Building 22', coordinates: { x: 480, y: 570 } },
-      { id: '319', name: 'Northern District 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Cabin 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Orientation 309', coordinates: { x: 600, y: 280 } },
-      { id: '310', name: 'Start 310', coordinates: { x: 540, y: 390 } },
-      { id: '312-b', name: 'Tower Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-b', name: 'Building 22', coordinates: { x: 480, y: 570 } },
-      { id: '314', name: 'Clinic 314', coordinates: { x: 580, y: 590 } },
-      { id: '900-b', name: 'Female Student Accommodation 900', coordinates: { x: 540, y: 730 } },
-    ],
-  },
-  {
-    id: 'route-pink',
-    name: 'Pink Route',
-    type: 'female',
-    color: '#EC4899',
-    image: pinkRoute,
-    description: 'Female bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '404-a', name: 'Physical Education 404', coordinates: { x: 640, y: 680 } },
-      { id: '312-a', name: 'Tower Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-a', name: 'Building 22', coordinates: { x: 480, y: 570 } },
-      { id: '319', name: 'Northern District 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Cabin 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Orientation 309', coordinates: { x: 600, y: 280 } },
-      { id: '310', name: 'Start 310', coordinates: { x: 540, y: 390 } },
-      { id: '312-b', name: 'Tower Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-b', name: 'Building 22', coordinates: { x: 480, y: 570 } },
-      { id: '314', name: 'Clinic 314', coordinates: { x: 580, y: 590 } },
-      { id: '404-b', name: 'Physical Education 404', coordinates: { x: 640, y: 680 } },
-    ],
-  },
-  {
-    id: 'route-orange',
-    name: 'Orange Route',
-    type: 'female',
-    color: '#F59E0B',
-    image: orangeRoute,
-    description: 'Female bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '319-a', name: 'Northern District 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Cabin 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Orientation 309', coordinates: { x: 600, y: 280 } },
-      { id: '310', name: 'Start 310', coordinates: { x: 540, y: 390 } },
-      { id: '22-a', name: 'Building 22', coordinates: { x: 480, y: 570 } },
-      { id: '312-a', name: 'Tower Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '314', name: 'Clinic 314', coordinates: { x: 580, y: 590 } },
-      { id: '312-b', name: 'Tower Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-b', name: 'Building 22', coordinates: { x: 480, y: 570 } },
-      { id: '319-b', name: 'Northern District 319', coordinates: { x: 760, y: 312 } },
-    ],
-  },
-  {
-    id: 'route-brown',
-    name: 'Brown Route',
-    type: 'female',
-    color: '#A16207',
-    image: brownRoute,
-    description: 'Female bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '310-a', name: 'Start 310', coordinates: { x: 540, y: 390 } },
-      { id: '58', name: 'Cabin 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Orientation 309', coordinates: { x: 600, y: 280 } },
-      { id: '310-b', name: 'Start 310', coordinates: { x: 540, y: 390 } },
-    ],
-  },
-  {
-    id: 'route-red',
-    name: 'Red Route',
-    type: 'female',
-    color: '#EF4444',
-    image: redRoute,
-    description: 'Female bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '27', name: 'Clinic Parking 27', coordinates: { x: 590, y: 635 } },
-      { id: '900', name: 'Female Student Accommodation 900', coordinates: { x: 540, y: 730 } },
-      { id: '404', name: 'Physical Education 404', coordinates: { x: 640, y: 680 } },
-    ],
-  },
-  {
-    id: 'route-blue',
-    name: 'Blue Route',
-    type: 'male',
-    color: '#2563EB',
-    image: blueRoute,
-    description: 'Male bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '301-a', name: 'Field Station 301', coordinates: { x: 240, y: 690 } },
-      { id: '302-a', name: 'Cooling Stop 302', coordinates: { x: 300, y: 620 } },
-      { id: '303-a', name: 'Heritage Station 303', coordinates: { x: 370, y: 555 } },
-      { id: '304-a', name: 'North Station 304', coordinates: { x: 430, y: 500 } },
-      { id: '305-a', name: 'Reservoir Station 305', coordinates: { x: 500, y: 450 } },
-      { id: '306-a', name: 'Deanship Station 306', coordinates: { x: 570, y: 420 } },
-      { id: '311-a', name: 'Sports Center 311', coordinates: { x: 650, y: 460 } },
-      { id: '313', name: 'Petroleum Station 313', coordinates: { x: 720, y: 520 } },
-      { id: '311-b', name: 'Sports Center 311', coordinates: { x: 650, y: 460 } },
-      { id: '306-b', name: 'Deanship Station 306', coordinates: { x: 570, y: 420 } },
-      { id: '305-b', name: 'Reservoir Station 305', coordinates: { x: 500, y: 450 } },
-      { id: '304-b', name: 'North Station 304', coordinates: { x: 430, y: 500 } },
-      { id: '303-b', name: 'Heritage Station 303', coordinates: { x: 370, y: 555 } },
-      { id: '302-b', name: 'Cooling Stop 302', coordinates: { x: 300, y: 620 } },
-      { id: '301-b', name: 'Field Station 301', coordinates: { x: 240, y: 690 } },
-    ],
-  },
-  {
-    id: 'route-cyan',
-    name: 'Cyan Route',
-    type: 'male',
-    color: '#06B6D4',
-    image: cyanRoute,
-    description: 'Male bus route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '303-a', name: 'Heritage Station 303', coordinates: { x: 370, y: 555 } },
-      { id: '304', name: 'North Station 304', coordinates: { x: 430, y: 500 } },
-      { id: '308', name: 'Mall 308', coordinates: { x: 500, y: 540 } },
-      { id: '303-b', name: 'Heritage Station 303', coordinates: { x: 370, y: 555 } },
-    ],
-  },
-];
+const [busRoutes, setBusRoutes] = useState([]);
+useEffect(() => {
+  const fetchBusRoutes = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/bus-routes");
+      const data = await response.json();
+
+      setBusRoutes(data);
+      setSelectedRoutes(data.map((route) => route.routeId));
+    } catch (error) {
+      console.error("Failed to fetch bus routes:", error);
+    }
+  };
+
+  fetchBusRoutes();
+}, []);
 
 export function BusRoutesPage() {
   const [showRoutesPanel, setShowRoutesPanel] = useState(false);
@@ -168,7 +39,7 @@ export function BusRoutesPage() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map((route) => route.id));
+  const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map((route) => route.routeId));
   const [selectedRoute, setSelectedRoute] = useState(null);
 
   const toggleRoute = (routeId) => {
@@ -180,7 +51,7 @@ export function BusRoutesPage() {
   };
 
   const selectAllRoutes = () => {
-    setSelectedRoutes(busRoutes.map((route) => route.id));
+    setSelectedRoutes(busRoutes.map((route) => route.routeId));
   };
 
   const deselectAllRoutes = () => {
@@ -243,9 +114,9 @@ export function BusRoutesPage() {
                       .filter((route) => route.type === 'female')
                       .map((route) => (
                         <Card
-                          key={route.id}
+                          key={route.routeId}
                           className={`cursor-pointer transition-all ${
-                            selectedRoute?.id === route.id ? 'ring-2 ring-primary' : ''
+                            selectedRoute?.id === route.routeId ? 'ring-2 ring-primary' : ''
                           }`}
                           onClick={() => {
                             setSelectedRoute(route);
@@ -256,8 +127,8 @@ export function BusRoutesPage() {
                           <CardContent className="p-4">
                             <div className="flex items-start gap-3">
                               <Checkbox
-                                checked={selectedRoutes.includes(route.id)}
-                                onCheckedChange={() => toggleRoute(route.id)}
+                                checked={selectedRoutes.includes(route.routeId)}
+                                onCheckedChange={() => toggleRoute(route.routeId)}
                                 onClick={(e) => e.stopPropagation()}
                               />
 
@@ -306,9 +177,9 @@ export function BusRoutesPage() {
                       .filter((route) => route.type === 'male')
                       .map((route) => (
                         <Card
-                          key={route.id}
+                          key={route.routeId}
                           className={`cursor-pointer transition-all ${
-                            selectedRoute?.id === route.id ? 'ring-2 ring-primary' : ''
+                            selectedRoute?.id === route.routeId ? 'ring-2 ring-primary' : ''
                           }`}
                           onClick={() => {
                             setSelectedRoute(route);
@@ -319,8 +190,8 @@ export function BusRoutesPage() {
                           <CardContent className="p-4">
                             <div className="flex items-start gap-3">
                               <Checkbox
-                                checked={selectedRoutes.includes(route.id)}
-                                onCheckedChange={() => toggleRoute(route.id)}
+                                checked={selectedRoutes.includes(route.routeId)}
+                                onCheckedChange={() => toggleRoute(route.routeId)}
                                 onClick={(e) => e.stopPropagation()}
                               />
 
@@ -385,10 +256,10 @@ export function BusRoutesPage() {
 
           {/* Route Images */}
           {busRoutes
-            .filter((route) => selectedRoutes.includes(route.id))
+            .filter((route) => selectedRoutes.includes(route.routeId))
             .map((route) => (
               <img
-                key={route.id}
+                key={route.routeId}
                 src={route.image}
                 alt={route.name}
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"

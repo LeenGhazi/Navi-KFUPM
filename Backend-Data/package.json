@@ -10,9 +10,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "seed:bus-routes": "node database/seedBusRoutes.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

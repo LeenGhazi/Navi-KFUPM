@@ -2,10 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const busRouteRoutes = require("./routes/busRouteRoutes");
 
 dotenv.config();
 
-// connect to MongoDB
 connectDB();
 
 const app = express();
@@ -13,10 +13,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// test route
 app.get("/", (req, res) => {
   res.send("API is running");
 });
+app.use("/api/bus-routes", busRouteRoutes);
 
 const PORT = process.env.PORT || 5000;
 
