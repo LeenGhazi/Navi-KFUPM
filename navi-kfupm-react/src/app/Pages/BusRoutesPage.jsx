@@ -43,7 +43,6 @@ export function BusRoutesPage() {
   const isDark = theme === 'dark';
 
   const [selectedRoutes, setSelectedRoutes] = useState([]);
-  const [selectedRoute, setSelectedRoute] = useState(null);
 
   const toggleRoute = (routeId) => {
     setSelectedRoutes((prev) =>
@@ -119,7 +118,7 @@ export function BusRoutesPage() {
                         <Card
                           key={route.routeId}
                           className={`cursor-pointer transition-all ${
-                            selectedRoute?.id === route.routeId ? 'ring-2 ring-primary' : ''
+                            selectedRoute?.routeId === route.routeId ? 'ring-2 ring-primary' : ''
                           }`}
                           onClick={() => {
                             setSelectedRoute(route);
@@ -182,7 +181,7 @@ export function BusRoutesPage() {
                         <Card
                           key={route.routeId}
                           className={`cursor-pointer transition-all ${
-                            selectedRoute?.id === route.routeId ? 'ring-2 ring-primary' : ''
+                            selectedRoute?.routeId === route.routeId ? 'ring-2 ring-primary' : ''
                           }`}
                           onClick={() => {
                             setSelectedRoute(route);
