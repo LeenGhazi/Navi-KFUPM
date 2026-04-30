@@ -7,105 +7,159 @@ import { Separator } from '../Components/ui/separator';
 import { Checkbox } from '../Components/ui/checkbox';
 import { Bus, Clock, MapPin } from 'lucide-react';
 import mapImage from '../../assets/map.jpg';
-import purpleRoute from '../../assets/1-Purple Route.png';
-import pinkRoute from '../../assets/2-Pink Route.png';
-import orangeRoute from '../../assets/3-Orange Route.png';
-import redRoute from '../../assets/4-Red Route.png';
-import brownRoute from '../../assets/5-Brown Route.png';
+import purpleRoute from '../../assets/bus-routes/purple-route.png';
+import pinkRoute from '../../assets/bus-routes/pink-route.png';
+import orangeRoute from '../../assets/bus-routes/orange-route.png';
+import brownRoute from '../../assets/bus-routes/brown-route.png';
+import redRoute from '../../assets/bus-routes/red-route.png';
+import blueRoute from '../../assets/bus-routes/blue-route.png';
+import cyanRoute from '../../assets/bus-routes/cyan-route.png';
 import { useTheme } from '../../ThemeContext';
 
 const busRoutes = [
   {
     id: 'route-purple',
     name: 'Purple Route',
+    type: 'female',
     color: '#7E3AF2',
     image: purpleRoute,
-    description: 'Female student shuttle route',
+    description: 'Female bus route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '900', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
-      { id: '27', name: 'Clinic 27', coordinates: { x: 590, y: 635 } },
-      { id: '312-a', name: 'Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-a', name: 'Station 22', coordinates: { x: 480, y: 570 } },
-      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 540, y: 390 } },
-      { id: '312-b', name: 'Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-b', name: 'Station 22', coordinates: { x: 480, y: 570 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 580, y: 590 } },
-      { id: '900-end', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
-    ]
+      { code: '900', name: 'Female Student Accommodation' },
+      { code: '27', name: 'Clinic Parking' },
+      { code: '312', name: 'Tower Station' },
+      { code: '22', name: 'Building 22' },
+      { code: '319', name: 'Northern District' },
+      { code: '58', name: 'Cabin' },
+      { code: '309', name: 'Orientation' },
+      { code: '310', name: 'Start' },
+      { code: '312', name: 'Tower Station' },
+      { code: '22', name: 'Building 22' },
+      { code: '314', name: 'Clinic' },
+      { code: '900', name: 'Female Student Accommodation' },
+    ],
   },
   {
     id: 'route-pink',
     name: 'Pink Route',
+    type: 'female',
     color: '#EC4899',
     image: pinkRoute,
-    description: 'Female student shuttle route',
+    description: 'Female bus route',
     frequency: 'Shuttle basis',
-    operatingHours: '7:30 AM - 5:30 PM',
+    operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '312-a', name: 'Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-a', name: 'Station 22', coordinates: { x: 480, y: 570 } },
-      { id: '319', name: 'Station 319', coordinates: { x: 760, y: 312 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 540, y: 390 } },
-      { id: '312-b', name: 'Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '22-b', name: 'Station 22', coordinates: { x: 480, y: 570 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 580, y: 590 } },
-    ]
+      { code: '404', name: 'Physical Education' },
+      { code: '312', name: 'Tower Station' },
+      { code: '22', name: 'Building 22' },
+      { code: '319', name: 'Northern District' },
+      { code: '58', name: 'Cabin' },
+      { code: '309', name: 'Orientation' },
+      { code: '310', name: 'Start' },
+      { code: '312', name: 'Tower Station' },
+      { code: '22', name: 'Building 22' },
+      { code: '314', name: 'Clinic' },
+      { code: '404', name: 'Physical Education' },
+    ],
   },
   {
     id: 'route-orange',
     name: 'Orange Route',
+    type: 'female',
     color: '#F59E0B',
     image: orangeRoute,
-    description: 'Female student shuttle route',
+    description: 'Female bus route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '700', name: 'Station 700', coordinates: { x: 600, y: 300 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
-      { id: '310', name: 'Station 310', coordinates: { x: 540, y: 390 } },
-      { id: '22', name: 'Station 22', coordinates: { x: 480, y: 570 } },
-      { id: '312', name: 'Station 312', coordinates: { x: 360, y: 460 } },
-      { id: '314', name: 'Station 314', coordinates: { x: 580, y: 590 } },
-      { id: '700-end', name: 'Station 700', coordinates: { x: 760, y: 312 } },
-    ]
-  },
-  {
-    id: 'route-red',
-    name: 'Red Route',
-    color: '#EF4444',
-    image: redRoute,
-    description: 'Female student shuttle route',
-    frequency: 'Shuttle basis',
-    operatingHours: '6:30 AM - 5:30 PM',
-    stops: [
-      { id: '900-a', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
-      { id: '27', name: 'Clinic 27', coordinates: { x: 590, y: 635 } },
-      { id: '900-b', name: 'Parking 900', coordinates: { x: 540, y: 730 } },
-    ]
+      { code: '319', name: 'Northern District' },
+      { code: '58', name: 'Cabin' },
+      { code: '309', name: 'Orientation' },
+      { code: '310', name: 'Start' },
+      { code: '22', name: 'Building 22' },
+      { code: '312', name: 'Tower Station' },
+      { code: '314', name: 'Clinic' },
+      { code: '312', name: 'Tower Station' },
+      { code: '22', name: 'Building 22' },
+      { code: '319', name: 'Northern District' },
+    ],
   },
   {
     id: 'route-brown',
     name: 'Brown Route',
+    type: 'female',
     color: '#A16207',
     image: brownRoute,
-    description: 'Female student shuttle route',
+    description: 'Female bus route',
     frequency: 'Shuttle basis',
     operatingHours: '6:30 AM - 5:30 PM',
     stops: [
-      { id: '800', name: 'Station 800', coordinates: { x: 540, y: 390 } },
-      { id: '58', name: 'Station 58', coordinates: { x: 520, y: 225 } },
-      { id: '309', name: 'Station 309', coordinates: { x: 600, y: 280 } },
-      { id: '800-end', name: 'Station 800', coordinates: { x: 540, y: 390 } },
-    ]
-  }
+      { code: '310', name: 'Start' },
+      { code: '58', name: 'Cabin' },
+      { code: '309', name: 'Orientation' },
+      { code: '310', name: 'Start' },
+    ],
+  },
+  {
+    id: 'route-red',
+    name: 'Red Route',
+    type: 'female',
+    color: '#EF4444',
+    image: redRoute,
+    description: 'Female bus route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { code: '27', name: 'Clinic Parking' },
+      { code: '900', name: 'Female Student Accommodation' },
+      { code: '404', name: 'Physical Education' },
+    ],
+  },
+  {
+    id: 'route-blue',
+    name: 'Blue Route',
+    type: 'male',
+    color: '#2563EB',
+    image: blueRoute,
+    description: 'Male bus route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { code: '301', name: 'Field Station' },
+      { code: '302', name: 'Cooling Stop' },
+      { code: '303', name: 'Heritage Station' },
+      { code: '304', name: 'North Station' },
+      { code: '305', name: 'Reservoir Station' },
+      { code: '306', name: 'Deanship Station' },
+      { code: '311', name: 'Sports Center' },
+      { code: '313', name: 'Petroleum Station' },
+      { code: '311', name: 'Sports Center' },
+      { code: '306', name: 'Deanship Station' },
+      { code: '305', name: 'Reservoir Station' },
+      { code: '304', name: 'North Station' },
+      { code: '303', name: 'Heritage Station' },
+      { code: '302', name: 'Cooling Stop' },
+      { code: '301', name: 'Field Station' },
+    ],
+  },
+  {
+    id: 'route-cyan',
+    name: 'Cyan Route',
+    type: 'male',
+    color: '#06B6D4',
+    image: cyanRoute,
+    description: 'Male bus route',
+    frequency: 'Shuttle basis',
+    operatingHours: '6:30 AM - 5:30 PM',
+    stops: [
+      { code: '303', name: 'Heritage Station' },
+      { code: '304', name: 'North Station' },
+      { code: '308', name: 'Mall' },
+      { code: '303', name: 'Heritage Station' },
+    ],
+  },
 ];
 export function BusRoutesPage() {
     
