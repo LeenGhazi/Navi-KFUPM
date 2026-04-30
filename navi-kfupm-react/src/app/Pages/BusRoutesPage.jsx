@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
 import { Badge } from '../Components/ui/badge';
 import { Button } from '../Components/ui/button';
@@ -16,8 +16,11 @@ import blueRoute from '../../assets/bus-routes/Blue Route.png';
 import cyanRoute from '../../assets/bus-routes/Cyan Route.png';
 import { useTheme } from '../../ThemeContext';
 
-const [busRoutes, setBusRoutes] = useState([]);
-useEffect(() => {
+
+export function BusRoutesPage() {
+  const [busRoutes, setBusRoutes] = useState([]);
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  useEffect(() => {
   const fetchBusRoutes = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/bus-routes");
@@ -33,13 +36,13 @@ useEffect(() => {
   fetchBusRoutes();
 }, []);
 
-export function BusRoutesPage() {
+
   const [showRoutesPanel, setShowRoutesPanel] = useState(false);
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const [selectedRoutes, setSelectedRoutes] = useState(busRoutes.map((route) => route.routeId));
+  const [selectedRoutes, setSelectedRoutes] = useState([]);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
   const toggleRoute = (routeId) => {
