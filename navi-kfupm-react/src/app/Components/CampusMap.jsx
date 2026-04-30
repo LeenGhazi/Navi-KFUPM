@@ -56,8 +56,26 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
       const containerWidth = mapRef.current.clientWidth;
       const containerHeight = mapRef.current.clientHeight;
 
-      const scaledWidth = containerWidth * currentZoom;
-      const scaledHeight = containerHeight * currentZoom;
+      // Square map ratio: 1000 x 1000
+      const mapRatio = 1;
+      const containerRatio = containerWidth / containerHeight;
+
+      let baseWidth;
+      let baseHeight;
+
+      // This matches preserveAspectRatio="xMidYMid slice"
+      if (containerRatio > mapRatio) {
+        // Wide frame: map fills width, height becomes larger
+        baseWidth = containerWidth;
+        baseHeight = containerWidth / mapRatio;
+      } else {
+        // Tall frame: map fills height, width becomes larger
+        baseHeight = containerHeight;
+        baseWidth = containerHeight * mapRatio;
+      }
+
+      const scaledWidth = baseWidth * currentZoom;
+      const scaledHeight = baseHeight * currentZoom;
 
       const minX = containerWidth - scaledWidth;
       const minY = containerHeight - scaledHeight;
@@ -240,7 +258,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
       {/* Map Canvas */}
       <div ref={mapRef} className="w-full h-full cursor-grab active:cursor-grabbing relative" onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
         
-        <svg width="100%" height="100%" viewBox="0 0 1000 1000" className="absolute inset-0 z-10" style={{
+        <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 z-10" style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: '0 0',
         }} onClick={handleMapClick}>
