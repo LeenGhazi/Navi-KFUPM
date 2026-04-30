@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext.jsx';
-import { mockComplaints } from '../../mockData';
-import { mockLocations } from '../../mockData';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Badge } from '../Components/ui/badge';
 import { ScrollArea } from '../Components/ui/scroll-area';
@@ -17,7 +15,8 @@ import { toast } from 'sonner';
 // Maintenance staff can update the status of assigned complaints.
 export function ComplaintsPanel() {
     const { user } = useAuth();
-    const [complaints, setComplaints] = useState(mockComplaints);
+    const [complaints, setComplaints] = useState([]);
+    const [locations, setLocations] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [statusUpdate, setStatusUpdate] = useState('');
     const [notes, setNotes] = useState('');
@@ -27,6 +26,25 @@ export function ComplaintsPanel() {
         category: '',
         description: '',
     });
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const complaintsRes = await fetch("http://localhost:5000/api/complaints");
+          const locationsRes = await fetch("http://localhost:5000/api/buildings");
+
+          const complaintsData = await complaintsRes.json();
+          const locationsData = await locationsRes.json();
+
+          setComplaints(complaintsData);
+          setLocations(locationsData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          toast.error("Failed to load complaints data");
+        }
+      };
+
+      fetchData();
+      }, []);
     // filter complaints from the users
     const userComplaints = user
         ? complaints.filter((c) => c.userId === user.id)
@@ -66,31 +84,68 @@ export function ComplaintsPanel() {
     // this is for maintenance staff to update the status of a complaint and add notes. 
     // It updates the complaints state with the new status and notes, and shows a success toast message. 
     // After updating, it clears the selected complaint and notes.
-    const handleUpdateStatus = (complaintId, newStatus) => {
-        setComplaints((prev) => prev.map((c) => c.id === complaintId
-            ? { ...c, status: newStatus, notes, updatedAt: new Date().toISOString() }
-            : c));
-        toast.success('Complaint status updated');
+    const handleUpdateStatus = async (complaintId, newStatus) => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/complaints/${complaintId}/status`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: newStatus,
+            notes,
+          }),
+        });
+
+        const updatedComplaint = await response.json();
+
+        setComplaints((prev) =>
+          prev.map((c) => (c.id === complaintId ? updatedComplaint : c))
+        );
+
+        toast.success("Complaint status updated");
         setSelectedComplaint(null);
-        setNotes('');
+        setNotes("");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to update complaint status");
+      }
     };
     // assigning complaints to a staff member.
-    const handleAssignComplaint = (complaintId, staffId) => {
-        setComplaints((prev) => prev.map((c) => c.id === complaintId
-            ? { ...c, assignedTo: staffId, updatedAt: new Date().toISOString() }
-            : c));
-        toast.success('Complaint assigned successfully');
+    const handleAssignComplaint = async (complaintId, staffId) => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/complaints/${complaintId}/assign`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            assignedTo: staffId,
+          }),
+        });
+
+        const updatedComplaint = await response.json();
+
+        setComplaints((prev) =>
+          prev.map((c) => (c.id === complaintId ? updatedComplaint : c))
+        );
+
+        toast.success("Complaint assigned successfully");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to assign complaint");
+      }
     };
     // handle complaint submission by students. 
     // It validates the input fields, creates a new complaint object, 
     // and updates the complaints state.
-    const handleSubmitComplaint = (e) => {
+    const handleSubmitComplaint = async (e) => {
         e.preventDefault();
         if (!user || !newComplaint.locationId || !newComplaint.category || !newComplaint.description) {
             toast.error('Please fill in all fields');
             return;
         }
-        const location = mockLocations.find(l => l.id === newComplaint.locationId);
+        const location = locations.find(l => l.id === newComplaint.locationId);
         if (!location) {
             toast.error('Invalid location selected');
             return;
@@ -107,7 +162,16 @@ export function ComplaintsPanel() {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
-        setComplaints([complaint, ...complaints]);
+        const response = await fetch("http://localhost:5000/api/complaints", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(complaint),
+        });
+
+        const savedComplaint = await response.json();
+        setComplaints([savedComplaint, ...complaints]);
         setNewComplaint({ locationId: '', category: '', description: '' });
         setShowAddComplaint(false);
         toast.success('Complaint submitted successfully!');
@@ -122,9 +186,9 @@ export function ComplaintsPanel() {
             <CardTitle className="text-base">{complaint.locationName}</CardTitle>
             <CardDescription className="mt-1">{complaint.category}</CardDescription>
           </div>
-          <Badge variant={getStatusBadgeVariant(complaint.status)} className="flex items-center gap-1">
-            {getStatusIcon(complaint.status)}
-            {complaint.status.replace('_', ' ')}
+          <Badge variant={getStatusBadgeVariant(complaint.status || "pending")} className="flex items-center gap-1">
+            {getStatusIcon(complaint.status || "pending")}
+            {(complaint.status || "pending").replace("_", " ")}
           </Badge>
         </div>
       </CardHeader>
@@ -190,7 +254,7 @@ export function ComplaintsPanel() {
                 <div className="space-y-3">
                   {userComplaints.length === 0 ? (<p className="text-sm text-muted-foreground text-center py-8">
                       No complaints submitted yet
-                    </p>) : (userComplaints.map((complaint) => (<ComplaintCard key={complaint.id} complaint={complaint}/>)))}
+                    </p>) : (userComplaints.map((complaint) => (<ComplaintCard key={complaint._id || complaint.id} complaint={complaint}/>)))}
                 </div>
               </ScrollArea>
             </TabsContent>
@@ -200,7 +264,7 @@ export function ComplaintsPanel() {
                   <div className="space-y-3">
                     {assignedComplaints.length === 0 ? (<p className="text-sm text-muted-foreground text-center py-8">
                         No complaints assigned to you
-                      </p>) : (assignedComplaints.map((complaint) => (<ComplaintCard key={complaint.id} complaint={complaint}/>)))}
+                      </p>) : (assignedComplaints.map((complaint) => (<ComplaintCard key={complaint._id || complaint.id} complaint={complaint}/>)))}
                   </div>
                 </ScrollArea>
               </TabsContent>)}
@@ -208,7 +272,7 @@ export function ComplaintsPanel() {
             {user.role === 'admin' && (<TabsContent value="all">
                 <ScrollArea className="h-[400px] pr-4">
                   <div className="space-y-3">
-                    {allComplaintsForAdmin.map((complaint) => (<ComplaintCard key={complaint.id} complaint={complaint}/>))}
+                    {allComplaintsForAdmin.map((complaint) => (<ComplaintCard key={complaint._id || complaint.id} complaint={complaint}/>))}
                   </div>
                 </ScrollArea>
               </TabsContent>)}
@@ -263,7 +327,7 @@ export function ComplaintsPanel() {
                     <SelectValue placeholder="Select a building"/>
                   </SelectTrigger>
                   <SelectContent>
-                    {mockLocations.map((location) => (<SelectItem key={location.id} value={location.id}>
+                    {locations.map((location) => (<SelectItem key={location.id} value={location.id}>
                         {location.name}
                       </SelectItem>))}
                   </SelectContent>
