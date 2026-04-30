@@ -7,13 +7,13 @@ import { Separator } from '../Components/ui/separator';
 import { Checkbox } from '../Components/ui/checkbox';
 import { Bus, Clock, MapPin } from 'lucide-react';
 import mapImage from '../../assets/map.jpg';
-import purpleRoute from '../../assets/bus-routes/purple-route.png';
-import pinkRoute from '../../assets/bus-routes/pink-route.png';
-import orangeRoute from '../../assets/bus-routes/orange-route.png';
-import brownRoute from '../../assets/bus-routes/brown-route.png';
-import redRoute from '../../assets/bus-routes/red-route.png';
-import blueRoute from '../../assets/bus-routes/blue-route.png';
-import cyanRoute from '../../assets/bus-routes/cyan-route.png';
+import purpleRoute from '../../assets/bus-routes/Purple Route.png';
+import pinkRoute from '../../assets/bus-routes/Pink Route.png';
+import orangeRoute from '../../assets/bus-routes/Orange Route.png';
+import brownRoute from '../../assets/bus-routes/Brown Route.png';
+import redRoute from '../../assets/bus-routes/Red Route.png';
+import blueRoute from '../../assets/bus-routes/Blue Route.png';
+import cyanRoute from '../../assets/bus-routes/Cyan Route.png';
 import { useTheme } from '../../ThemeContext';
 
 const busRoutes = [
