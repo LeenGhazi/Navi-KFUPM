@@ -48,6 +48,27 @@ router.put("/:id/status", async (req, res) => {
   }
 });
 
+// ADMIN response
+router.put("/:id/response", async (req, res) => {
+  try {
+    const { adminResponse } = req.body;
+
+    const complaint = await Complaint.findOneAndUpdate(
+      { id: req.params.id },
+      {
+        adminResponse,
+        status: "In Progress",
+        updatedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    res.json(complaint);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 // ASSIGN complaint to maintenance staff
 router.put("/:id/assign", async (req, res) => {
   try {

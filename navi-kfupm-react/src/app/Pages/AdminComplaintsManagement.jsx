@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
@@ -9,48 +9,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '
 import { Badge } from '../Components/ui/badge';
 import { toast } from 'sonner';
 import { MessageSquare, Send, CheckCircle, Clock } from 'lucide-react';
-const mockComplaints = [
-    {
-        id: '1',
-        userId: 'user1',
-        userName: 'Ahmed Ali',
-        userEmail: 's202012345@kfupm.edu.sa',
-        type: 'Technical Issue',
-        title: 'Map not loading on mobile',
-        description: 'The campus map fails to load on my iPhone. I tried multiple times but it shows a blank screen.',
-        status: 'Submitted',
-        createdAt: '2024-03-01T10:30:00',
-    },
-    {
-        id: '2',
-        userId: 'user2',
-        userName: 'Mohammed Salem',
-        userEmail: 's202098765@kfupm.edu.sa',
-        type: 'Service Feedback',
-        title: 'Incorrect building hours',
-        description: 'The library hours shown on the map are outdated. It now closes at 10 PM, not 8 PM.',
-        status: 'In Progress',
-        createdAt: '2024-02-28T14:20:00',
-        adminResponse: 'Thank you for reporting this. We are verifying the new hours with the library management.',
-    },
-    {
-        id: '3',
-        userId: 'user3',
-        userName: 'Sara Hassan',
-        userEmail: 's202011111@kfupm.edu.sa',
-        type: 'Feature Request',
-        title: 'Add parking availability status',
-        description: 'It would be helpful to see real-time parking availability for each parking lot.',
-        status: 'Resolved',
-        createdAt: '2024-02-25T09:15:00',
-        adminResponse: 'Great suggestion! We have forwarded this to the technical team for consideration in the next update.',
-    },
-];
 
 export function AdminComplaintsManagement() {{/* AdminComplaintsManagement component allows administrators to view, filter, search, 
   and respond to user complaints. It uses mock data for complaints . */}
     const { user } = useAuth();
-    const [complaints, setComplaints] = useState(mockComplaints);
+    const [complaints, setComplaints] = useState([]);
+
+    useEffect(() => {
+      const fetchComplaints = async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/complaints");
+          const data = await res.json();
+          setComplaints(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load complaints");
+        }
+      };
+
+      fetchComplaints();
+    }, []);
+
     const [filterStatus, setFilterStatus] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedComplaint, setSelectedComplaint] = useState(null);
@@ -67,20 +46,50 @@ export function AdminComplaintsManagement() {{/* AdminComplaintsManagement compo
     });
 
 {/* Handle updating the status of a complaint. This function updates the status of the specified complaint in the state and shows a success toast message. */  }
-    const handleUpdateStatus = (complaintId, newStatus) => {
-        setComplaints(complaints.map((c) => c.id === complaintId ? { ...c, status: newStatus } : c));
-        toast.success(`Complaint status updated to ${newStatus}`);
-    };
+  const handleUpdateStatus = async (complaintId, newStatus) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/complaints/${complaintId}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const updatedComplaint = await res.json();
+
+      setComplaints((prev) =>
+        prev.map((c) => (c.id === complaintId ? updatedComplaint : c))
+      );
+
+      toast.success(`Complaint status updated to ${newStatus}`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update status");
+    }
+  };
 
 {/* Handle submitting a response to a complaint. This function updates the adminResponse and status of the specified complaint in the state, clears the response text, and shows a success toast message. */  }
-    const handleSubmitResponse = (complaintId) => {
-        
-        setComplaints(complaints.map((c) => c.id === complaintId
-            ? { ...c, adminResponse: responseText, status: 'In Progress' }
-            : c));
-        setResponseText('');
-        toast.success('Response sent to user successfully');
+    const handleSubmitResponse = async (complaintId) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/complaints/${complaintId}/response`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ adminResponse: responseText }),
+        });
+
+        const updatedComplaint = await res.json();
+
+        setComplaints((prev) =>
+          prev.map((c) => (c.id === complaintId ? updatedComplaint : c))
+        );
+
+        setResponseText("");
+        toast.success("Response sent to user successfully");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to send response");
+      }
     };
+
 {/* Get the icon for a given status. */  }
     const getStatusIcon = (status) => {
         switch (status) {
@@ -160,10 +169,10 @@ export function AdminComplaintsManagement() {{/* AdminComplaintsManagement compo
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-lg">{complaint.title}</CardTitle>
+                    <CardTitle className="text-lg">{complaint.title || complaint.locationName}</CardTitle>
 
                     <CardDescription className="mt-1">
-                      {complaint.type} • By {complaint.userName} ({complaint.userEmail})
+                      {complaint.type || complaint.category} • By {complaint.userName} ({complaint.userEmail || "No email"})
                     </CardDescription>
 
                     <CardDescription className="text-xs">
