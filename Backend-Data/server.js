@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const busRouteRoutes = require("./routes/busRouteRoutes");
 
 dotenv.config();
 
@@ -16,7 +15,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API is running");
 });
-app.use("/api/bus-routes", busRouteRoutes);
+app.use("/api/bus-routes", require("./routes/busRouteRoutes"));
 app.use("/api/complaints", require("./routes/complaintRoutes"));
 app.use("/api/buildings", require("./routes/buildingRoutes"));
 app.use("/api/about-page", require("./routes/aboutPageRoutes"));
