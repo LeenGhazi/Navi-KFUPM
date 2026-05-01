@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { mockComments, mockStories } from '../../mockData';
+import { mockComments } from '../../mockData';
 import { useAuth } from '../../AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, } from './ui/dialog';
 import { Badge } from './ui/badge';
@@ -18,7 +18,11 @@ import { MapPin, Clock, Users, Star, MessageSquare, Heart, Printer, FlaskConical
 // For maintenance staff: to edit building details and manage comments.
 export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitComment, onSubmitComplaint, onStartMoveBuilding, setLocations,onLocationUpdated,}) {
     const { user } = useAuth();
-    const [stories, setStories] = useState(mockStories);
+
+    const currentUserId = user?.id || user?._id || user?.userId || "1";
+    const currentUserName = user?.name || user?.userName || "Student User";
+    
+    const [stories, setStories] = useState([]);
     const [comments, setComments] = useState(mockComments);
     const [newStoryTitle, setNewStoryTitle] = useState('');
     const [newStoryText, setNewStoryText] = useState('');
@@ -28,6 +32,17 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
     const [editCommentRating, setEditCommentRating] = useState(5);
+
+    // Fetch comments for the location when the component mounts or when the location changes.
+    useEffect(() => {
+      if (!location) return;
+
+      fetch(`http://localhost:5000/api/building-comments/${location.id}`)
+        .then(res => res.json())
+        .then(data => setStories(data))
+        .catch(err => console.error(err));
+    }, [location]);
+
     // the edit form is activated when the location changes to load the new location data into the form
     useEffect(() => {
         if (location) {
@@ -47,7 +62,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         return !c.hidden;
     });
     // storaies relaetd to a certain location are filtered based on location id
-    const locationStories = stories.filter((s) => s.locationId === location.id);
+    const locationStories = stories;
     const avgRating = locationComments.length > 0
         ? locationComments.reduce((sum, c) => sum + c.rating, 0) / locationComments.length
         : 0;
@@ -225,44 +240,78 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         }));
     };
     // like or unlike a story (only students can do this)
-    const handleLikeStory = (storyId) => {
-        if (!user || user.role !== 'student') {
-            if (user && user.role !== 'student') {
-                toast.error("Only students can like stories");
-            }
-            return;
-        }
-        setStories(prevStories => prevStories.map(story => {
-            if (story.id === storyId) {
-                const hasLiked = story.likes.includes(user.id);
-                return {
-                    ...story,
-                    likes: hasLiked
-                        ? story.likes.filter(id => id !== user.id)
-                        : [...story.likes, user.id]
-                };
-            }
-            return story;
-        }));
+    const handleLikeStory = async (storyId) => {
+      if (!user || user.role !== 'student') {
+        toast.error("Only students can like stories");
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/building-comments/${storyId}/like`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: currentUserId,
+            }),
+          }
+        );
+
+        const updatedStory = await res.json();
+
+        setStories(prev =>
+          prev.map(s => (s._id === storyId ? updatedStory : s))
+        );
+
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to like story");
+      }
     };
     // add a new story related to the location
-    const handleAddStory = () => {
-        if (!user || !newStoryTitle.trim() || !newStoryText.trim())
-            return;
-        const newStory = {
-            id: `story${Date.now()}`,
-            userId: user.id,
-            userName: user.name,
-            locationId: location.id,
-            title: newStoryTitle,
-            text: newStoryText,
-            likes: [],
-            createdAt: new Date().toISOString(),
-        };
-        setStories([newStory, ...stories]);
+    const handleAddStory = async () => {
+      if (!user || !newStoryTitle.trim() || !newStoryText.trim()) return;
+
+      const newStory = {
+        userId: currentUserId,
+        userName: currentUserName,
+        locationId: location.id,
+        title: newStoryTitle,
+        text: newStoryText,
+        likes: [],
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/api/building-comments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newStory),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Backend error:", errorData);
+          toast.error("Backend rejected the story");
+          return;
+        }
+
+        const savedStory = await res.json();
+
+        setStories(prev => [savedStory, ...prev]);
         setNewStoryTitle('');
         setNewStoryText('');
         setShowAddStory(false);
+
+        toast.success("Story posted successfully!");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to post story");
+      }
     };
     const displayLocation = (isEditingBuilding ? editForm : location);
     const categoryBadge = getCategoryBadge(displayLocation.category);
@@ -498,7 +547,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
               <div className="space-y-3">
                 {locationStories.length === 0 ? (<p className="text-sm text-muted-foreground text-center py-4">
                     No stories yet. Be the first to share your memory!
-                  </p>) : (locationStories.map((story) => (<Card key={story.id} className="p-4">
+                  </p>) : (locationStories.map((story) => (<Card key={story._id} className="p-4">
                       <div className="space-y-2">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -507,15 +556,15 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
                               by {story.userName} • {new Date(story.createdAt).toLocaleDateString()}
                             </p>
                           </div>
-                          {user?.role === 'maintenance_staff' && (<Button size="icon" variant="ghost" onClick={() => handleDeleteStory(story.id)} className="h-7 w-7">
+                          {user?.role === 'maintenance_staff' && (<Button size="icon" variant="ghost" onClick={() => handleDeleteStory(story._id)} className="h-7 w-7">
                               <Trash2 className="w-3.5 h-3.5 text-red-600"/>
                             </Button>)}
                         </div>
                         <p className="text-sm">{story.text}</p>
                         <div className="flex items-center gap-2 pt-2">
-                          <Button size="sm" variant={user?.role === 'student' && story.likes.includes(user.id) ? 'default' : 'ghost'} onClick={() => handleLikeStory(story.id)} disabled={!user || user.role !== 'student'} className="gap-1">
-                            <Heart className={`w-4 h-4 ${user?.role === 'student' && story.likes.includes(user.id) ? 'fill-current' : ''}`}/>
-                            {story.likes.length}
+                          <Button size="sm" variant={user?.role === 'student' && story.likes?.includes(currentUserId) ? 'default' : 'ghost'} onClick={() => handleLikeStory(story._id)} disabled={!user || user.role !== 'student'} className="gap-1">
+                            <Heart className={`w-4 h-4 ${user?.role === 'student' && story.likes?.includes(currentUserId) ? 'fill-current' : ''}`}/>
+                            {story.likes?.length || 0}
                           </Button>
                         </div>
                       </div>
