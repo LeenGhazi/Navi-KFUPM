@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/demo", async (req, res) => {
   try {
     const users = await User.find({
-      role: { $in: ["kfupm_admin", "maintenance_team", "regular_user"] },
+      role: { $in: ["admin", "maintenance_staff", "student"] },
     }).select("name email role");
 
     res.status(200).json(users);
@@ -42,7 +42,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password,
-      role: "regular_user",
+      role: "student",
     });
 
     res.status(201).json({
@@ -70,9 +70,9 @@ router.post("/login", async (req, res) => {
     }
 
     const expectedRoleMap = {
-      user: "regular_user",
-      admin: "kfupm_admin",
-      technical_admin: "maintenance_team",
+      user: "student",
+      admin: "admin",
+      technical_admin: "maintenance_staff",
     };
 
     const expectedRole = expectedRoleMap[loginType];

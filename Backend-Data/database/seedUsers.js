@@ -9,19 +9,19 @@ const users = [
     name: "Admin User",
     email: "admin@kfupm.edu.sa",
     password: "123456",
-    role: "kfupm_admin",
+    role: "admin",
   },
   {
     name: "Maintenance Team",
     email: "maintenance@kfupm.edu.sa",
     password: "123456",
-    role: "maintenance_team",
+    role: "maintenance_staff",
   },
   {
     name: "Regular User",
     email: "user@kfupm.edu.sa",
     password: "123456",
-    role: "regular_user",
+    role: "student",
   },
 ];
 
