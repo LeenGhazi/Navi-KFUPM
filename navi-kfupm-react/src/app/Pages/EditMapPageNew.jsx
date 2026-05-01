@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
-import { mockLocations } from '../../mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
 import { Input } from '../Components/ui/input';
@@ -14,7 +13,24 @@ import { MapPin, Clock, Users, Search, Edit, Save, X, Plus, Trash2, } from 'luci
 import { toast } from 'sonner';
 export function EditMapPage() {
     const { user } = useAuth();
-    const [locations, setLocations] = useState(mockLocations);
+    const [locations, setLocations] = useState([]);
+
+    useEffect(() => {
+      const fetchBuildings = async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/buildings");
+          const data = await res.json();
+          setLocations(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load buildings");
+        }
+      };
+
+      fetchBuildings();
+    }, []);
+
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -37,13 +53,34 @@ export function EditMapPage() {
         }
         setIsEditing(false);
     };
-    const handleSaveChanges = () => {
-        if (!selectedLocation || !editForm.id)
-            return;
-        setLocations(prev => prev.map(loc => (loc.id === editForm.id ? { ...loc, ...editForm } : loc)));
-        setSelectedLocation(editForm);
-        toast.success('Building information updated successfully!');
+    const handleSaveChanges = async () => {
+      if (!selectedLocation || !editForm.id) return;
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/buildings/${editForm.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editForm),
+        });
+
+        const updatedBuilding = await res.json();
+
+        setLocations((prev) =>
+          prev.map((loc) => (loc.id === updatedBuilding.id ? updatedBuilding : loc))
+        );
+
+        setSelectedLocation(updatedBuilding);
+        setEditForm(updatedBuilding);
+        toast.success("Building information updated successfully!");
         setIsEditing(false);
+
+        toast.success("Building updated successfully");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to update building information");
+      }
     };
     const handleUpdateField = (field, value) => {
         setEditForm(prev => ({ ...prev, [field]: value }));

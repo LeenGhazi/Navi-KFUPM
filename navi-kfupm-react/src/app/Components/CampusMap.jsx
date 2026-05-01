@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { mockLocations, mockBusRoutes, mockMainPaths } from '../../mockData';
+import React, { useEffect, useState, useRef } from 'react';
+import { mockBusRoutes, mockMainPaths } from '../../mockData';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
@@ -18,7 +18,24 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const [hoveredLocation, setHoveredLocation] = useState(null);
     const [userLocation] = useState({ x: 400, y: 350 });
-    const [locations, setLocations] = useState(mockLocations);
+    const [locations, setLocations] = useState([]);
+
+    useEffect(() => {
+      const fetchLocations = async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/buildings");
+          const data = await res.json();
+          setLocations(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load map locations");
+        }
+      };
+
+      fetchLocations();
+    }, []);
+
+
     const mapRef = useRef(null);
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -111,12 +128,31 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             const actualX = (svgP.x - pan.x) / zoom;
             const actualY = (svgP.y - pan.y) / zoom;
             // Update building location
-            setLocations(prevLocations => prevLocations.map(loc => loc.id === movingBuildingId
-                ? { ...loc, coordinates: { x: actualX, y: actualY } }
-                : loc));
+            const updatedLocation = {
+              ...locations.find(loc => loc.id === movingBuildingId),
+              coordinates: { x: actualX, y: actualY }
+            };
+
+            fetch(`http://localhost:5000/api/buildings/${movingBuildingId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedLocation),
+            })
+              .then(res => res.json())
+              .then(updated => {
+                setLocations(prev =>
+                  prev.map(loc => loc.id === updated.id ? updated : loc)
+                );
+                toast.success(`Building "${updated.name}" moved successfully!`);
+              })
+              .catch(err => {
+                console.error(err);
+                toast.error("Failed to move building");
+              });
             // Show success message
-            const movedBuilding = locations.find(loc => loc.id === movingBuildingId);
-            toast.success(`Building "${movedBuilding?.name}" moved successfully!`);
+
             // Exit move mode
             if (onBuildingMoved) {
                 onBuildingMoved();
@@ -191,8 +227,8 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     // show the route from one location to the other
     const calculatedRoutes = routeFrom && routeTo
         ? (() => {
-            const fromLoc = mockLocations.find((l) => l.id === routeFrom);
-            const toLoc = mockLocations.find((l) => l.id === routeTo);
+            const fromLoc = locations.find((l) => l.id === routeFrom);
+            const toLoc = locations.find((l) => l.id === routeTo);
             if (fromLoc && toLoc) {
                 return generateRoutes(fromLoc.coordinates, toLoc.coordinates);
             }
@@ -318,6 +354,8 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             const shape = location.buildingShape || { width: 50, height: 40 };
             const color = getCategoryColor(location.category);
             // Calculate building position (centered on coordinates)
+            if (!location.coordinates) return null;
+
             const buildingX = location.coordinates.x - shape.width / 2;
             const buildingY = location.coordinates.y - shape.height / 2;
             return (<g key={location.id} onClick={(e) => {

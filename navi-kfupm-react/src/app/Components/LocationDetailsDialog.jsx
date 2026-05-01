@@ -16,7 +16,7 @@ import { MapPin, Clock, Users, Star, MessageSquare, Heart, Printer, FlaskConical
 //  including its description, facilities, user comments, and stories. 
 // It also allows users to add comments and stories 
 // For maintenance staff: to edit building details and manage comments.
-export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitComment, onSubmitComplaint, onStartMoveBuilding, }) {
+export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitComment, onSubmitComplaint, onStartMoveBuilding, setLocations,onLocationUpdated,}) {
     const { user } = useAuth();
     const [stories, setStories] = useState(mockStories);
     const [comments, setComments] = useState(mockComments);
@@ -125,10 +125,40 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         setEditForm({ ...location });
     };
     // save building info changes
-    const handleSaveBuildingChanges = () => {
-        toast.success('Building information updated successfully!');
-        setIsEditingBuilding(false);
-        // when the backend is implemented, this would update the location data
+    const handleSaveBuildingChanges = async () => {
+        try {
+            const res = await fetch(
+                `http://localhost:5000/api/buildings/${editForm.id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(editForm),
+                }
+            );
+
+            const updatedBuilding = await res.json();
+
+            console.log("Updated from backend:", updatedBuilding);
+            
+            if (setLocations) {
+                setLocations(prev =>
+                    prev.map(loc =>
+                        loc.id === updatedBuilding.id ? updatedBuilding : loc
+                    )
+                );
+
+                onLocationUpdated(updatedBuilding);
+                setEditForm(updatedBuilding);
+            }
+            toast.success("Building updated successfully!");
+            setIsEditingBuilding(false);
+
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to update building");
+        }
     };
     // update building info
     const handleUpdateBuildingField = (field, value) => {

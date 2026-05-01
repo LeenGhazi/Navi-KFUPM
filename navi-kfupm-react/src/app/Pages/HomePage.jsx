@@ -57,8 +57,7 @@ export function HomePage() {
         setSelectedLocationForAction(locationId);
         setShowComplaintDialog(true);
     };
-    
-    
+    const [locations, setLocations] = useState([]);
     const [showSidebar, setShowSidebar] = useState(true);
     return (<div className="flex h-[calc(100vh-4rem)]">
       {/* Left Sidebar */}
@@ -125,7 +124,7 @@ export function HomePage() {
       </div>
 
       {/* Dialogs */}
-      {selectedLocation && (<LocationDetailsDialog location={selectedLocation} open={showLocationDetails} onOpenChange={setShowLocationDetails} onSubmitComment={handleSubmitComment} onSubmitComplaint={handleSubmitComplaint} />)}
+      {selectedLocation && (<LocationDetailsDialog location={selectedLocation} open={showLocationDetails} onOpenChange={setShowLocationDetails} onSubmitComment={handleSubmitComment} onSubmitComplaint={handleSubmitComplaint} setLocations={setLocations} onLocationUpdated={setSelectedLocation}/>)}
 
 
       {selectedLocationForAction && (<>
