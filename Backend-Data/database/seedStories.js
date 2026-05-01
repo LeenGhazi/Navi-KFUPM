@@ -34,3 +34,22 @@ const stories = [
   },
 ];
 
+const seedStories = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
+
+    await Story.deleteMany();
+    console.log("Old stories deleted");
+
+    await Story.insertMany(stories);
+    console.log("Stories seeded successfully!");
+
+    mongoose.connection.close();
+  } catch (error) {
+    console.error("Error seeding stories:", error);
+    mongoose.connection.close();
+  }
+};
+
+seedStories();
