@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
@@ -10,31 +10,10 @@ import { Badge } from '../Components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Components/ui/tabs';
 import { toast } from 'sonner';
 import { FileText, Send, Clock, CheckCircle, XCircle, MessageSquare } from 'lucide-react';
-const mockRequests = [
-    {
-        id: '1',
-        type: 'Building Service Update',
-        title: 'Update Library Operating Hours',
-        description: 'Please update the library hours to 24/7 during exam week',
-        status: 'In Progress',
-        createdAt: '2024-02-28',
-        adminResponse: 'Technical team is reviewing the request. Expected completion by March 5th.',
-        adminName: 'Admin User',
-    },
-    {
-        id: '2',
-        type: 'Announcement Add',
-        title: 'Add Spring Registration Announcement',
-        description: 'New announcement for spring semester registration dates',
-        status: 'Completed',
-        createdAt: '2024-02-25',
-        adminResponse: 'Announcement has been added to the system successfully.',
-        adminName: 'Admin User',
-    },
-];
+
 export function AdminRequestsToTechPage() {
     const { user } = useAuth();
-    const [requests, setRequests] = useState(mockRequests);
+    const [requests, setRequests] = useState([]);
     const [activeTab, setActiveTab] = useState('submit');
     const [requestType, setRequestType] = useState('');
     const [customRequestType, setCustomRequestType] = useState('');
@@ -56,29 +35,52 @@ export function AdminRequestsToTechPage() {
         'Discuss/Resolve a Complaint',
         'Others (Please Specify)',
     ];
-    { /* Redirect users who are not maintenance staff back to the home page. */  }
 
-    const handleSubmitRequest = () => {
-        if (!requestType || !title.trim() || !description.trim()) {
-            toast.error('Please fill in all required fields');
-            return;
-        }
-        // Validate custom request type when "Others" is selected
-        if (requestType === 'Others (Please Specify)' && !customRequestType.trim()) {
-            toast.error('Please specify your custom request type');
-            return;
-        }
-        {/* Create a new request object with the submitted data and add it to the list of requests. Reset the form fields and show a success message. */  }
-        const newRequest = {
-            id: `req${Date.now()}`,
-            type: requestType === 'Others (Please Specify)' ? customRequestType : requestType,
-            title,
-            description,
-            status: 'Pending',
-            createdAt: new Date().toISOString().split('T')[0],
-            adminName: user?.name || 'Admin',
-        };
-        setRequests([newRequest, ...requests]);
+    useEffect(() => {
+      fetch("http://localhost:5000/api/tech-requests")
+        .then(res => res.json())
+        .then(data => setRequests(data))
+        .catch(err => console.error(err));
+    }, []);
+
+    { /* Redirect users who are not maintenance staff back to the home page. */  }
+    const handleSubmitRequest = async () => {
+      if (!requestType || !title.trim() || !description.trim()) {
+        toast.error('Please fill in all required fields');
+        return;
+      }
+
+      if (requestType === 'Others (Please Specify)' && !customRequestType.trim()) {
+        toast.error('Please specify your custom request type');
+        return;
+      }
+
+      const newRequest = {
+        requestType: requestType === 'Others (Please Specify)' ? customRequestType : requestType,
+        title,
+        description,
+        submittedBy: user?.name || 'Admin User',
+        affectedServices,
+        category,
+        location,
+        workingHours,
+        contacts,
+        attachments,
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/api/tech-requests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newRequest),
+        });
+
+        const savedRequest = await res.json();
+
+        setRequests([savedRequest, ...requests]);
+
         setRequestType('');
         setCustomRequestType('');
         setTitle('');
@@ -89,9 +91,15 @@ export function AdminRequestsToTechPage() {
         setWorkingHours('');
         setContacts('');
         setAttachments('');
+
         toast.success('Request submitted successfully! Technical team will review it soon.');
         setActiveTab('my-requests');
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to submit request');
+      }
     };
+
     {/* Handle adding a follow-up comment to a request. */  }
     const handleAddComment = (requestId) => {
         toast.success('Follow-up comment added. Technical team has been notified.');
@@ -238,13 +246,13 @@ export function AdminRequestsToTechPage() {
                 </CardContent>
 
               </Card>) : 
-              (requests.map((request) => (<Card key={request.id}>
+              (requests.map((request) => (<Card key={request._id}>
                   <CardHeader>{/* Header section of each request card. It includes the request title, type, submission date, and a badge indicating the current status of the request. */  }
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <CardTitle className="text-lg">{request.title}</CardTitle>
                         <CardDescription className="mt-1">
-                          {request.type} • Submitted on {new Date(request.createdAt).toLocaleDateString()}
+                          {request.requestType} • Submitted on {new Date(request.createdAt).toLocaleDateString()}
                         </CardDescription>
                       </div>
                       <Badge className={`gap-1 ${getStatusColor(request.status)}`}>
@@ -263,18 +271,18 @@ export function AdminRequestsToTechPage() {
                     </div>
                     {/* If there is a response from the technical team, show it in a highlighted section. */  }
 
-                    {request.adminResponse && (<div className="bg-muted/50 p-4 rounded-lg">
+                    {request.techResponse && (<div className="bg-muted/50 p-4 rounded-lg">
                         <Label className="text-sm font-semibold flex items-center gap-2 mb-2">
                           <MessageSquare className="w-4 h-4"/>
                           Technical Team Response
                         </Label>
-                        <p className="text-sm">{request.adminResponse}</p>
+                        <p className="text-sm">{request.techResponse}</p>
                       </div>)}
                       {/* If the request is still open (not completed or rejected), show an input field to add a follow-up comment and a button to submit it. */  }
 
                     {request.status !== 'Completed' && request.status !== 'Rejected' && (<div className="flex items-center gap-2 pt-2">
                         <Input placeholder="Add a follow-up comment or clarification..."/>
-                        <Button size="sm" onClick={() => handleAddComment(request.id)}>
+                        <Button size="sm" onClick={() => handleAddComment(request._id)}>
                           <Send className="w-4 h-4"/>
                         </Button>
                       </div>)}

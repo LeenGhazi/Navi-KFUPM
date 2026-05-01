@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
@@ -11,57 +11,26 @@ import { Label } from '../Components/ui/label';
 import { Textarea } from '../Components/ui/textarea';
 import { FileText, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
-const mockRequests = [
-    {
-        id: 'req1',
-        title: 'Update Library Operating Hours',
-        description: 'The Central Library now operates 24/7 during exam season. Please update the operating hours.',
-        requestType: 'Building Update',
-        submittedBy: 'Dr. Ahmed Al-Mansour',
-        submittedDate: '2026-02-25',
-        status: 'Pending',
-    },
-    {
-        id: 'req2',
-        title: 'Add New Cafeteria Location',
-        description: 'A new cafeteria has opened in Building 23. Please add it to the map with services and operating hours.',
-        requestType: 'Map Data',
-        submittedBy: 'Facilities Management',
-        submittedDate: '2026-02-24',
-        status: 'In Progress',
-        notes: 'Gathering cafeteria details',
-    },
-    {
-        id: 'req3',
-        title: 'Update Prayer Room Locations',
-        description: 'Two new prayer rooms have been added in the Engineering Complex. Update the map accordingly.',
-        requestType: 'Building Update',
-        submittedBy: 'Student Affairs Office',
-        submittedDate: '2026-02-23',
-        status: 'Completed',
-        notes: 'Successfully added both prayer rooms',
-    },
-    {
-        id: 'req4',
-        title: 'Announcement: Campus Maintenance',
-        description: 'Post announcement about scheduled maintenance work on the main water line affecting Buildings 10-15.',
-        requestType: 'Announcement',
-        submittedBy: 'Maintenance Department',
-        submittedDate: '2026-02-20',
-        status: 'Completed',
-    },
-];
+
 
 {/* AdminRequestsPage component allows maintenance staff to view and manage update requests submitted by KFUPM administrators. */  }
 export function AdminRequestsPage() {
     const { user } = useAuth();
-    const [requests, setRequests] = useState(mockRequests);
+    const [requests, setRequests] = useState([]);
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [showDetailsDialog, setShowDetailsDialog] = useState(false);
     const [notes, setNotes] = useState('');
     if (!user || user.role !== 'maintenance_staff') {
         return <Navigate to="/" replace/>;
     }
+
+    useEffect(() => {
+      fetch("http://localhost:5000/api/tech-requests")
+        .then(res => res.json())
+        .then(data => setRequests(data))
+        .catch(err => console.error(err));
+    }, []);
+
     {/* Function to handle viewing the details of a specific request.  */  }
     const handleViewDetails = (request) => {
         setSelectedRequest(request);
@@ -69,13 +38,36 @@ export function AdminRequestsPage() {
         setShowDetailsDialog(true);
     };
     {/* Function to handle changing the status of a request. It updates the status in the local state and shows a success toast notification. */  }
-    const handleStatusChange = (requestId, newStatus) => {
-        setRequests(prev => prev.map(req => req.id === requestId
-            ? { ...req, status: newStatus, notes: newStatus !== 'Pending' ? notes : req.notes }
-            : req));
+    const handleStatusChange = async (requestId, newStatus) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/tech-requests/${requestId}/status`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: newStatus,
+            notes,
+          }),
+        });
+
+        const updatedRequest = await res.json();
+
+        setRequests(prev =>
+          prev.map(req =>
+            req._id === requestId ? updatedRequest : req
+          )
+        );
+
+        setSelectedRequest(updatedRequest);
         toast.success(`Request status updated to ${newStatus}`);
         setShowDetailsDialog(false);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update request status");
+      }
     };
+    
     {/* Function to get the badge variant based on the request status. */  }
     const getStatusBadge =(status) => {
         const variants = {
@@ -125,7 +117,7 @@ export function AdminRequestsPage() {
         <p className="text-sm mb-3 line-clamp-2">{request.description}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>Submitted by: {request.submittedBy}</span>
-          <span>{new Date(request.submittedDate).toLocaleDateString()}</span>
+          <span>{new Date(request.createdAt).toLocaleDateString()}</span>
         </div>
       </CardContent>
     </Card>);
@@ -155,19 +147,19 @@ export function AdminRequestsPage() {
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">{/* Content for the "All Requests" tab. It maps over all requests and renders a RequestCard for each one. */  }
-          {requests.map(request => (<RequestCard key={request.id} request={request}/>))}
+          {requests.map(request => (<RequestCard key={request._id} request={request}/>))}
         </TabsContent>
 
         <TabsContent value="pending" className="space-y-4">
-          {filterRequestsByStatus('Pending').map(request => (<RequestCard key={request.id} request={request}/>))}
+          {filterRequestsByStatus('Pending').map(request => (<RequestCard key={request._id} request={request}/>))}
         </TabsContent>
 
         <TabsContent value="inProgress" className="space-y-4">
-          {filterRequestsByStatus('In Progress').map(request => (<RequestCard key={request.id} request={request}/>))}
+          {filterRequestsByStatus('In Progress').map(request => (<RequestCard key={request._id} request={request}/>))}
         </TabsContent>
 
         <TabsContent value="completed" className="space-y-4">
-          {filterRequestsByStatus('Completed').map(request => (<RequestCard key={request.id} request={request}/>))}
+          {filterRequestsByStatus('Completed').map(request => (<RequestCard key={request._id} request={request}/>))}
         </TabsContent>
       </Tabs>
 
@@ -206,7 +198,7 @@ export function AdminRequestsPage() {
                   <div>
                     <Label>Submitted Date</Label>
                     <p className="text-sm mt-1">
-                      {new Date(selectedRequest.submittedDate).toLocaleDateString()}
+                      {new Date(selectedRequest.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -229,14 +221,14 @@ export function AdminRequestsPage() {
                 <div className="space-y-2 pt-4">
                   <Label>Update Status</Label>
                   <div className="grid grid-cols-2 gap-2">{/* Buttons to update the status of the request. */  }
-                    {selectedRequest.status === 'Pending' && (<Button onClick={() => handleStatusChange(selectedRequest.id, 'In Progress')} className="w-full">
+                    {selectedRequest.status === 'Pending' && (<Button onClick={() => handleStatusChange(selectedRequest._id, 'In Progress')} className="w-full">
                         Start Processing
                       </Button>)}
                     {(selectedRequest.status === 'Pending' || selectedRequest.status === 'In Progress') && (<>
-                        <Button onClick={() => handleStatusChange(selectedRequest.id, 'Completed')} className="w-full bg-green-600 hover:bg-green-700">
+                        <Button onClick={() => handleStatusChange(selectedRequest._id, 'Completed')} className="w-full bg-green-600 hover:bg-green-700">
                           Mark as Completed
                         </Button>
-                        <Button onClick={() => handleStatusChange(selectedRequest.id, 'Rejected')} variant="destructive" className="w-full">
+                        <Button onClick={() => handleStatusChange(selectedRequest._id, 'Rejected')} variant="destructive" className="w-full">
                           Reject Request
                         </Button>
                       </>)}
