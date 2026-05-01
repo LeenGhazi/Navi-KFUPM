@@ -1,5 +1,4 @@
-import React from 'react';
-import { mockAnnouncements } from '../../mockData';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
@@ -31,7 +30,16 @@ export function AnnouncementsPanel() {
         }
     };
     // Sort announcements by date
-    const sortedAnnouncements = [...mockAnnouncements].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const [announcements, setAnnouncements] = useState([]);
+
+useEffect(() => {
+    fetch("http://localhost:5000/api/announcements")
+        .then(res => res.json())
+        .then(data => setAnnouncements(data))
+        .catch(err => console.error(err));
+}, []);
+
+const sortedAnnouncements = [...announcements].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     return (<Card className="h-full">
       <CardHeader>
         <CardTitle>University Announcements</CardTitle>
@@ -40,7 +48,7 @@ export function AnnouncementsPanel() {
       <CardContent>
         <ScrollArea className="h-[400px] pr-4">
           <div className="space-y-3">
-            {sortedAnnouncements.map((announcement) => (<Card key={announcement.id}>
+            {sortedAnnouncements.map((announcement) => (<Card key={announcement._id}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-2 flex-1">
