@@ -19,6 +19,7 @@ app.use("/api/bus-routes", require("./routes/busRouteRoutes"));
 app.use("/api/complaints", require("./routes/complaintRoutes"));
 app.use("/api/buildings", require("./routes/buildingRoutes"));
 app.use("/api/about-page", require("./routes/aboutPageRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
