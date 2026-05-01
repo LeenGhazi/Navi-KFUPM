@@ -1,232 +1,152 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../Components/ui/card";
 import { Badge } from "../Components/ui/badge";
-import { Map, Users, MessageSquare, Bus, Route, Search } from 'lucide-react';
+import { Map, Users, MessageSquare, Bus, Route, Search } from "lucide-react";
 
-export function AboutPage() {    {/* this page provides an overview of the Navi-KFUPM app, its features, user roles, and how to get started */ }
-    return (<div className="container mx-auto py-6 px-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-4xl font-bold mb-2">About Navi-KFUPM</h1>
-          <p className="text-muted-foreground text-lg">
-            Your comprehensive campus navigation companion
-          </p>
-        </div>
-        
+const iconMap = {
+  Map,
+  Users,
+  MessageSquare,
+  Bus,
+  Route,
+  Search,
+};
 
-        <Card> {/* this card is for the introduction section */}
-          <CardHeader>
-            <CardTitle>What is Navi-KFUPM?</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p>
-              Navi-KFUPM is a comprehensive campus navigation system designed specifically for 
-              King Fahd University of Petroleum & Minerals. Our platform helps students, faculty, 
-              and visitors navigate the campus with ease while building a community through shared 
-              experiences.
-            </p>
-            <p>
-              Whether you're looking for the nearest cafe, planning your route between classes, 
-              or wanting to share your favorite campus memories, Navi-KFUPM has you covered.
-            </p>
-          </CardContent>
-        </Card>
+export function AboutPage() {
+  const [aboutData, setAboutData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-        <Card> {/* this card is for the key features section */}
-          <CardHeader>
-            <CardTitle>Key Features</CardTitle>
-          </CardHeader>
-          <CardContent>{/* this section is for the key features of the app, each feature will have an icon and a description */ }
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <Map className="w-5 h-5 text-blue-500"/>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Interactive Campus Map</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Explore the campus with color-coded buildings, real-time location tracking, 
-                    and detailed building information.
-                  </p>
-                </div>
+  useEffect(() => {
+    const fetchAboutPage = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/about-page");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch About page data");
+        }
+
+        const data = await response.json();
+        setAboutData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAboutPage();
+  }, []);
+
+  if (loading) {
+    return <div className="p-6">Loading About page...</div>;
+  }
+
+  if (error) {
+    return <div className="p-6 text-red-500">{error}</div>;
+  }
+
+  if (!aboutData) {
+    return <div className="p-6">No About page data found.</div>;
+  }
+
+  return (
+    <div className="p-6 space-y-6">
+      <section className="text-center space-y-2">
+        <h1>{aboutData.hero.title}</h1>
+        <p>{aboutData.hero.subtitle}</p>
+      </section>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{aboutData.introduction.title}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {aboutData.introduction.paragraphs.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Key Features</CardTitle>
+        </CardHeader>
+        <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {aboutData.keyFeatures.map((feature) => {
+            const Icon = iconMap[feature.icon] || Map;
+
+            return (
+              <div key={feature.title} className="space-y-2">
+                <Icon className="w-6 h-6" />
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
               </div>
+            );
+          })}
+        </CardContent>
+      </Card>
 
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <Route className="w-5 h-5 text-green-500"/>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Smart Route Planning</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Get multiple route options between locations with distance calculations 
-                    and accessibility features.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <Search className="w-5 h-5 text-purple-500"/>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Advanced Search & Filter</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Find locations by category, search by name, and discover nearest facilities 
-                    based on your needs.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <MessageSquare className="w-5 h-5 text-amber-500"/>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Stories & Memories</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Share your campus experiences, read stories from fellow students, 
-                    and like your favorite memories.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <Bus className="w-5 h-5 text-red-500"/>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Campus Bus Routes</h3>
-                  <p className="text-sm text-muted-foreground">
-                    View bus routes, stops, and arrival times to plan your commute 
-                    around campus.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="mt-1">
-                  <Users className="w-5 h-5 text-teal-500"/>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Facility Information</h3>
-                  <p className="text-sm text-muted-foreground">
-                    See detailed facilities in each building including labs, printers, 
-                    prayer rooms, bathrooms, and study rooms.
-                  </p>
-                </div>
-              </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>User Roles</CardTitle>
+        </CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-4">
+          {aboutData.userRoles.map((role) => (
+            <div key={role.title}>
+              <Badge>{role.title}</Badge>
+              <p className="mt-2">{role.description}</p>
             </div>
-          </CardContent>
-        </Card>
+          ))}
+        </CardContent>
+      </Card>
 
-        <Card> {/* this card is for the user roles section */}
-          <CardHeader>
-            <CardTitle>User Roles</CardTitle>
-          </CardHeader>
-          <CardContent>{/* this section outlines the different user roles and their permissions */ }
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge>Student</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Students can explore the map, share stories and memories about buildings, 
-                  like stories from other students, submit maintenance complaints, and leave 
-                  reviews for locations.
-                </p>
-              </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{aboutData.buildingFacilities.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>{aboutData.buildingFacilities.description}</p>
 
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary">System Admin</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  System administrators can manage users, moderate content, handle announcements, 
-                  and oversee the platform's operation.
-                </p>
-              </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+            {aboutData.buildingFacilities.facilities.map((facility) => (
+              <Badge key={facility.title} variant="secondary">
+                {facility.title}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline">Maintenance Staff</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Maintenance staff can view and update complaint statuses, ensuring quick 
-                  response to facility issues reported by students.
-                </p>
-              </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{aboutData.technology.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>{aboutData.technology.description}</p>
 
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline">Guest</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Guests and visitors can access core map features to navigate the campus 
-                  without needing to create an account.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {aboutData.technology.tools.map((tool) => (
+              <Badge key={tool}>{tool}</Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card> {/* this card is for the building facilities section */}
-          <CardHeader>
-            <CardTitle>Building Facilities</CardTitle>
-          </CardHeader>
-          <CardContent>{/* this section provides information about the facilities available in each building */ }
-            <p className="mb-4">
-              Each building on our map provides detailed facility information to help you 
-              find exactly what you need:
-            </p>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>🧪 Computer & Research Labs</div>
-              <div>🖨️ Printing Services</div>
-              <div>🕌 Prayer Rooms</div>
-              <div>🚻 Restroom Facilities</div>
-              <div>📚 Study Rooms</div>
-              <div>⏰ Operating Hours</div>
-            </div>
-          </CardContent>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>{aboutData.gettingStarted.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>{aboutData.gettingStarted.description}</p>
 
-        <Card> {/* this card is for the technology section */}
-          <CardHeader>
-            <CardTitle>Technology</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-3">
-              Navi-KFUPM is built with modern web technologies to provide a fast, 
-              responsive, and reliable experience:
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">React</Badge>
-              <Badge variant="outline">TypeScript</Badge>
-              <Badge variant="outline">Tailwind CSS</Badge>
-              <Badge variant="outline">Vite</Badge>
-              <Badge variant="outline">Radix UI</Badge>
-              <Badge variant="outline">Lucide Icons</Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card> {/* this card is for the getting started section */}
-          <CardHeader>
-            <CardTitle>Get Started</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p>
-              Ready to explore KFUPM campus? Here's how to get started:
-            </p>
-            <ol className="list-decimal list-inside space-y-2 text-sm">
-              <li>Use the interactive map to explore different buildings</li>
-              <li>Click on any building to see detailed information and facilities</li>
-              <li>Read stories and memories shared by other students</li>
-              <li>Sign up as a student to share your own experiences and like stories</li>
-              <li>Use the route planner to find the best path between locations</li>
-              <li>Filter locations by category to find exactly what you need</li>
-            </ol>
-          </CardContent>
-        </Card>
-      </div>
-    </div>);
+          <ol className="list-decimal list-inside mt-4 space-y-2">
+            {aboutData.gettingStarted.steps.map((step, index) => (
+              <li key={index}>{step}</li>
+            ))}
+          </ol>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
