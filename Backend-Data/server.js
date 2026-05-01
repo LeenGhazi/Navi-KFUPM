@@ -24,6 +24,7 @@ app.use("/api/tech-requests", require("./routes/techRequestRoutes"));
 app.use("/api/building-comments", require("./routes/buildingCommentRoutes"));
 app.use("/api/building-reviews", require("./routes/buildingReviewRoutes"));
 app.use("/api/stories", require("./routes/storyRoutes"));
+app.use("/api/path-requests", require("./routes/pathRequestRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
