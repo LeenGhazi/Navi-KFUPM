@@ -14,19 +14,20 @@ export function RegisterDialog({ open, onOpenChange, onSwitchToLogin }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const handleRegister = (e) => {
-        e.preventDefault();
-        // Always register as student - admins and maintenance staff have pre-created accounts
-        if (register(email, password, name, 'student')) {
-            toast.success('Registration successful!');
-            onOpenChange(false);
-            setEmail('');
-            setPassword('');
-            setName('');
-        }
-        else {
-            toast.error('Registration failed. Please try again.');
-        }
+    const handleRegister = async (e) => {
+      e.preventDefault();
+
+      try {
+        await register(email, password, name);
+
+        toast.success("Registration successful!");
+        onOpenChange(false);
+        setEmail("");
+        setPassword("");
+        setName("");
+      } catch (error) {
+        toast.error(error.message);
+      }
     };
     return (<Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">

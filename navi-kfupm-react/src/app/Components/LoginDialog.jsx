@@ -5,7 +5,6 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from './ui/dialog';
 import { toast } from 'sonner';
-import { mockUsers } from '../../mockData';
 import { User, Shield, Wrench, ArrowLeft } from 'lucide-react';
 // This component handles login for all user types: (students, admins, maintenance staff) with role-based validation
 export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
@@ -14,45 +13,20 @@ export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
     const [password, setPassword] = useState('');
     const [loginType, setLoginType] = useState(null);
     // loginType can be 'user', 'admin', or 'technical_admin'
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // Find the user by email. Until we implement real authentication in the backend, mock data is used to validate role-based login
-        const foundUser = mockUsers.find((u) => u.email === email);
-        if (!foundUser) {
-            toast.error('Invalid credentials');
-            return;
-        }
-        // Validate that user role matches the selected login type
-        let expectedRole = null;
-        let loginTypeLabel = '';
-        if (loginType === 'user') {
-            expectedRole = 'student';
-            loginTypeLabel = 'User';
-        }
-        else if (loginType === 'admin') {
-            expectedRole = 'admin';
-            loginTypeLabel = 'KFUPM Administrator';
-        }
-        else if (loginType === 'technical_admin') {
-            expectedRole = 'maintenance_staff';
-            loginTypeLabel = 'Technical Admin';
-        }
-        // validate role login
-        if (foundUser.role !== expectedRole) {
-            toast.error(`These credentials do not have ${loginTypeLabel} access. Please use the correct login option.`);
-            return;
-        }
-        // Login attempts
-        if (login(email, password)) {
-            toast.success('Login successful!');
-            onOpenChange(false);
-            setEmail('');
-            setPassword('');
-            setLoginType(null);
-        }
-        else {
-            toast.error('Invalid credentials');
-        }
+    const handleLogin = async (e) => {
+      e.preventDefault();
+
+      try {
+        await login(email, password, loginType);
+
+        toast.success("Login successful!");
+        onOpenChange(false);
+        setEmail("");
+        setPassword("");
+        setLoginType(null);
+      } catch (error) {
+        toast.error(error.message);
+      }
     };
     // Handle going back to login type selection
     const handleBack = () => {
@@ -132,7 +106,7 @@ export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
             <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
               <div className="font-medium mb-1">Demo accounts:</div>
               <ul className="space-y-0.5 text-xs">
-                {loginType === 'user' && (<li>• s201900001@kfupm.edu.sa (User)</li>)}
+                {loginType === 'user' && (<li>• user@kfupm.edu.sa (User)</li>)}
                 {loginType === 'admin' && (<li>• admin@kfupm.edu.sa (KFUPM Administrator)</li>)}
                 {loginType === 'technical_admin' && (<li>• maintenance@kfupm.edu.sa (Technical Admin)</li>)}
               </ul>

@@ -1,24 +1,3 @@
-export const mockUsers = [
-    {
-        id: '1',
-        email: 'admin@kfupm.edu.sa',
-        name: 'Admin User',
-        role: 'admin',
-    },
-    {
-        id: '2',
-        email: 's201900001@kfupm.edu.sa',
-        name: 'Ahmed Al-Otaibi',
-        role: 'student',
-        studentId: '201900001',
-    },
-    {
-        id: '3',
-        email: 'maintenance@kfupm.edu.sa',
-        name: 'Mohammed Al-Mansour',
-        role: 'maintenance_staff',
-    },
-];
 export const mockLocations = [
     {
         id: 'loc1',
