@@ -20,16 +20,19 @@ export function AdminRequestsPage() {
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [showDetailsDialog, setShowDetailsDialog] = useState(false);
     const [notes, setNotes] = useState('');
-    if (!user || user.role !== 'maintenance_staff') {
-        return <Navigate to="/" replace/>;
-    }
-
+    
     useEffect(() => {
       fetch("http://localhost:5000/api/tech-requests")
         .then(res => res.json())
         .then(data => setRequests(data))
         .catch(err => console.error(err));
     }, []);
+
+    if (!user || user.role !== 'maintenance_staff') {
+        return <Navigate to="/" replace/>;
+    }
+
+
 
     {/* Function to handle viewing the details of a specific request.  */  }
     const handleViewDetails = (request) => {
@@ -48,6 +51,7 @@ export function AdminRequestsPage() {
           body: JSON.stringify({
             status: newStatus,
             notes,
+            techResponse: notes,
           }),
         });
 

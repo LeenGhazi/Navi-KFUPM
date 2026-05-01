@@ -29,11 +29,15 @@ router.post("/", async (req, res) => {
 // PATCH update status (for technical team)
 router.patch("/:id/status", async (req, res) => {
   try {
-    const { status, notes } = req.body;
+    const { status, notes, techResponse } = req.body;
 
     const updated = await TechRequest.findByIdAndUpdate(
       req.params.id,
-      { status, notes },
+      {
+        status,
+        notes,
+        techResponse: techResponse || notes,
+      },
       { new: true }
     );
 
