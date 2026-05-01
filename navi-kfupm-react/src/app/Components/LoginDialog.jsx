@@ -106,9 +106,26 @@ export function LoginDialog({ open, onOpenChange, onSwitchToRegister }) {
             <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
               <div className="font-medium mb-1">Demo accounts:</div>
               <ul className="space-y-0.5 text-xs">
-                {loginType === 'user' && (<li>• user@kfupm.edu.sa (User)</li>)}
-                {loginType === 'admin' && (<li>• admin@kfupm.edu.sa (KFUPM Administrator)</li>)}
-                {loginType === 'technical_admin' && (<li>• maintenance@kfupm.edu.sa (Technical Admin)</li>)}
+                {loginType === 'user' && (
+                  <li>
+                    • Email: user@kfupm.edu.sa <br />
+                    • Password: 123456
+                  </li>
+                )}
+
+                {loginType === 'admin' && (
+                  <li>
+                    • Email: admin@kfupm.edu.sa <br />
+                    • Password: 123456
+                  </li>
+                )}
+
+                {loginType === 'technical_admin' && (
+                  <li>
+                    • Email: maintenance@kfupm.edu.sa <br />
+                    • Password: 123456
+                  </li>
+                )}
               </ul>
             </div>
             <Button type="submit" className="w-full">
