@@ -18,7 +18,7 @@ const users = [
     role: "maintenance_staff",
   },
   {
-    name: "Regular User",
+    name: "Ahmed Al-Otaibi",
     email: "user@kfupm.edu.sa",
     password: "123456",
     role: "student",
