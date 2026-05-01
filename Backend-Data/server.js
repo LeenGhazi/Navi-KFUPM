@@ -26,7 +26,7 @@ app.use("/api/building-reviews", require("./routes/buildingReviewRoutes"));
 app.use("/api/stories", require("./routes/storyRoutes"));
 app.use("/api/path-requests", require("./routes/pathRequestRoutes"));
 app.use("/api/map-categories", require("./routes/mapCategoryRoutes"));
-
+app.use("/api/announcements", require("./routes/announcementRoutes"));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
