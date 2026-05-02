@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { mockBusRoutes, mockMainPaths } from '../../mockData';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
@@ -19,20 +18,35 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     const [hoveredLocation, setHoveredLocation] = useState(null);
     const [userLocation] = useState({ x: 400, y: 350 });
     const [locations, setLocations] = useState([]);
+    const [busRoutes, setBusRoutes] = useState([]);
 
     useEffect(() => {
-      const fetchLocations = async () => {
+      const fetchMapData = async () => {
         try {
-          const res = await fetch('${import.meta.env.VITE_API_URL}/api/buildings');
-          const data = await res.json();
-          setLocations(data);
+          const buildingsRes = await fetch(`${API_BASE_URL}/api/buildings`);
+
+          if (!buildingsRes.ok) {
+            throw new Error("Failed to fetch buildings");
+          }
+
+          const buildingsData = await buildingsRes.json();
+          setLocations(buildingsData);
+
+          const busRoutesRes = await fetch(`${API_BASE_URL}/api/bus-routes`);
+
+          if (!busRoutesRes.ok) {
+            throw new Error("Failed to fetch bus routes");
+          }
+
+          const busRoutesData = await busRoutesRes.json();
+          setBusRoutes(busRoutesData);
         } catch (error) {
           console.error(error);
-          toast.error("Failed to load map locations");
+          toast.error("Failed to load map data");
         }
       };
 
-      fetchLocations();
+      fetchMapData();
     }, []);
 
 
@@ -322,15 +336,9 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
               preserveAspectRatio="xMidYMid slice"
             />
 
-          {/* Main Paths */}
-          {showMainPaths &&
-            mockMainPaths.map((path) => (<g key={path.id}>
-                <polyline points={path.path.map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke={path.color} strokeWidth="4" strokeDasharray="8,4" opacity="0.5"/>
-              </g>))}
-
           {/* Bus Routes */}
           {showBusRoutes &&
-            mockBusRoutes.map((route) => (<g key={route.id}>
+            busRoutes.map((route) => (<g key={route.id}>
                 <polyline points={route.path.map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke={route.color} strokeWidth="5" opacity="0.7"/>
                 {route.stops.map((stop) => (<g key={stop.id}>
                     <circle cx={stop.coordinates.x} cy={stop.coordinates.y} r="8" fill={route.color} stroke="white" strokeWidth="3"/>
