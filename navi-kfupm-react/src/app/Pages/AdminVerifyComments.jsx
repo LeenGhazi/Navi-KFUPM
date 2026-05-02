@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
@@ -9,67 +9,22 @@ import { Badge } from '../Components/ui/badge';
 import { toast } from 'sonner';
 import { MessageSquare, CheckCircle, Star, MapPin, Search, Shield } from 'lucide-react';
 import { mockLocations } from '../../mockData';
-const mockCommentsForVerification = [
-    {
-        id: '1',
-        userId: 'user1',
-        userName: 'Ahmed Ali',
-        userEmail: 's202012345@kfupm.edu.sa',
-        locationId: '1',
-        locationName: 'Central Library',
-        text: 'Great study environment! The quiet zones are perfect for concentration.',
-        rating: 5,
-        createdAt: '2024-03-01T10:30:00',
-        verified: false,
-        hidden: false,
-    },
-    {
-        id: '2',
-        userId: 'user2',
-        userName: 'Mohammed Salem',
-        userEmail: 's202098765@kfupm.edu.sa',
-        locationId: '2',
-        locationName: 'Engineering Building 2',
-        text: 'Modern facilities and well-equipped labs. Highly recommend!',
-        rating: 5,
-        createdAt: '2024-02-28T14:20:00',
-        verified: true,
-        hidden: false,
-    },
-    {
-        id: '3',
-        userId: 'user3',
-        userName: 'Sara Hassan',
-        userEmail: 's202011111@kfupm.edu.sa',
-        locationId: '3',
-        locationName: 'Main Cafeteria',
-        text: 'Good food variety but can get crowded during lunch hours.',
-        rating: 4,
-        createdAt: '2024-02-27T12:15:00',
-        verified: false,
-        hidden: false,
-    },
-    {
-        id: '4',
-        userId: 'user4',
-        userName: 'Khalid Omar',
-        userEmail: 's202054321@kfupm.edu.sa',
-        locationId: '1',
-        locationName: 'Central Library',
-        text: 'The new study rooms are fantastic! Very comfortable.',
-        rating: 5,
-        createdAt: '2024-02-26T16:45:00',
-        verified: true,
-        hidden: false,
-    },
-];
+
 {/* AdminVerifyComments component allows administrators to review and verify public comments on campus buildings. . */  }
 export function AdminVerifyComments() {
     const { user } = useAuth();
-    const [comments, setComments] = useState(mockCommentsForVerification);
+    const [comments, setComments] = useState([]);
     const [filterVerified, setFilterVerified] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+
+    /// useEffect hook fetches the building reviews from the backend API when the component mounts and updates the comments state with the retrieved data. It also handles any errors that may occur during the fetch operation.
+    useEffect(() => {
+      fetch("http://localhost:5000/api/building-reviews")
+        .then(res => res.json())
+        .then(data => setComments(data))
+        .catch(err => console.error(err));
+    }, []);
 
     {/*filterComments function filters the comments based on verification status, selected building location, and search query. */  }
     const filteredComments = comments.filter((comment) => {
@@ -84,14 +39,45 @@ export function AdminVerifyComments() {
         return matchesVerification && matchesLocation && matchesSearch;
     });
 
-{/*handleVerifyComment function updates the state to mark a comment as verified, while handleUnverifyComment removes the verification.  */  }
-    const handleVerifyComment = (commentId) => {
-        setComments(comments.map((c) => c.id === commentId ? { ...c, verified: true } : c));
-        toast.success('Comment verified! It now shows "Approved by administrators"');
+    {/*handleVerifyComment function updates the state to mark a comment as verified, while handleUnverifyComment removes the verification.  */  }
+    const handleVerifyComment = async (commentId) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ verified: true }),
+        });
+
+        const updated = await res.json();
+
+        setComments(prev =>
+          prev.map(c => c._id === commentId ? updated : c)
+        );
+
+        toast.success("Review verified!");
+      } catch (err) {
+        console.error(err);
+      }
     };
-    const handleUnverifyComment = (commentId) => {
-        setComments(comments.map((c) => c.id === commentId ? { ...c, verified: false } : c));
-        toast.success('Verification removed from comment');
+
+    const handleUnverifyComment = async (commentId) => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ verified: false }),
+        });
+
+        const updated = await res.json();
+
+        setComments(prev =>
+          prev.map(c => c._id === commentId ? updated : c)
+        );
+
+        toast.success("Verification removed");
+      } catch (err) {
+        console.error(err);
+      }
     };
     {/*stats object calculates the total number of comments, verified comments, and unverified comments . */  }
     const stats = {
@@ -199,7 +185,7 @@ export function AdminVerifyComments() {
               <p className="text-muted-foreground">No comments found</p>
             </CardContent>
           </Card>) : 
-          (filteredComments.map((comment) => (<Card key={comment.id}>{/* Card for each comment, displaying the commenter's name, email, building location, comment text, rating, and verification status. */  }
+          (filteredComments.map((comment) => (<Card key={comment._id}>{/* Card for each comment, displaying the commenter's name, email, building location, comment text, rating, and verification status. */  }
               <CardHeader>{/* Header section of the comment card, showing the location name, commenter details, and rating. If the comment is verified, it also shows a "Verified" badge. */  }
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -245,9 +231,9 @@ export function AdminVerifyComments() {
 
                 {/* Action Buttons */}
                 <div className="flex justify-end pt-2 border-t">
-                  {comment.verified ? (<Button variant="outline" onClick={() => handleUnverifyComment(comment.id)}>
+                  {comment.verified ? (<Button variant="outline" onClick={() => handleUnverifyComment(comment._id)}>
                       Remove Verification
-                    </Button>) : (<Button variant="default" onClick={() => handleVerifyComment(comment.id)}>
+                    </Button>) : (<Button variant="default" onClick={() => handleVerifyComment(comment._id)}>
                       <CheckCircle className="w-4 h-4 mr-2"/>
                       Approve & Verify
                     </Button>)}

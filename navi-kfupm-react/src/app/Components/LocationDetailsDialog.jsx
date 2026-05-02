@@ -23,15 +23,28 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     const currentUserName = user?.name || user?.userName || "Student User";
     
     const [stories, setStories] = useState([]);
-    const [comments, setComments] = useState(mockComments);
+    const [reviews, setReviews] = useState([]);
     const [newStoryTitle, setNewStoryTitle] = useState('');
     const [newStoryText, setNewStoryText] = useState('');
     const [showAddStory, setShowAddStory] = useState(false);
+    const [newReviewText, setNewReviewText] = useState('');
+    const [newReviewRating, setNewReviewRating] = useState(5);
+    const [showAddReview, setShowAddReview] = useState(false);
     const [isEditingBuilding, setIsEditingBuilding] = useState(false);
     const [editForm, setEditForm] = useState({});
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState('');
     const [editCommentRating, setEditCommentRating] = useState(5);
+
+    // Fetch reviews for the location when the component mounts or when the location changes.
+    useEffect(() => {
+      if (!location) return;
+
+      fetch(`http://localhost:5000/api/building-reviews/${location.id}`)
+        .then(res => res.json())
+        .then(data => setReviews(data))
+        .catch(err => console.error(err));
+    }, [location]);
 
     // Fetch comments for the location when the component mounts or when the location changes.
     useEffect(() => {
@@ -53,7 +66,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     if (!location)
         return null;
     // Filter comments based on user role
-    const locationComments = comments
+    const locationComments = reviews
         .filter((c) => c.locationId === location.id)
         .filter((c) => {
         // only maintainence staff can see all comments, others only see non-hidden ones
@@ -82,40 +95,97 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
         return categoryMap[category] || { label: category, variant: 'outline' };
     };
     // delete a comment (only maintainence staff can do this)
-    const handleDeleteComment = (commentId) => {
-        if (!user || user.role !== 'maintenance_staff')
-            return;
-        setComments(prevComments => prevComments.filter(c => c.id !== commentId));
-        toast.success('Comment deleted successfully');
+    const handleDeleteComment = async (commentId) => {
+      if (!user || user.role !== 'maintenance_staff') return;
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+          method: "DELETE",
+        });
+
+        if (!res.ok) throw new Error("Failed to delete review");
+
+        setReviews(prevReviews =>
+          prevReviews.filter(review => review._id !== commentId)
+        );
+
+        toast.success("Review deleted successfully");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to delete review");
+      }
     };
     // hide/unhide a comment (only maintainence staff can do this)
-    const handleToggleHideComment = (commentId) => {
-        if (!user || user.role !== 'maintenance_staff')
-            return;
-        setComments(prevComments => prevComments.map(c => c.id === commentId
-            ? { ...c, hidden: !c.hidden }
-            : c));
-        const comment = comments.find(c => c.id === commentId);
-        toast.success(comment?.hidden ? 'Comment is now visible to users' : 'Comment hidden from public view');
+    const handleToggleHideComment = async (commentId) => {
+      if (!user || user.role !== 'maintenance_staff') return;
+
+      const review = reviews.find(r => r._id === commentId);
+      if (!review) return;
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            hidden: !review.hidden,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Failed to update review");
+
+        const updatedReview = await res.json();
+
+        setReviews(prevReviews =>
+          prevReviews.map(r => r._id === commentId ? updatedReview : r)
+        );
+
+        toast.success(updatedReview.hidden ? "Review hidden from public view" : "Review is now visible to users");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update review visibility");
+      }
     };
     // edit a comment (only maintainence staff can do this, 
     // ethically this should be used to correct misinformation or 
     // remove inappropriate content, not to alter user opinions)
     const handleStartEditComment = (comment) => {
-        if (!user || user.role !== 'maintenance_staff')
-            return;
-        setEditingCommentId(comment.id);
-        setEditCommentText(comment.text);
-        setEditCommentRating(comment.rating);
+      if (!user || user.role !== 'maintenance_staff') return;
+
+      setEditingCommentId(comment._id);
+      setEditCommentText(comment.text);
+      setEditCommentRating(comment.rating);
     };
-    const handleSaveCommentEdit = () => {
-        if (!editingCommentId)
-            return;
-        setComments(prevComments => prevComments.map(c => c.id === editingCommentId
-            ? { ...c, text: editCommentText, rating: editCommentRating }
-            : c));
+    const handleSaveCommentEdit = async () => {
+      if (!editingCommentId) return;
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/building-reviews/${editingCommentId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: editCommentText,
+            rating: editCommentRating,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Failed to update review");
+
+        const updatedReview = await res.json();
+
+        setReviews(prevReviews =>
+          prevReviews.map(r => r._id === editingCommentId ? updatedReview : r)
+        );
+
         setEditingCommentId(null);
-        toast.success('Comment updated successfully');
+        toast.success("Review updated successfully");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update review");
+      }
     };
     const handleCancelCommentEdit = () => {
         setEditingCommentId(null);
@@ -311,6 +381,43 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
       } catch (err) {
         console.error(err);
         toast.error("Failed to post story");
+      }
+    };
+    const handleAddReview = async () => {
+      if (!user || !newReviewText.trim()) return;
+
+      const newReview = {
+        userId: currentUserId,
+        userName: currentUserName,
+        locationId: location.id,
+        text: newReviewText,
+        rating: newReviewRating,
+        hidden: false,
+        verified: false,
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/api/building-reviews", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newReview),
+        });
+
+        if (!res.ok) throw new Error("Failed to post review");
+
+        const savedReview = await res.json();
+
+        setReviews(prev => [savedReview, ...prev]);
+        setNewReviewText('');
+        setNewReviewRating(5);
+        setShowAddReview(false);
+
+        toast.success("Review posted successfully!");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to post review");
       }
     };
     const displayLocation = (isEditingBuilding ? editForm : location);
@@ -573,81 +680,188 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
             </div>
 
             {/* Reviews Section */}
-            {locationComments.length > 0 && (<>
-                <Separator />
-                <div>
-                  <h3 className="text-sm font-semibold mb-2">Reviews</h3>
+            <Separator />
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold">
+                  Reviews ({locationComments.length})
+                </h3>
+
+                {user && user.role === 'student' && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setShowAddReview(!showAddReview)}
+                  >
+                    {showAddReview ? 'Cancel' : 'Add Review'}
+                  </Button>
+                )}
+              </div>
+
+              {showAddReview && user && (
+                <Card className="p-4 mb-4 bg-muted/50">
                   <div className="space-y-3">
-                    {locationComments.map((comment) => (<Card key={comment.id} className="p-3">
-                        {editingCommentId === comment.id ? (
-                // Edit Mode
-                <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-muted-foreground">Rating:</span>
-                              <Select value={editCommentRating.toString()} onValueChange={(value) => setEditCommentRating(parseInt(value))}>
-                                <SelectTrigger className="w-20 h-7">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="1">1</SelectItem>
-                                  <SelectItem value="2">2</SelectItem>
-                                  <SelectItem value="3">3</SelectItem>
-                                  <SelectItem value="4">4</SelectItem>
-                                  <SelectItem value="5">5</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <Textarea value={editCommentText} onChange={(e) => setEditCommentText(e.target.value)} rows={3} className="text-sm"/>
-                            <div className="flex gap-2">
-                              <Button size="sm" onClick={handleSaveCommentEdit}>
-                                <Save className="w-3 h-3 mr-1"/>
-                                Save
-                              </Button>
-                              <Button size="sm" variant="outline" onClick={handleCancelCommentEdit}>
-                                <X className="w-3 h-3 mr-1"/>
-                                Cancel
-                              </Button>
-                            </div>
-                          </div>) : (
-                // View Mode
-                <>
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <div className="font-medium text-sm">{comment.userName}</div>
-                                  {comment.verified && (<Badge variant="default" className="text-xs gap-1 bg-green-100 text-green-800">
-                                      <Shield className="w-3 h-3"/>
-                                      Approved by administrators
-                                    </Badge>)}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {new Date(comment.createdAt).toLocaleDateString()}
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 fill-yellow-500 text-yellow-500"/>
-                                  <span className="text-sm font-medium">{comment.rating}</span>
-                                </div>
-                                {user?.role === 'maintenance_staff' && (<>
-                                    <Button size="icon" variant="ghost" onClick={() => handleStartEditComment(comment)} className="h-7 w-7" title="Edit comment">
-                                      <Edit className="w-3.5 h-3.5 text-blue-600"/>
-                                    </Button>
-                                    <Button size="icon" variant="ghost" onClick={() => handleToggleHideComment(comment.id)} className="h-7 w-7" title={comment.hidden ? "Show comment to public" : "Hide comment from public"}>
-                                      {comment.hidden ? (<Eye className="w-3.5 h-3.5 text-green-600"/>) : (<EyeOff className="w-3.5 h-3.5 text-orange-600"/>)}
-                                    </Button>
-                                    <Button size="icon" variant="ghost" onClick={() => handleDeleteComment(comment.id)} className="h-7 w-7" title="Delete comment permanently">
-                                      <Trash2 className="w-3.5 h-3.5 text-red-600"/>
-                                    </Button>
-                                  </>)}
-                              </div>
-                            </div>
-                            <p className="text-sm">{comment.text}</p>
-                          </>)}
-                      </Card>))}
+                    <Select
+                      value={newReviewRating.toString()}
+                      onValueChange={(value) => setNewReviewRating(parseInt(value))}
+                    >
+                      <SelectTrigger className="w-28">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 Star</SelectItem>
+                        <SelectItem value="2">2 Stars</SelectItem>
+                        <SelectItem value="3">3 Stars</SelectItem>
+                        <SelectItem value="4">4 Stars</SelectItem>
+                        <SelectItem value="5">5 Stars</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Textarea
+                      placeholder="Write your review about this building..."
+                      value={newReviewText}
+                      onChange={(e) => setNewReviewText(e.target.value)}
+                      rows={3}
+                    />
+
+                    <Button
+                      onClick={handleAddReview}
+                      disabled={!newReviewText.trim()}
+                      size="sm"
+                    >
+                      Post Review
+                    </Button>
                   </div>
+                </Card>
+              )}
+
+              {locationComments.length > 0 ? (
+                <div className="space-y-3">
+                  {locationComments.map((comment) => (
+                    <Card key={comment._id} className="p-3">
+                      {editingCommentId === comment._id ? (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">Rating:</span>
+                            <Select
+                              value={editCommentRating.toString()}
+                              onValueChange={(value) => setEditCommentRating(parseInt(value))}
+                            >
+                              <SelectTrigger className="w-20 h-7">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1">1</SelectItem>
+                                <SelectItem value="2">2</SelectItem>
+                                <SelectItem value="3">3</SelectItem>
+                                <SelectItem value="4">4</SelectItem>
+                                <SelectItem value="5">5</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <Textarea
+                            value={editCommentText}
+                            onChange={(e) => setEditCommentText(e.target.value)}
+                            rows={3}
+                            className="text-sm"
+                          />
+
+                          <div className="flex gap-2">
+                            <Button size="sm" onClick={handleSaveCommentEdit}>
+                              <Save className="w-3 h-3 mr-1" />
+                              Save
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={handleCancelCommentEdit}>
+                              <X className="w-3 h-3 mr-1" />
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <div className="font-medium text-sm">{comment.userName}</div>
+
+                                {comment.verified && (
+                                  <Badge variant="default" className="text-xs gap-1 bg-green-100 text-green-800">
+                                    <Shield className="w-3 h-3" />
+                                    Approved by administrators
+                                  </Badge>
+                                )}
+
+                                {comment.hidden && user?.role === 'maintenance_staff' && (
+                                  <Badge variant="secondary" className="text-xs">
+                                    Hidden
+                                  </Badge>
+                                )}
+                              </div>
+
+                              <div className="text-xs text-muted-foreground">
+                                {new Date(comment.createdAt).toLocaleDateString()}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1">
+                                <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
+                                <span className="text-sm font-medium">{comment.rating}</span>
+                              </div>
+
+                              {user?.role === 'maintenance_staff' && (
+                                <>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={() => handleStartEditComment(comment)}
+                                    className="h-7 w-7"
+                                    title="Edit review"
+                                  >
+                                    <Edit className="w-3.5 h-3.5 text-blue-600" />
+                                  </Button>
+
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={() => handleToggleHideComment(comment._id)}
+                                    className="h-7 w-7"
+                                    title={comment.hidden ? "Show review to public" : "Hide review from public"}
+                                  >
+                                    {comment.hidden ? (
+                                      <Eye className="w-3.5 h-3.5 text-green-600" />
+                                    ) : (
+                                      <EyeOff className="w-3.5 h-3.5 text-orange-600" />
+                                    )}
+                                  </Button>
+
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    onClick={() => handleDeleteComment(comment._id)}
+                                    className="h-7 w-7"
+                                    title="Delete review permanently"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5 text-red-600" />
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          <p className="text-sm">{comment.text}</p>
+                        </>
+                      )}
+                    </Card>
+                  ))}
                 </div>
-              </>)}
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No reviews yet. Be the first to add a review!
+                </p>
+              )}
+            </div>
 
             {/* Action Buttons */}
             <Separator />
