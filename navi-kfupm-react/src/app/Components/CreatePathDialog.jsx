@@ -23,7 +23,7 @@ export function CreatePathDialog({ open, onOpenChange }) {
 
       const fetchBuildings = async () => {
         try {
-          const res = await fetch(`${API_BASE_URL}/api/buildings`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/buildings`);
 
           if (!res.ok) {
             throw new Error("Failed to fetch buildings");
@@ -59,7 +59,7 @@ export function CreatePathDialog({ open, onOpenChange }) {
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/api/path-requests`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

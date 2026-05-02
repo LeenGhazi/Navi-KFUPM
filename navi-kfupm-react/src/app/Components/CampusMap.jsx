@@ -23,7 +23,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     useEffect(() => {
       const fetchMapData = async () => {
         try {
-          const buildingsRes = await fetch(`${API_BASE_URL}/api/buildings`);
+          const buildingsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/buildings`);
 
           if (!buildingsRes.ok) {
             throw new Error("Failed to fetch buildings");
@@ -32,7 +32,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
           const buildingsData = await buildingsRes.json();
           setLocations(buildingsData);
 
-          const busRoutesRes = await fetch(`${API_BASE_URL}/api/bus-routes`);
+          const busRoutesRes = await fetch(`${import.meta.env.VITE_API_URL}/api/bus-routes`);
 
           if (!busRoutesRes.ok) {
             throw new Error("Failed to fetch bus routes");

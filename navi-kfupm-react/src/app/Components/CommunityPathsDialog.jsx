@@ -21,7 +21,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
 
       const fetchPaths = async () => {
         try {
-          const res = await fetch(`${API_BASE_URL}/api/path-requests`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests`);
 
           if (!res.ok) {
             throw new Error("Failed to fetch community paths");

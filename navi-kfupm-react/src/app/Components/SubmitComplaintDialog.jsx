@@ -22,7 +22,7 @@ export function SubmitComplaintDialog({ open, onOpenChange, locationId, }) {
 
       const fetchLocation = async () => {
         try {
-          const res = await fetch(`${API_BASE_URL}/api/buildings/${locationId}`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/buildings/${locationId}`);
 
           if (!res.ok) {
             throw new Error("Failed to fetch location");
@@ -52,7 +52,7 @@ export function SubmitComplaintDialog({ open, onOpenChange, locationId, }) {
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/api/complaints`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

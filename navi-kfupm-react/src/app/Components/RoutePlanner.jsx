@@ -13,7 +13,7 @@ export function RoutePlanner({ routeFrom, routeTo, onRouteFromChange, onRouteToC
     useEffect(() => {
       const fetchLocations = async () => {
         try {
-          const res = await fetch(`${API_BASE_URL}/api/buildings`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/buildings`);
 
           if (!res.ok) {
             throw new Error("Failed to fetch locations");
