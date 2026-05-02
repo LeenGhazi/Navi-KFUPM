@@ -51,7 +51,7 @@ cd Backend-Data
 npm start
 ```
 
-3️⃣ 2nd Terminal: Install Dependencies
+3️⃣ 2nd Terminal: Install Dependencies & run the Frontend
 ```
 cd Navi-KFUPM/navi-kfupm-react
 ```
