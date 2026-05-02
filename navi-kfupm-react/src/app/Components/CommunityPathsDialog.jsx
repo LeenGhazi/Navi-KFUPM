@@ -8,64 +8,6 @@ import { Badge } from "./ui/badge";
 import { ScrollArea } from "./ui/scroll-area";
 import { Star, Navigation, MapPin, TrendingUp, } from "lucide-react";
 import { toast } from "sonner";
-// this is a mock community paths data, this will change when we integrate with the backend
-const mockPaths = [
-    {
-        id: "path1",
-        title: "Quick Route to Library",
-        from: "Engineering Complex",
-        to: "Central Library",
-        description: "Leave the Engineering Complex through the main entrance and walk straight toward the central plaza. Turn right onto the covered walkway that runs between the academic buildings. Continue forward, passing Building 22, then turn slightly left toward the library courtyard. The Central Library entrance will be directly ahead.",
-        creator: "Ahmed Al-Salem",
-        rating: 4.8,
-        ratingCount: 24,
-        status: "Approved",
-    },
-    {
-        id: "path2",
-        title: "Scenic Campus Tour",
-        from: "Main Gate",
-        to: "Student Center",
-        description: "Enter through the Main Gate and walk straight along the central garden pathway. Continue past the fountain area, then turn slightly right toward the landscaped courtyard. Follow the curved walkway through the garden section until you reach the Student Center building on your left.",
-        creator: "Sara Al-Ghamdi",
-        rating: 4.5,
-        ratingCount: 18,
-        status: "Approved",
-    },
-    {
-        id: "path3",
-        title: "Morning Jog Route",
-        from: "Sports Complex",
-        to: "Medical Center",
-        description: "Start from the Sports Complex and follow the outer campus loop heading north. Keep right along the shaded pedestrian path beside the green field. Continue straight past the dormitory area, then turn left at the main intersection near the palm trees. Follow the curved path until you reach the Medical Center entrance.",
-        creator: "Mohammed Al-Otaibi",
-        rating: 4.7,
-        ratingCount: 15,
-        status: "Approved",
-    },
-    {
-        id: "path4",
-        title: "Study Break Walk",
-        from: "Central Library",
-        to: "Cafeteria Building",
-        description: "Exit the Central Library from the main entrance and head south toward the academic square. Turn right at the first intersection and follow the pedestrian path between the buildings. Continue straight past the shaded seating area, then turn left toward the Cafeteria Building entrance.",
-        creator: "Fatima Al-Zahrani",
-        rating: 4.3,
-        ratingCount: 12,
-        status: "Approved",
-    },
-    {
-        id: "path5",
-        title: "Late Night Safe Path",
-        from: "Dorms Building 1",
-        to: "Engineering Complex",
-        description: "Exit Dorms Building 1 and head east along the main pedestrian walkway. Continue straight past the cafeteria area, then turn left toward the central academic corridor. Follow the well-lit pathway beside Building 22 and continue straight until you reach the Engineering Complex entrance. The entire route stays within illuminated areas and avoids isolated sections.",
-        creator: "Omar Al-Rashid",
-        rating: 4.9,
-        ratingCount: 31,
-        status: "Approved",
-    },
-];
 // display the paths created by the community and allow users to rate them. 
 // Only students can rate paths, and they can only rate each path once. 
 // Admins can see the average rating but cannot rate paths themselves.
