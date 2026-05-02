@@ -23,7 +23,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     useEffect(() => {
       const fetchLocations = async () => {
         try {
-          const res = await fetch("${import.meta.env.VITE_API_URL}/api/buildings");
+          const res = await fetch('${import.meta.env.VITE_API_URL}/api/buildings');
           const data = await res.json();
           setLocations(data);
         } catch (error) {
