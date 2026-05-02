@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
-import { mockLocations } from '../../mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
 import { Badge } from '../Components/ui/badge';
@@ -11,85 +10,79 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '../Components/ui/dialog';
 import { MessageCircle, Search, Trash2, MapPin, Calendar, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-const mockComments = [
-    {
-        id: 'c1',
-        locationId: 'loc1',
-        locationName: 'Central Library',
-        userId: 'u1',
-        userName: 'Ahmed Al-Salem',
-        userEmail: 'student@kfupm.edu.sa',
-        comment: 'Great study environment, especially the quiet zones on the third floor!',
-        date: '2026-02-26',
-    },
-    {
-        id: 'c2',
-        locationId: 'loc1',
-        locationName: 'Central Library',
-        userId: 'u2',
-        userName: 'Sara Mohammed',
-        userEmail: 'sara.m@kfupm.edu.sa',
-        comment: 'The 24/7 hours during exams are incredibly helpful for late-night studying.',
-        date: '2026-02-25',
-    },
-    {
-        id: 'c3',
-        locationId: 'loc2',
-        locationName: 'Engineering Complex',
-        userId: 'u3',
-        userName: 'Omar Al-Rasheed',
-        userEmail: 'omar.r@kfupm.edu.sa',
-        comment: 'The labs are well-equipped but could use better air conditioning.',
-        date: '2026-02-24',
-    },
-    {
-        id: 'c4',
-        locationId: 'loc3',
-        locationName: 'Student Center',
-        userId: 'u4',
-        userName: 'Fatima Al-Ghamdi',
-        userEmail: 'f.ghamdi@kfupm.edu.sa',
-        comment: 'Love the new food court! Lots of variety and good prices.',
-        date: '2026-02-23',
-    },
-    {
-        id: 'c5',
-        locationId: 'loc3',
-        locationName: 'Student Center',
-        userId: 'u5',
-        userName: 'Mohammed Al-Otaibi',
-        userEmail: 'm.otaibi@kfupm.edu.sa',
-        comment: 'Great place to hang out between classes!',
-        date: '2026-02-22',
-    },
-];
 export function AdminCommentsPage() {{/* this function is the main component for the admin comments page. it allows maintenance staff to view, search, filter, hide/show, and delete user comments on buildings. */  }
     const { user } = useAuth();
-    const [comments, setComments] = useState(mockComments);
+    const [comments, setComments] = useState([]);
+    const [locations, setLocations] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState('all');{/* State to track the selected location filter. Default is 'all' to show comments from all locations. */  }
     const [searchQuery, setSearchQuery] = useState('');
     const [showHiddenFilter, setShowHiddenFilter] = useState('all');{/* State to track the hidden status filter. Default is 'all' to show both hidden and visible comments. */  }
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);{/* State to control the visibility of the delete confirmation dialog. */  }
     const [selectedComment, setSelectedComment] = useState(null);{/* State to store the comment that is currently selected for deletion. */  }
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [commentsRes, locationsRes] = await Promise.all([
+            fetch(`${API_BASE_URL}/api/building-reviews`),
+            fetch(`${API_BASE_URL}/api/buildings`),
+          ]);
+
+          const commentsData = await commentsRes.json();
+          const locationsData = await locationsRes.json();
+
+          setComments(commentsData);
+          setLocations(locationsData);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load comments");
+        }
+      };
+
+      fetchData();
+    }, []);
     if (!user || user.role !== 'maintenance_staff') {
         return <Navigate to="/" replace/>;
     }
     {/* Function to toggle the hidden status of a comment. It updates the comments state and shows a toast notification indicating whether the comment is now hidden or visible. */  }
-    const handleToggleHidden = (commentId) => {
-        setComments(prev => prev.map(c => c.id === commentId
-            ? { ...c, hidden: !c.hidden }
-            : c));
-        const comment = comments.find(c => c.id === commentId);
-        toast.success(comment?.hidden ? 'Comment is now visible to users' : 'Comment hidden from users');
+    const handleToggleHidden = async (commentId) => {
+      const comment = comments.find(c => c._id === commentId);
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/building-reviews/${commentId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hidden: !comment.hidden }),
+        });
+
+        const updated = await res.json();
+
+        setComments(prev =>
+          prev.map(c => c._id === commentId ? updated : c)
+        );
+
+        toast.success(updated.hidden ? "Comment hidden from users" : "Comment is now visible to users");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to update comment");
+      }
     };
     {/* Function to handle the deletion of a comment. It removes the selected comment from the comments state, shows a success toast notification. */  }
-    const handleDeleteComment = () => {
-        if (!selectedComment)
-            return;
-        setComments(prev => prev.filter(c => c.id !== selectedComment.id));
-        toast.success('Comment deleted successfully!');
+    const handleDeleteComment = async () => {
+      if (!selectedComment) return;
+
+      try {
+        await fetch(`${API_BASE_URL}/api/building-reviews/${selectedComment._id}`, {
+          method: "DELETE",
+        });
+
+        setComments(prev => prev.filter(c => c._id !== selectedComment._id));
+        toast.success("Comment deleted successfully!");
         setShowDeleteDialog(false);
         setSelectedComment(null);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete comment");
+      }
     };
     {/* Function to open the delete confirmation dialog. It sets the selected comment that the user intends to delete and shows the dialog. */  }
     const openDeleteDialog = (comment) => {
@@ -130,11 +123,11 @@ export function AdminCommentsPage() {{/* this function is the main component for
             </div>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Calendar className="w-3 h-3"/>
-              {new Date(comment.date).toLocaleDateString()}
+              {new Date(comment.createdAt).toLocaleDateString()}
             </div>
           </div>
           <div className="flex gap-1">
-            <Button size="icon" variant="ghost" onClick={() => handleToggleHidden(comment.id)} title={comment.hidden ? "Show comment" : "Hide comment"}>
+            <Button size="icon" variant="ghost" onClick={() => handleToggleHidden(comment._id)} title={comment.hidden ? "Show comment" : "Hide comment"}>
               {comment.hidden ? (<Eye className="w-4 h-4 text-green-600"/>) : (<EyeOff className="w-4 h-4 text-orange-600"/>)}
             </Button>
             <Button size="icon" variant="ghost" onClick={() => openDeleteDialog(comment)} title="Delete comment">
@@ -144,7 +137,7 @@ export function AdminCommentsPage() {{/* this function is the main component for
         </div>
       </CardHeader>
       <CardContent>{/* Content section of the comment card, showing the comment text and user information. */  }
-        <p className="text-sm mb-3">{comment.comment}</p>
+        <p className="text-sm mb-3">{comment.text}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>{comment.userName}</span>{/* Display the user's name and email using span so they are in the same line */  }
           <span>{comment.userEmail}</span>
@@ -175,7 +168,7 @@ export function AdminCommentsPage() {{/* this function is the main component for
                 </SelectTrigger>
                 <SelectContent>{}
                   <SelectItem value="all">All Buildings</SelectItem>
-                  {mockLocations.map((location) => (<SelectItem key={location.id} value={location.id}>
+                  {locations.map((location) => (<SelectItem key={location.id} value={location.id}>
                       {location.name}
                     </SelectItem>))}
                 </SelectContent>
@@ -208,7 +201,7 @@ export function AdminCommentsPage() {{/* this function is the main component for
       </Card>
 
       <div className="space-y-4">
-        {filterComments().length > 0 ? (filterComments().map(comment => (<CommentCard key={comment.id} comment={comment}/>))) : (<Card className="p-8">
+        {filterComments().length > 0 ? (filterComments().map(comment => (<CommentCard key={comment._id} comment={comment}/>))) : (<Card className="p-8">
             <div className="text-center text-muted-foreground">
               <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50"/>
               <p>No comments found matching your filters</p>
