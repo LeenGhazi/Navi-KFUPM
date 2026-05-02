@@ -8,7 +8,7 @@ router.get("/demo", async (req, res) => {
   try {
     const users = await User.find({
       role: { $in: ["admin", "maintenance_staff", "student"] },
-    }).select("name email role");
+    }).select("_id name email role");
 
     res.status(200).json(users);
   } catch (error) {
@@ -46,6 +46,7 @@ router.post("/register", async (req, res) => {
     });
 
     res.status(201).json({
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: user.role,
@@ -98,6 +99,7 @@ router.post("/login", async (req, res) => {
     }
 
     res.status(200).json({
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: user.role,
