@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import { CampusMap } from '../Components/CampusMap';
 import { LocationDetailsDialog } from '../Components/LocationDetailsDialog';
@@ -13,21 +13,22 @@ import { ScrollArea } from '../Components/ui/scroll-area';
 import { Separator } from '../Components/ui/separator';
 import { Checkbox } from '../Components/ui/checkbox';
 import { Search, Route as RouteIcon, Move, } from 'lucide-react';
-const categories = [
-    { value: 'academic', label: 'Academic Buildings' },
-    { value: 'restaurant', label: 'Restaurants' },
-    { value: 'cafe', label: 'Cafes' },
-    { value: 'dorm', label: 'Dormitories' },
-    { value: 'parking', label: 'Parking' },
-    { value: 'study_room', label: 'Study Rooms' },
-    { value: 'prayer_room', label: 'Prayer Rooms' },
-    { value: 'library', label: 'Library' },
-    { value: 'sports', label: 'Sports Facilities' },
-];
+
 {/* HomePage component is the main landing page of the application.
    It includes a sidebar for filtering locations by category and a search bar, as well as a main map area that displays the campus map with various locations. The component also manages state for selected categories, search query, selected location, and dialogs for location details, comments, complaints, and community paths. */  }
 export function HomePage() {
     const { user } = useAuth();
+    const [categories, setCategories] = useState([]);
+
+useEffect(() => {
+    fetch("http://localhost:5000/api/map-categories")
+        .then(res => res.json())
+        .then(data => setCategories(data.map(cat => ({
+            value: cat.categoryName,
+            label: cat.displayLabel
+        }))))
+        .catch(err => console.error(err));
+}, []);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedLocation, setSelectedLocation] = useState(null);
