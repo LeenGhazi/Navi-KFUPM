@@ -12,6 +12,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+// GET reviews for a specific user
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const reviews = await BuildingReview.find({
+      userId: req.params.userId,
+    }).sort({ createdAt: -1 });
+
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // GET reviews for one location
 router.get("/:locationId", async (req, res) => {
   try {

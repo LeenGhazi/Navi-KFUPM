@@ -80,7 +80,29 @@ export function AccountPage() {   {/* this page allows users to view and edit th
     });
     {/* User paths */}
     const [userPaths, setUserPaths] = useState(mockUserPaths);
-    const [userComments, setUserComments] = useState(mockUserComments);{/* User comments */}
+    const [userStories, setUserStories] = useState([]);
+    const [userReviews, setUserReviews] = useState([]);
+
+    // Fetch user-specific stories and reviews on component mount
+    useEffect(() => {
+      if (!user) return;
+
+      const userId = user.id || user._id || user.userId || 2; // Fallback to 2 for mock data if no user ID found
+
+      // fetch stories
+      fetch(`http://localhost:5000/api/building-comments/user/${userId}`)
+        .then(res => res.json())
+        .then(data => setUserStories(data))
+        .catch(err => console.error(err));
+
+      // fetch reviews
+      fetch(`http://localhost:5000/api/building-reviews/user/${userId}`)
+        .then(res => res.json())
+        .then(data => setUserReviews(data))
+        .catch(err => console.error(err));
+
+    }, [user]);
+
     {/* Check authentication on load */}
     useEffect(() => {
         console.log('AccountPage - User:', user);
@@ -519,31 +541,98 @@ export function AccountPage() {   {/* this page allows users to view and edit th
             </Card>
           </TabsContent>
 
-          {/* Comments Tab */}
+          {/* Contributions Tab */}
           <TabsContent value="comments" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>My Comments</CardTitle>
-                <CardDescription>View and manage your comments</CardDescription>
+                <CardTitle>My Contributions</CardTitle>
+                <CardDescription>View your stories and reviews</CardDescription>
               </CardHeader>
+
               <CardContent>
-                <div className="space-y-4">
-                  {userComments.map((comment) => (<div key={comment.id} className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <MessageSquare className="w-5 h-5 text-primary"/>
+                <div className="space-y-6">
+                  {/* My Stories */}
+                  <div>
+                    <h3 className="font-semibold mb-3">My Stories</h3>
+
+                    {userStories.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        No stories yet.
+                      </p>
+                    ) : (
+                      <div className="space-y-4">
+                        {userStories.map((story) => (
+                          <div key={story._id} className="flex items-start gap-4">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                              <MessageSquare className="w-5 h-5 text-primary" />
+                            </div>
+
+                            <div className="flex-1">
+                              <h4 className="font-medium">{story.title}</h4>
+
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {story.text}
+                              </p>
+
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Posted on {new Date(story.createdAt).toLocaleDateString('en-US')}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">{comment.building}</h4>
-                        <p className="text-sm text-muted-foreground mt-1">{comment.comment}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Submitted on {new Date(comment.submittedDate).toLocaleDateString('en-US')}
-                        </p>
-                        <Button variant="outline" className="mt-2" onClick={() => handleDeleteComment(comment.id)}>
-                          <Trash2 className="w-4 h-4"/>
-                          Delete
-                        </Button>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  {/* My Reviews */}
+                  <div>
+                    <h3 className="font-semibold mb-3">My Reviews</h3>
+
+                    {userReviews.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        No reviews yet.
+                      </p>
+                    ) : (
+                      <div className="space-y-4">
+                        {userReviews.map((review) => (
+                          <div key={review._id} className="flex items-start gap-4">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                              <Star className="w-5 h-5 text-primary" />
+                            </div>
+
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-medium">Review</h4>
+                                <Badge variant="outline">{review.rating}/5</Badge>
+
+                                {review.verified && (
+                                  <Badge className="bg-green-100 text-green-700 border-green-200">
+                                    Verified
+                                  </Badge>
+                                )}
+
+                                {review.hidden && (
+                                  <Badge variant="secondary">
+                                    Hidden
+                                  </Badge>
+                                )}
+                              </div>
+
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {review.text}
+                              </p>
+
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Posted on {new Date(review.createdAt).toLocaleDateString('en-US')}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>))}
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

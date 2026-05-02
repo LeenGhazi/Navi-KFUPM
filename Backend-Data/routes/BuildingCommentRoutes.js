@@ -12,6 +12,19 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET stories for a specific user
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const stories = await BuildingComment.find({
+      userId: req.params.userId,
+    }).sort({ createdAt: -1 });
+
+    res.json(stories);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET comments/stories for one location
 router.get("/:locationId", async (req, res) => {
   try {
