@@ -41,31 +41,28 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
       fetchPaths();
     }, [open]);
     const [sortBy, setSortBy] = useState("rating");
+    // handle the path rating by students. It updates the local state to reflect the new rating and shows a success message.
     const handleRatePath = (pathId, rating) => {
-        if (!user || user.role !== "student") {
-            toast.error("Only students can rate paths");
-            return;
-        }
-        setPaths((prevPaths) => prevPaths.map((path) => {
-            if (path._id === pathId) {
-                const oldTotal = path.rating * path.ratingCount;
-                const newRatingCount = path.userRating
-                    ? path.ratingCount
-                    : path.ratingCount + 1;
-                const newTotal = path.userRating
-                    ? oldTotal - path.userRating + rating
-                    : oldTotal + rating;
-                const newRating = newTotal / newRatingCount;
-                return {
-                    ...path,
-                    rating: newRating,
-                    ratingCount: newRatingCount,
-                    userRating: rating,
-                };
-            }
-            return path;
-        }));
-        toast.success("Rating submitted successfully!");
+      if (!user || user.role !== "student") {
+        toast.error("Only students can rate paths");
+        return;
+      }
+
+      setPaths((prevPaths) =>
+        prevPaths.map((path) => {
+          if (path._id === pathId) {
+            return {
+              ...path,
+              rating,
+              ratingCount: 1,
+              userRating: rating,
+            };
+          }
+          return path;
+        })
+      );
+
+      toast.success("Rating submitted successfully!");
     };
     // render star ratings.
     const renderStars = (pathId, currentRating, userRating) => {
@@ -164,7 +161,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
                 ? "Rate this path:"
                 : "Average rating:"}
                       </span>
-                      {renderStars(path._id, path.rating, path.userRating)}
+                      {renderStars(path._id, path.rating || 0, path.userRating)}
                     </div>
                   </div>
                 </div>
