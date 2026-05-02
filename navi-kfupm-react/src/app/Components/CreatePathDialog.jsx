@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from "../../AuthContext";
-import { mockLocations } from '../../mockData';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -18,36 +17,84 @@ export function CreatePathDialog({ open, onOpenChange }) {
     const [fromLocation, setFromLocation] = useState('');
     const [toLocation, setToLocation] = useState('');
     const [description, setDescription] = useState('');
+    const [buildings, setBuildings] = useState([]);
+    useEffect(() => {
+      if (!open) return;
+
+      const fetchBuildings = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/buildings`);
+
+          if (!res.ok) {
+            throw new Error("Failed to fetch buildings");
+          }
+
+          const data = await res.json();
+          setBuildings(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load buildings");
+        }
+      };
+
+      fetchBuildings();
+    }, [open]);
     // handle the creat path submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!user) {
-            toast.error('You must be logged in to create a path');
-            return;
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (!user) {
+        toast.error('You must be logged in to create a path');
+        return;
+      }
+
+      if (!title.trim() || !fromLocation || !toLocation || !description.trim()) {
+        toast.error('Please fill in all fields');
+        return;
+      }
+
+      if (fromLocation === toLocation) {
+        toast.error('Start and destination must be different locations');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/path-requests`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id || user._id,
+            creatorName: user.name,
+            pathName: title,
+            startLocation: fromLocation,
+            endLocation: toLocation,
+            description,
+            reason: description,
+            status: "pending",
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to submit path");
         }
-        if (!title.trim() || !fromLocation || !toLocation || !description.trim()) {
-            toast.error('Please fill in all fields');
-            return;
-        }
-        if (fromLocation === toLocation) {
-            toast.error('Start and destination must be different locations');
-            return;
-        }
-        // mock the path submission.
+
         toast.success('Path submitted for admin approval!');
-        // Reset form
         setTitle('');
         setFromLocation('');
         setToLocation('');
         setDescription('');
         onOpenChange(false);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to submit path");
+      }
     };
     if (!user)
         return null;
     // Get unique building names for the select options, more about the data will be 
-    // implemented in the backend, for now we will just use the mock data and extract 
     // the building names from the locations.
-    const buildings = mockLocations.map(loc => loc.name).sort();
     return (<Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
@@ -74,9 +121,11 @@ export function CreatePathDialog({ open, onOpenChange }) {
                   <SelectValue placeholder="Start point"/>
                 </SelectTrigger>
                 <SelectContent>
-                  {buildings.map((building) => (<SelectItem key={building} value={building}>
-                      {building}
-                    </SelectItem>))}
+                  {buildings.map((building) => (
+                    <SelectItem key={building.id} value={building.name}>
+                      {building.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
