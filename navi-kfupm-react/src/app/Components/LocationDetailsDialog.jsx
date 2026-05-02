@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { mockComments } from '../../mockData';
 import { useAuth } from '../../AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, } from './ui/dialog';
 import { Badge } from './ui/badge';
