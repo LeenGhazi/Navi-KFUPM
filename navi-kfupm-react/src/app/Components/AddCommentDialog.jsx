@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from "../../AuthContext";
-import { mockLocations } from '../../mockData';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '../Components/ui/dialog';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -15,19 +14,69 @@ export function AddCommentDialog({ open, onOpenChange, locationId }) {
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [hoveredRating, setHoveredRating] = useState(0);
-    const location = mockLocations.find((l) => l.id === locationId);
-    // comment submission handler 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!user || user.role === 'guest') {
-            toast.error('Please login to submit comments');
-            return;
+    const [location, setLocation] = useState(null);
+    useEffect(() => {
+      if (!open || !locationId) return;
+
+      const fetchLocation = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/buildings/${locationId}`);
+
+          if (!res.ok) {
+            throw new Error("Failed to fetch location");
+          }
+
+          const data = await res.json();
+          setLocation(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load location data");
         }
-        // Mock submit - in real app would save to database
+      };
+
+      fetchLocation();
+    }, [open, locationId]);
+    // comment submission handler 
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (!user || user.role === 'guest') {
+        toast.error('Please login to submit comments');
+        return;
+      }
+
+      if (!comment.trim()) {
+        toast.error("Please write a comment");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/building-reviews`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id || user._id,
+            userName: user.name,
+            locationId,
+            text: comment,
+            rating,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to submit comment");
+        }
+
         toast.success('Comment submitted successfully!');
         setComment('');
         setRating(5);
         onOpenChange(false);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to submit comment");
+      }
     };
     // in case the location is invalid, do not render anything
     if (!location)
