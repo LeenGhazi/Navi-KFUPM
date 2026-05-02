@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
@@ -9,118 +9,112 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '
 import { Badge } from '../Components/ui/badge';
 import { toast } from 'sonner';
 import { Route, CheckCircle, XCircle, Clock, MapPin, User } from 'lucide-react';
-const mockPaths = [
-    {
-        id: '1',
-        userId: 'student1',
-        userName: 'Ali Mohammed',
-        userEmail: 's202012345@kfupm.edu.sa',
-        title: 'Quick Route to Library from Dorm 5',
-        description: 'A faster walking path through the gardens that saves 5 minutes',
-        startLocation: 'Dormitory 5',
-        endLocation: 'Central Library',
-        status: 'Pending',
-        createdAt: '2024-03-01T09:30:00',
-    },
-    {
-        id: '2',
-        userId: 'student2',
-        userName: 'Omar Hassan',
-        userEmail: 's202098765@kfupm.edu.sa',
-        title: 'Shaded Path to Engineering Building',
-        description: 'Alternative route with shade for hot days',
-        startLocation: 'Student Center',
-        endLocation: 'Engineering Building 2',
-        status: 'Approved',
-        createdAt: '2024-02-28T14:20:00',
-        reviewNotes: 'Great suggestion! Forwarded to technical team for implementation.',
-    },
-    {
-        id: '3',
-        userId: 'student3',
-        userName: 'Khalid Salem',
-        userEmail: 's202011111@kfupm.edu.sa',
-        title: 'Shortcut through Parking Lot',
-        description: 'Walking through the parking lot to reach cafeteria faster',
-        startLocation: 'Academic Building 4',
-        endLocation: 'Main Cafeteria',
-        status: 'Rejected',
-        createdAt: '2024-02-25T11:15:00',
-        reviewNotes: 'Safety concerns with pedestrian traffic through active parking area.',
-    },
-];
 export function AdminCommunityPathsReview() { {/* Main component for the admin community paths review page. It allows admins to view, filter, search, and review student-submitted community paths. */  }
     const { user } = useAuth();
-    const [paths, setPaths] = useState(mockPaths);{}
+    const [paths, setPaths] = useState([]);
     const [filterStatus, setFilterStatus] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedPath, setSelectedPath] = useState(null);
     const [reviewNotes, setReviewNotes] = useState('');
+    useEffect(() => {
+      const fetchPaths = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/path-requests`);
+          const data = await res.json();
+          setPaths(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load community paths");
+        }
+      };
+
+      fetchPaths();
+    }, []);
     const filteredPaths = paths.filter((path) => {
 
         const matchesStatus = filterStatus === 'all' || path.status === filterStatus;
         const matchesSearch = searchQuery === '' ||
-            path.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            path.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            path.pathName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            path.creatorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             path.startLocation.toLowerCase().includes(searchQuery.toLowerCase()) ||
             path.endLocation.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
     });
     {/* Handler function to approve a community path. It updates the path's status to "Approved" and adds review notes if provided. It also shows a success toast notification. */  }
-    const handleApprove = (pathId) => {
-        
-        setPaths(paths.map((p) => p.id === pathId
-            ? {
-                ...p,
-                status: 'Approved',
-                reviewNotes: reviewNotes || 'Approved and forwarded to technical team.'
-            }
-            : p));
+    const handleApprove = async (pathId) => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/path-requests/${pathId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "approved",
+            reviewNotes: reviewNotes || "Approved and forwarded to technical team.",
+            reviewedByAdminId: user.id || user._id,
+          }),
+        });
+
+        const updated = await res.json();
+
+        setPaths(paths.map((p) => p._id === pathId ? updated : p));
         setReviewNotes('');
         setSelectedPath(null);
-        toast.success('Community path approved! Request sent to technical team.');
+        toast.success("Community path approved!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to approve path");
+      }
     };
 
-    const handleReject = (pathId) => {
-        
-        setPaths(paths.map((p) => p.id === pathId
-            ? {
-                ...p,
-                status: 'Rejected',
-                reviewNotes: reviewNotes || 'Rejected - does not meet criteria.'
-            }
-            : p));
+    const handleReject = async (pathId) => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/path-requests/${pathId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "rejected",
+            rejectionReason: reviewNotes || "Rejected - does not meet criteria.",
+            reviewedByAdminId: user.id || user._id,
+          }),
+        });
+
+        const updated = await res.json();
+
+        setPaths(paths.map((p) => p._id === pathId ? updated : p));
         setReviewNotes('');
         setSelectedPath(null);
-        toast.success('Community path rejected. User has been notified.');
+        toast.success("Community path rejected.");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to reject path");
+      }
     };
     {/* function to get the appropriate icon based on the path's status. It returns a clock icon for pending paths, a check circle for approved paths, and an X circle for rejected paths. */  }
     const getStatusIcon = (status) => {
         switch (status) {
-            case 'Pending':
+            case 'pending':
                 return <Clock className="w-4 h-4"/>;
-            case 'Approved':
+            case 'approved':
                 return <CheckCircle className="w-4 h-4"/>;
-            case 'Rejected':
+            case 'rejected':
                 return <XCircle className="w-4 h-4"/>;
         }
     };
     {/* function to get the appropriate badge color based on the path's status. It returns yellow for pending paths, green for approved paths, and red for rejected paths. */  }
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Pending':
+            case 'pending':
                 return 'bg-yellow-100 text-yellow-800';
-            case 'Approved':
+            case 'approved':
                 return 'bg-green-100 text-green-800';
-            case 'Rejected':
+            case 'rejected':
                 return 'bg-red-100 text-red-800';
         }
     };
     {/* Calculate statistics for the dashboard cards, counting the number of paths in each status category. */  }
     const stats = {
-        pending: paths.filter((p) => p.status === 'Pending').length,
-        approved: paths.filter((p) => p.status === 'Approved').length,
-        rejected: paths.filter((p) => p.status === 'Rejected').length,
+        pending: paths.filter((p) => p.status === 'pending').length,
+        approved: paths.filter((p) => p.status === 'approved').length,
+        rejected: paths.filter((p) => p.status === 'rejected').length,
     };
 
 
@@ -187,9 +181,9 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Paths</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Approved">Approved</SelectItem>
-                  <SelectItem value="Rejected">Rejected</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -211,15 +205,15 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
               <p className="text-muted-foreground">No community paths found</p>
             </CardContent>
             {/* This card is shown when there are no community paths that match the current filter and search criteria. It provides feedback to the admin that there are no paths to review. */  }
-          </Card>) : (filteredPaths.map((path) => (<Card key={path.id}>
+          </Card>) : (filteredPaths.map((path) => (<Card key={path._id}>
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-lg">{path.title}</CardTitle>
+                    <CardTitle className="text-lg">{path.pathName}</CardTitle>
                     <CardDescription className="mt-1 space-y-1">
                       <div className="flex items-center gap-1">
                         <User className="w-3 h-3"/>
-                        Submitted by {path.userName} ({path.userEmail})
+                        Submitted by {path.creatorName || path.userId} ({path.userEmail})
                       </div>
                       <div className="text-xs">
                         {new Date(path.createdAt).toLocaleString()}
@@ -270,21 +264,21 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
                   </div>)}
 
                 {/* If the path is still pending review, display a section with a textarea for the admin to add review notes and buttons to approve or reject the path. The textarea is pre-filled with any existing review notes if the admin has already started writing them. */  }
-                {path.status === 'Pending' && (<div className="space-y-3 pt-2 border-t">
+                {path.status === 'pending' && (<div className="space-y-3 pt-2 border-t">
                     <div className="space-y-2">
                       <Label>Review Notes (Optional)</Label>
-                      <Textarea placeholder="Add notes about your decision..." value={selectedPath?.id === path.id ? reviewNotes : ''} onChange={(e) => {
+                      <Textarea placeholder="Add notes about your decision..." value={selectedPath?.id === path._id ? reviewNotes : ''} onChange={(e) => {
                     setSelectedPath(path);
                     setReviewNotes(e.target.value);
                 }} rows={2}/>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Button onClick={() => handleApprove(path.id)} className="flex-1" variant="default">
+                      <Button onClick={() => handleApprove(path._id)} className="flex-1" variant="default">
                         <CheckCircle className="w-4 h-4 mr-2"/>
                         Approve & Forward to Tech Team
                       </Button>
-                      <Button onClick={() => handleReject(path.id)} className="flex-1" variant="destructive">
+                      <Button onClick={() => handleReject(path._id)} className="flex-1" variant="destructive">
                         <XCircle className="w-4 h-4 mr-2"/>
                         Reject
                       </Button>
