@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from "../../AuthContext";
-import { mockLocations } from '../../mockData';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from './ui/dialog';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -17,18 +16,76 @@ export function SubmitComplaintDialog({ open, onOpenChange, locationId, }) {
     const { user } = useAuth();
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
-    const location = mockLocations.find((l) => l.id === locationId);
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!user || user.role === 'guest') {
-            toast.error('Please login to submit complaints');
-            return;
+    const [location, setLocation] = useState(null);
+    useEffect(() => {
+      if (!open || !locationId) return;
+
+      const fetchLocation = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/buildings/${locationId}`);
+
+          if (!res.ok) {
+            throw new Error("Failed to fetch location");
+          }
+
+          const data = await res.json();
+          setLocation(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load location data");
         }
-        // Mock submission until the backend is implemented
+      };
+
+      fetchLocation();
+    }, [open, locationId]);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (!user || user.role === 'guest') {
+        toast.error('Please login to submit complaints');
+        return;
+      }
+
+      if (!category || !description.trim()) {
+        toast.error("Please fill in all fields");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/complaints`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: `comp-${Date.now()}`,
+            userId: user.id || user._id,
+            userName: user.name,
+            userEmail: user.email,
+            locationId: location.id,
+            locationName: location.name,
+            category,
+            type: category,
+            title: `${category} issue at ${location.name}`,
+            description,
+            status: "Pending",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to submit complaint");
+        }
+
         toast.success('Complaint submitted successfully! You can track its status in the Complaints tab.');
         setCategory('');
         setDescription('');
         onOpenChange(false);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to submit complaint");
+      }
     };
     if (!location)
         return null;
