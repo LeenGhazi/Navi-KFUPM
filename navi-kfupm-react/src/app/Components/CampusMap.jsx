@@ -23,7 +23,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
     useEffect(() => {
       const fetchLocations = async () => {
         try {
-          const res = await fetch("http://localhost:5000/api/buildings");
+          const res = await fetch("${import.meta.env.VITE_API_URL}/api/buildings");
           const data = await res.json();
           setLocations(data);
         } catch (error) {
@@ -133,7 +133,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
               coordinates: { x: actualX, y: actualY }
             };
 
-            fetch(`http://localhost:5000/api/buildings/${movingBuildingId}`, {
+            fetch(`${import.meta.env.VITE_API_URL}/api/buildings/${movingBuildingId}`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
