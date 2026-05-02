@@ -33,7 +33,7 @@ export function AccountPage() {   {/* this page allows users to view and edit th
     useEffect(() => {
       if (!user) return;
 
-      const userId = user._id || user.id;
+      const userId = user._id || user.id || user.userId;
 
       const fetchUserData = async () => {
         try {
