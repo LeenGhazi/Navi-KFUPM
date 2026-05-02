@@ -9,6 +9,15 @@ const pathRequestSchema = new mongoose.Schema(
     startLocation: String,
     endLocation: String,
     reason: String,
+    creatorName: String,
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    ratingCount: {
+      type: Number,
+      default: 0,
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
