@@ -39,8 +39,8 @@ export function FilterManagementPage() {
       const fetchData = async () => {
         try {
           const [categoriesRes, buildingsRes] = await Promise.all([
-            fetch(`${API_BASE_URL}/api/map-categories`),
-            fetch(`${API_BASE_URL}/api/buildings`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/buildings`),
           ]);
 
           const categoriesData = await categoriesRes.json();
@@ -68,7 +68,7 @@ export function FilterManagementPage() {
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/api/map-categories`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -99,7 +99,7 @@ export function FilterManagementPage() {
         return;
       }
       try {
-        const res = await fetch(`${API_BASE_URL}/api/map-categories/${selectedCategory._id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/map-categories/${selectedCategory._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -124,7 +124,7 @@ export function FilterManagementPage() {
       Otherwise, it removes the category from the state and shows a success toast message. */  }
     const handleDeleteCategory = async (categoryId) => {
       try {
-        await fetch(`${API_BASE_URL}/api/map-categories/${categoryId}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/map-categories/${categoryId}`, {
           method: "DELETE",
         });
 
@@ -163,7 +163,7 @@ export function FilterManagementPage() {
     const handleSaveBuildingAssignments = () => {
         if (!selectedCategory)
             return;
-        setCategories(prev => prev.map(cat => cat.id === selectedCategory.id
+        setCategories(prev => prev.map(cat => cat._id === selectedCategory._id
             ? { ...cat, assignedBuildings: selectedBuildings, buildingCount: selectedBuildings.length }
             : cat));
         toast.success('Building assignments saved successfully!');
@@ -215,12 +215,12 @@ export function FilterManagementPage() {
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Buildings:</span>
-                  <Badge>{category.buildingCount}</Badge>
+                  <Badge>{category.active ? "Active" : "Inactive"}</Badge>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Created:</span>
                   <span className="text-xs">
-                    {new Date(category.createdDate).toLocaleDateString()}
+                    {new Date(category.createdAt).toLocaleDateString()}
                   </span>
                 </div>
                 <Button variant="outline" size="sm" className="w-full mt-2" onClick={() => openBuildingsDialog(category)}>
@@ -328,7 +328,7 @@ export function FilterManagementPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <MapPin className="w-5 h-5"/>
-              Assign Buildings to {selectedCategory?.name}
+              Assign Buildings to {selectedCategory?.displayLabel}
             </DialogTitle>
             <DialogDescription>
               Select buildings to assign to this filter category
