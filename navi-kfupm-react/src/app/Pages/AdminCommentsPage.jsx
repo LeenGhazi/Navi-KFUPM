@@ -162,7 +162,7 @@ export function AdminCommentsPage() {{/* this function is the main component for
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="location-filter">Filter by Building</Label>
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>{/* Select component to filter comments by building location. It uses the mockLocations data to populate the options. */  }
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>{/* Select component to filter comments by building location.*/  }
                 <SelectTrigger id="location-filter">{/* Trigger for the location filter select dropdown. It displays the currently selected location or "All Buildings" if no specific location is selected. */  }
                   <SelectValue />
                 </SelectTrigger>
