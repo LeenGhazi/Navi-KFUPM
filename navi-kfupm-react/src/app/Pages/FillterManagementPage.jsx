@@ -11,17 +11,6 @@ import { Checkbox } from '../Components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from '../Components/ui/dialog';
 import { Filter, Plus, Trash2, Edit, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
-const initialCategories = [
-    { id: 'cat1', name: 'Academic Buildings', value: 'academic', buildingCount: 15, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat2', name: 'Restaurants', value: 'restaurant', buildingCount: 8, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat3', name: 'Cafes', value: 'cafe', buildingCount: 12, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat4', name: 'Dormitories', value: 'dorm', buildingCount: 6, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat5', name: 'Parking', value: 'parking', buildingCount: 10, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat6', name: 'Study Rooms', value: 'study_room', buildingCount: 20, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat7', name: 'Prayer Rooms', value: 'prayer_room', buildingCount: 14, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat8', name: 'Library', value: 'library', buildingCount: 3, createdDate: '2024-01-10', assignedBuildings: [] },
-    { id: 'cat9', name: 'Sports Facilities', value: 'sports', buildingCount: 5, createdDate: '2024-01-10', assignedBuildings: [] },
-];
 {/* FilterManagementPage component is responsible for managing filter categories used for building classification on the map. 
   It allows maintenance staff to add, edit, delete categories, and assign buildings to each category. 
   The component uses various UI components such as Card, Dialog, and Tabs to provide an interactive interface for managing filters. */  }
@@ -42,6 +31,10 @@ export function FilterManagementPage() {
             fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`),
             fetch(`${import.meta.env.VITE_API_URL}/api/buildings`),
           ]);
+
+          if (!categoriesRes.ok || !buildingsRes.ok) {
+            throw new Error("Failed to fetch filter data");
+          }
 
           const categoriesData = await categoriesRes.json();
           const buildingsData = await buildingsRes.json();
@@ -301,9 +294,9 @@ export function FilterManagementPage() {
             </div>
             {/* Warning message if the selected category has buildings assigned. It informs the user that changing the category value may affect existing assignments. */  }
 
-            {selectedCategory && selectedCategory.buildingCount > 0 && (<div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+            {selectedCategory?.assignedBuildings?.length > 0 && (<div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                 <p className="text-sm text-yellow-800">
-                  <strong>Warning:</strong> This category is assigned to {selectedCategory.buildingCount} building(s).
+                  <strong>Warning:</strong> This category is assigned to {selectedCategory.assignedBuildings.length} building(s).
                   Changing the value may affect existing assignments.
                 </p>
               </div>)}
@@ -344,9 +337,13 @@ export function FilterManagementPage() {
              Each building can be assigned or unassigned from the selected category by toggling the checkbox. */  }
               <div className="space-y-2">{/* Mapping over the list of buildings to render a checkbox for each building. 
               The checkbox is checked if the building is currently assigned to the selected category. Toggling the checkbox will call the handleToggleBuilding function to update the selected buildings state. */  }
-                {buildings.map((building) => (<div key={building.id} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
-                    <Checkbox id={`building-${building.id}`} checked={selectedBuildings.includes(building.id)} onCheckedChange={() => handleToggleBuilding(building.id)}/>
-                    <label htmlFor={`building-${building.id}`} className="flex-1 text-sm font-medium cursor-pointer">
+                {buildings.map((building) => (<div key={building._id || building.id} className="flex items-center space-x-2 p-2 hover:bg-accent rounded-md">
+                    <Checkbox
+                        id={`building-${building._id || building.id}`}
+                        checked={selectedBuildings.includes(building._id || building.id)}
+                        onCheckedChange={() => handleToggleBuilding(building._id || building.id)}
+                      />
+                    <label htmlFor={`building-${building._id || building.id}`} className="flex-1 text-sm font-medium cursor-pointer">
                       {building.name}
                       <Badge variant="outline" className="ml-2 text-xs">
                         {building.category}
