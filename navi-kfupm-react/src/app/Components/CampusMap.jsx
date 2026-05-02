@@ -322,16 +322,18 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             </filter>
           </defs>
           
-          <img
-            src={mapImage}
-            alt="KFUPM Campus Map"
-            className="w-full h-full object-contain"
-            style={{
-              filter: isDark
-                ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)"
-                : "none"
-            }}
-          />
+            <image
+              href={mapImage}
+              style={{
+                opacity: isDark ? 0.85 : 1,
+                filter: isDark ? "brightness(0.8) contrast(1.1)" : "none"
+              }}
+              x="0"
+              y="0"
+              width="1000"
+              height="1000"
+              preserveAspectRatio="xMidYMid slice"
+            />
 
           {/* Bus Routes */}
           {showBusRoutes &&

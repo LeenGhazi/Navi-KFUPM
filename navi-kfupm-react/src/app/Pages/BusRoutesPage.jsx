@@ -251,10 +251,13 @@ export function BusRoutesPage() {
 
         <div className="relative w-full h-full overflow-hidden">
         <img
-          key={route.routeId}
           src={mapImage}
-          alt={route.name}
-          className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10"
+          alt="KFUPM Campus Map"
+          className="w-full h-full object-cover"
+          style={{
+            opacity: isDark ? 0.85 : 1,
+            filter: isDark ? "brightness(0.8) contrast(1.1)" : "none"
+          }}
         />
 
           {/* Route Images */}
