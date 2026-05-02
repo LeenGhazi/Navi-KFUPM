@@ -5,8 +5,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '
 import { MapPin, Navigation } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { toast } from 'sonner';
-// This component allows users to find the nearest locations 
-// of a selected category based on a mock user location. 
 // It calculates distances and displays the top 5 nearest locations in a card.
 export function NearestLocationFinder({ onLocationSelect }) {
     const [selectedCategory, setSelectedCategory] = useState('');

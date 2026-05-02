@@ -9,7 +9,7 @@ import { Badge } from '../Components/ui/badge';
 import { Separator } from '../Components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
-import { UserCircle, Mail, Phone, MapPin, Shield, Edit, Save, X, Key, Activity, Award, Route, MessageSquare, Trash2, Star, } from 'lucide-react';
+import { UserCircle, Mail, Phone, MapPin, Shield, Edit, Save, X, Key, Award, Route, MessageSquare, Trash2, Star, } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function AccountPage() {   {/* this page allows users to view and edit their account information*/ }
