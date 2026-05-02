@@ -46,7 +46,7 @@ export function AccountPage() {   {/* this page allows users to view and edit th
           const reviewsData = await reviewsRes.json();
 
           setUserPaths(pathsData.filter(path => path.userId === userId));
-          setUserComments(reviewsData);
+          setUserReviews(reviewsData);
 
         } catch (error) {
           console.error(error);
@@ -115,11 +115,11 @@ export function AccountPage() {   {/* this page allows users to view and edit th
     {/* Render status badge */}
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'Approved':
+            case 'approved':
                 return <Badge className="bg-green-100 text-green-700 border-green-200">Approved</Badge>;
-            case 'Pending':
+            case 'pending':
                 return <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200">Pending</Badge>;
-            case 'Rejected':
+            case 'rejected':
                 return <Badge className="bg-red-100 text-red-700 border-red-200">Rejected</Badge>;
             default:
                 return <Badge variant="outline">{status}</Badge>;
@@ -159,13 +159,6 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         {[1, 2, 3, 4, 5].map((star) => (<Star key={star} className={`w-4 h-4 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}/>))}
       </div>);
     };
-    // Mock activity data
-    const recentActivity = [
-        { date: '2026-02-08', action: 'Submitted complaint', details: 'AC not working in Building 5' },
-        { date: '2026-02-07', action: 'Posted comment', details: 'Engineering Complex' },
-        { date: '2026-02-06', action: 'Liked story', details: 'Library memories' },
-        { date: '2026-02-05', action: 'Viewed map', details: 'Searched for Study Rooms' },
-    ];
     return (
       
     <div className="container mx-auto py-6 px-4 h-full overflow-auto">{/* Main container */}
@@ -218,7 +211,7 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         {/* Tabs for different sections */}
         <Tabs defaultValue={user.role === 'student' ? 'paths' : 'profile'} className="space-y-4">
           {/* Tabs Navigation */}
-          <TabsList className={`grid w-full ${user.role === 'student' ? 'grid-cols-2' : 'grid-cols-5'}`}>
+          <TabsList className={`grid w-full ${user.role === 'student' ? 'grid-cols-2' : 'grid-cols-4'}`}>
              {/* Non-student tabs */}
             {user.role !== 'student' && (
               <>
@@ -229,10 +222,6 @@ export function AccountPage() {   {/* this page allows users to view and edit th
                 <TabsTrigger value="security" className="gap-2">
                   <Key className="w-4 h-4"/>
                   Security
-                </TabsTrigger>
-                <TabsTrigger value="activity" className="gap-2">
-                  <Activity className="w-4 h-4"/>
-                  Activity
                 </TabsTrigger>
               </>
             )}
@@ -437,40 +426,6 @@ export function AccountPage() {   {/* this page allows users to view and edit th
             </Card>
           </TabsContent>
 
-          {/* Activity Tab */}
-          <TabsContent value="activity" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your recent actions on Navi-KFUPM</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity, index) => (<div key={index}>
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <Activity className="w-5 h-5 text-primary"/>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-medium">{activity.action}</h4>
-                            <span className="text-xs text-muted-foreground">
-                              {new Date(activity.date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-            })}
-                            </span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-1">{activity.details}</p>
-                        </div>
-                      </div>
-                      {index < recentActivity.length - 1 && <Separator className="mt-4"/>}
-                    </div>))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           {/* Paths Tab */}
           <TabsContent value="paths" className="space-y-4">
             <Card>
@@ -480,7 +435,7 @@ export function AccountPage() {   {/* this page allows users to view and edit th
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {userPaths.map((path) => (<div key={path.id} className="flex items-start gap-4">
+                  {userPaths.map((path) => (<div key={path._id} className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                         <Route className="w-5 h-5 text-primary"/>
                       </div>
