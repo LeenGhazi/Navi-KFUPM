@@ -20,15 +20,21 @@ export function HomePage() {
     const { user } = useAuth();
     const [categories, setCategories] = useState([]);
 
-useEffect(() => {
-    fetch('${import.meta.env.VITE_API_URL}/api/map-categories')
-        .then(res => res.json())
-        .then(data => setCategories(data.map(cat => ({
-            value: cat.categoryName,
-            label: cat.displayLabel
-        }))))
-        .catch(err => console.error(err));
-}, []);
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`)
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        return res.json();
+      })
+      .then(data =>
+        setCategories(data.map(cat => ({
+          value: cat.categoryName,
+          label: cat.displayLabel
+        })))
+      )
+      .catch(err => console.error(err));
+  }, []);
+
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedLocation, setSelectedLocation] = useState(null);
