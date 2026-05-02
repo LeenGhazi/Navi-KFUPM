@@ -1,16 +1,36 @@
-import React from 'react';
-import { mockLocations } from '../../mockData';
+import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from './ui/select';
 import { ArrowRight, X } from 'lucide-react';
+import { toast } from 'sonner';
 // This component allows users to select a starting point and destination for route planning. 
 // It groups locations by category for easier navigation. 
 // If both points are selected, it shows a clear button to reset the selection. 
 // It also prevents selecting the same location as both start and end.
 export function RoutePlanner({ routeFrom, routeTo, onRouteFromChange, onRouteToChange, onClear }) {
+    const [locations, setLocations] = useState([]);
+    useEffect(() => {
+      const fetchLocations = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/buildings`);
+
+          if (!res.ok) {
+            throw new Error("Failed to fetch locations");
+          }
+
+          const data = await res.json();
+          setLocations(data);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load route locations");
+        }
+      };
+
+      fetchLocations();
+    }, []);
     // Group locations by category
-    const locationsByCategory = mockLocations.reduce((acc, loc) => {
+    const locationsByCategory = locations.reduce((acc, loc) => {
         if (!acc[loc.category]) {
             acc[loc.category] = [];
         }
