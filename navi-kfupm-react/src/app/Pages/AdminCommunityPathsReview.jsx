@@ -20,11 +20,16 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
       const fetchPaths = async () => {
         try {
           const res = await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests`);
+
+          if (!res.ok) {
+            throw new Error("Failed response");
+          }
+
           const data = await res.json();
           setPaths(data);
         } catch (error) {
-          console.error(error);
-          toast.error("Failed to load community paths");
+          console.error("Fetch error:", error);
+          setTimeout(fetchPaths, 2000);
         }
       };
 
@@ -33,11 +38,12 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
     const filteredPaths = paths.filter((path) => {
 
         const matchesStatus = filterStatus === 'all' || path.status === filterStatus;
-        const matchesSearch = searchQuery === '' ||
-            path.pathName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            path.creatorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            path.startLocation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            path.endLocation.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch =
+          searchQuery === '' ||
+          (path.pathName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (path.creatorName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (path.startLocation || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (path.endLocation || '').toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
     });
     {/* Handler function to approve a community path. It updates the path's status to "Approved" and adds review notes if provided. It also shows a success toast notification. */  }
