@@ -65,7 +65,7 @@ export function CreatePathDialog({ open, onOpenChange }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: user.id || user._id,
+            userId: user._id || user.id,
             creatorName: user.name,
             pathName: title,
             startLocation: fromLocation,
@@ -137,9 +137,9 @@ export function CreatePathDialog({ open, onOpenChange }) {
                   <SelectValue placeholder="Destination"/>
                 </SelectTrigger>
                 <SelectContent>
-                  {buildings.map((building) => (<SelectItem key={building} value={building}>
-                      {building}
-                    </SelectItem>))}
+                  {buildings.map((building) => (<SelectItem key={building._id || building.id} value={building.name}>
+                    {building.name}
+                  </SelectItem>))}
                 </SelectContent>
               </Select>
             </div>

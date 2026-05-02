@@ -47,7 +47,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
             return;
         }
         setPaths((prevPaths) => prevPaths.map((path) => {
-            if (path.id === pathId) {
+            if (path._id === pathId) {
                 const oldTotal = path.rating * path.ratingCount;
                 const newRatingCount = path.userRating
                     ? path.ratingCount
@@ -81,11 +81,11 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
             </button>))}
         </div>
         <span className="text-sm font-medium ml-1">
-          {currentRating.toFixed(1)}
+          {(currentRating || 0).toFixed(1)}
         </span>
         <span className="text-xs text-muted-foreground">
           (
-          {paths.find((p) => p.id === pathId)?.ratingCount || 0}
+          {paths.find((p) => p._id === pathId)?.ratingCount || 0}
           )
         </span>
       </div>);
@@ -93,7 +93,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
     // sorting paths base on the selected category.
     const sortedPaths = [...paths].sort((a, b) => {
         if (sortBy === "rating") {
-            return b.rating - a.rating;
+            return (b.rating || 0) - (a.rating || 0);
         }
         return 0;
     });
@@ -126,7 +126,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
 
         <ScrollArea className="max-h-[60vh]">
           <div className="space-y-3 pr-4">
-            {sortedPaths.map((path) => (<Card key={path.id} className="p-4">
+            {sortedPaths.map((path) => (<Card key={path._id} className="p-4">
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -164,7 +164,7 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
                 ? "Rate this path:"
                 : "Average rating:"}
                       </span>
-                      {renderStars(path.id, path.rating, path.userRating)}
+                      {renderStars(path._id, path.rating, path.userRating)}
                     </div>
                   </div>
                 </div>
