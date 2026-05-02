@@ -42,11 +42,19 @@ Follow these steps to run the project locally:
 ```
 git clone https://github.com/LeenGhazi/Navi-KFUPM.git
 ```
+
+2️⃣ 1st Terminal: Run the Backend 
+```
+cd Backend-Data
+```
+```
+npm start
+```
+
+3️⃣ 2nd Terminal: Install Dependencies
 ```
 cd Navi-KFUPM/navi-kfupm-react
 ```
-
-2️⃣ Install Dependencies
 ```
 npm install
 ```
@@ -56,11 +64,10 @@ npm install -D tailwindcss @tailwindcss/vite
 ```
 npm install @radix-ui/react-dialog
 ```
-3️⃣ Run the Development Server
+4️⃣ Run the Development Server 
 ```
 npm run dev
 ```
-4️⃣ Open in Browser
 ```
 Open http://localhost:PORT
 ```
@@ -71,7 +78,7 @@ Open http://localhost:PORT
 
 1. Open the application in your browser using:
 ```
-http://localhost:5173
+http://localhost:PORT
 ```
 
 2. From the Home Page:
@@ -102,7 +109,7 @@ http://localhost:5173
 - View route details and stops on the map  
 
 **👤 Using the System as a Registered User**
-- Login or signup  
+- Login or signup using the demo accounts information provided  
 - Access personalized features  
 
 ---
@@ -111,6 +118,6 @@ http://localhost:5173
 
 | Name | Role | Responsibilities |
 |------|------|------------------|
-| Leen AlMjnouni | Frontend Developer | Developed map features and UI components, implemented About page, and handled admin/technical interface updates |
-| Asma Alghamdi | Frontend Developer | Implemented bus routes, announcements, complaints, authentication (login/signup), and user profile features |
-| Rawan Alzahrani | Frontend Developer | Developed admin and technical dashboards including requests, complaints management, path approvals, filters, and user management |
+| Leen Almjnouni | Frontend/Backend Developer | Developed map features and UI components, implemented About page, handled admin/technical interface updates, managed users data, bus routes, and about page |
+| Asma Alghamdi | Frontend/Backend Developer | Implemented bus routes, announcements, complaints, authentication (login/signup), and user profile features, managed locations/buildings data, Complaints, and admin requests |
+| Rawan Alzahrani | Frontend/Backend Developer | Developed admin and technical dashboards including requests, complaints management, path approvals, filters, user management, also managed comments, reviews, stories, community path requests and approvals, and map categories |
