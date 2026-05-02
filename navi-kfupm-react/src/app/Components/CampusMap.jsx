@@ -325,8 +325,7 @@ export function CampusMap({ selectedCategories, showBusRoutes, showMainPaths, se
             <image
               href={mapImage}
               style={{
-                opacity: isDark ? 0.85 : 1,
-                filter: isDark ? "brightness(0.8) contrast(1.1)" : "none"
+                filter: isDark ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)" : "none"
               }}
               x="0"
               y="0"

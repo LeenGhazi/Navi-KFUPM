@@ -255,8 +255,7 @@ export function BusRoutesPage() {
           alt="KFUPM Campus Map"
           className="w-full h-full object-cover"
           style={{
-            opacity: isDark ? 0.85 : 1,
-            filter: isDark ? "brightness(0.8) contrast(1.1)" : "none"
+            filter: isDark ? "invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.1)" : "none"
           }}
         />
 
