@@ -21,7 +21,7 @@ app.use("/api/buildings", require("./routes/buildingRoutes"));
 app.use("/api/about-page", require("./routes/aboutPageRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/tech-requests", require("./routes/techRequestRoutes"));
-app.use("/api/building-comments", require("./routes/buildingCommentRoutes"));
+app.use("/api/building-comments", require("./routes/BuildingCommentRoutes"));
 app.use("/api/building-reviews", require("./routes/buildingReviewRoutes"));
 app.use("/api/stories", require("./routes/storyRoutes"));
 app.use("/api/path-requests", require("./routes/pathRequestRoutes"));
