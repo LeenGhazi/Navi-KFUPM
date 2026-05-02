@@ -64,7 +64,7 @@ npm install -D tailwindcss @tailwindcss/vite
 ```
 npm install @radix-ui/react-dialog
 ```
-4️⃣ Run the Development Server 
+4️⃣ Run the Server 
 ```
 npm run dev
 ```
