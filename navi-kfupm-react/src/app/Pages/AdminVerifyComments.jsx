@@ -8,7 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '
 import { Badge } from '../Components/ui/badge';
 import { toast } from 'sonner';
 import { MessageSquare, CheckCircle, Star, MapPin, Search, Shield } from 'lucide-react';
-import { mockLocations } from '../../mockData';
 
 {/* AdminVerifyComments component allows administrators to review and verify public comments on campus buildings. . */  }
 export function AdminVerifyComments() {
@@ -17,13 +16,29 @@ export function AdminVerifyComments() {
     const [filterVerified, setFilterVerified] = useState('all');
     const [selectedLocation, setSelectedLocation] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [locations, setLocations] = useState([]);
 
     /// useEffect hook fetches the building reviews from the backend API when the component mounts and updates the comments state with the retrieved data. It also handles any errors that may occur during the fetch operation.
     useEffect(() => {
-      fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews`)
-        .then(res => res.json())
-        .then(data => setComments(data))
-        .catch(err => console.error(err));
+      const fetchData = async () => {
+        try {
+          const [reviewsRes, buildingsRes] = await Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/buildings`),
+          ]);
+
+          const reviewsData = await reviewsRes.json();
+          const buildingsData = await buildingsRes.json();
+
+          setComments(reviewsData);
+          setLocations(buildingsData);
+        } catch (err) {
+          console.error(err);
+          toast.error("Failed to load comments");
+        }
+      };
+
+      fetchData();
     }, []);
 
     {/*filterComments function filters the comments based on verification status, selected building location, and search query. */  }
@@ -150,7 +165,7 @@ export function AdminVerifyComments() {
               </Select>
             </div>
 
-            <div className="space-y-2">{/* Select component to filter comments by building location. It uses mockLocations to populate the options. */  }
+            <div className="space-y-2">{/* Select component to filter comments by building location. */  }
               <Label htmlFor="location-filter">Filter by Building</Label>
               <Select value={selectedLocation} onValueChange={setSelectedLocation}>{}
                 <SelectTrigger id="location-filter">
@@ -158,7 +173,7 @@ export function AdminVerifyComments() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Buildings</SelectItem>
-                  {mockLocations.map((location) => (<SelectItem key={location.id} value={location.id}>
+                  {locations.map((location) => (<SelectItem key={location.id} value={location.id}>
                       {location.name}
                     </SelectItem>))}
                 </SelectContent>
