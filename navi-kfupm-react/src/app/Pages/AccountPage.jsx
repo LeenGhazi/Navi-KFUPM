@@ -11,61 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
 import { UserCircle, Mail, Phone, MapPin, Shield, Edit, Save, X, Key, Activity, Award, Route, MessageSquare, Trash2, Star, } from 'lucide-react';
 import { toast } from 'sonner';
-// Mock data for community paths
-const mockUserPaths = [
-    {
-        id: 1,
-        title: 'Quick Route to Library',
-        from: 'Engineering Complex',
-        to: 'Central Library',
-        description: 'Fastest path avoiding construction area',
-        status: 'Approved',
-        rating: 4.5,
-        createdDate: '2026-02-20',
-    },
-    {
-        id: 2,
-        title: 'Scenic Campus Tour',
-        from: 'Main Gate',
-        to: 'Student Center',
-        description: 'Beautiful route through the gardens',
-        status: 'Pending',
-        rating: 0,
-        createdDate: '2026-02-24',
-    },
-    {
-        id: 3,
-        title: 'Early Morning Jog Route',
-        from: 'Sports Complex',
-        to: 'Medical Center',
-        description: 'Best morning exercise path',
-        status: 'Rejected',
-        rating: 0,
-        createdDate: '2026-02-18',
-        rejectionReason: 'Path crosses restricted area',
-    },
-];
-// Mock data for user comments
-const mockUserComments = [
-    {
-        id: 1,
-        building: 'Engineering Complex',
-        comment: 'Great study spaces on the 3rd floor! Very quiet and well-lit.',
-        submittedDate: '2026-02-23',
-    },
-    {
-        id: 2,
-        building: 'Central Library',
-        comment: 'The new coffee machine on the second floor is amazing!',
-        submittedDate: '2026-02-25',
-    },
-    {
-        id: 3,
-        building: 'Student Center',
-        comment: 'Love the renovated cafeteria! Much better seating now.',
-        submittedDate: '2026-02-22',
-    },
-];
 
 export function AccountPage() {   {/* this page allows users to view and edit their account information*/ }
     const { user, logout } = useAuth(); {/* Get current user data and logout function */ }
@@ -79,30 +24,38 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         confirmPassword: '',
     });
     {/* User paths */}
-    const [userPaths, setUserPaths] = useState(mockUserPaths);
+    const [userPaths, setUserPaths] = useState([]);
     const [userStories, setUserStories] = useState([]);
+    const [userComments, setUserComments] = useState([]);
     const [userReviews, setUserReviews] = useState([]);
 
     // Fetch user-specific stories and reviews on component mount
     useEffect(() => {
       if (!user) return;
 
-      const userId = user.id || user._id || user.userId || 2; // Fallback to 2 for mock data if no user ID found
+      const userId = user.id || user._id;
 
-      // fetch stories
-      fetch(`${import.meta.env.VITE_API_URL}/api/building-comments/user/${userId}`)
-        .then(res => res.json())
-        .then(data => setUserStories(data))
-        .catch(err => console.error(err));
+      const fetchUserData = async () => {
+        try {
+          const [pathsRes, reviewsRes] = await Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/api/path-requests`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/user/${userId}`),
+          ]);
 
-      // fetch reviews
-      fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/user/${userId}`)
-        .then(res => res.json())
-        .then(data => setUserReviews(data))
-        .catch(err => console.error(err));
+          const pathsData = await pathsRes.json();
+          const reviewsData = await reviewsRes.json();
 
+          setUserPaths(pathsData.filter(path => path.userId === userId));
+          setUserComments(reviewsData);
+
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load account data");
+        }
+      };
+
+      fetchUserData();
     }, [user]);
-
     {/* Check authentication on load */}
     useEffect(() => {
         console.log('AccountPage - User:', user);
@@ -173,16 +126,32 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         }
     };
     {/* Delete path  if confirmed */}
-    const handleDeletePath = (pathId) => {
-        toast.success('Path deleted successfully!');
-        // In real app, would delete from database
-        setUserPaths(userPaths.filter((path) => path.id !== pathId));
+    const handleDeletePath = async (pathId) => {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests/${pathId}`, {
+          method: "DELETE",
+        });
+
+        setUserPaths(prev => prev.filter(p => p._id !== pathId));
+        toast.success("Path deleted successfully!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete path");
+      }
     };
       {/* Delete comment if confirmed */}
-    const handleDeleteComment = (commentId) => {
-        toast.success('Comment deleted successfully!');
-        // In real app, would delete from database
-        setUserComments(userComments.filter((comment) => comment.id !== commentId));
+    const handleDeleteComment = async (commentId) => {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
+          method: "DELETE",
+        });
+
+        setUserComments(prev => prev.filter(c => c._id !== commentId));
+        toast.success("Comment deleted successfully!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete comment");
+      }
     };
       
     const renderStars = (rating) => {
@@ -517,20 +486,20 @@ export function AccountPage() {   {/* this page allows users to view and edit th
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium">{path.title}</h4>
+                          <h4 className="font-medium">{path.pathName}</h4>
                           <div className="flex items-center gap-2">
                             {getStatusBadge(path.status)}
                             {path.rating > 0 && renderStars(path.rating)}
                           </div>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {path.description} ({path.from} to {path.to})
+                          {path.description} ({path.startLocation} to {path.endLocation})
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Created on {new Date(path.createdDate).toLocaleDateString('en-US')}
+                          Created on {new Date(path.createdAt).toLocaleDateString('en-US')}
                         </p>
                         {path.rejectionReason && (<p className="text-xs text-red-500 mt-1">Reason: {path.rejectionReason}</p>)}
-                        <Button variant="outline" className="mt-2" onClick={() => handleDeletePath(path.id)}>
+                        <Button variant="outline" className="mt-2" onClick={() => handleDeletePath(path._id)}>
                           <Trash2 className="w-4 h-4"/>
                           Delete
                         </Button>
