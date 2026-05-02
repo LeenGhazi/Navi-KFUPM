@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { MessageSquare, Send, CheckCircle, Clock } from 'lucide-react';
 
 export function AdminComplaintsManagement() {{/* AdminComplaintsManagement component allows administrators to view, filter, search, 
-  and respond to user complaints. It uses mock data for complaints . */}
+  and respond to user complaints. */}
     const { user } = useAuth();
     const [complaints, setComplaints] = useState([]);
 
