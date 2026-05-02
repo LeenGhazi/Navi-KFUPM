@@ -21,7 +21,7 @@ export function HomePage() {
     const [categories, setCategories] = useState([]);
 
 useEffect(() => {
-    fetch("http://localhost:5000/api/map-categories")
+    fetch('${import.meta.env.VITE_API_URL}/api/map-categories')
         .then(res => res.json())
         .then(data => setCategories(data.map(cat => ({
             value: cat.categoryName,

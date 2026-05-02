@@ -22,7 +22,7 @@ export function AdminRequestsPage() {
     const [notes, setNotes] = useState('');
     
     useEffect(() => {
-      fetch("http://localhost:5000/api/tech-requests")
+      fetch(`${import.meta.env.VITE_API_URL}/api/tech-requests`)
         .then(res => res.json())
         .then(data => setRequests(data))
         .catch(err => console.error(err));
@@ -43,7 +43,7 @@ export function AdminRequestsPage() {
     {/* Function to handle changing the status of a request. It updates the status in the local state and shows a success toast notification. */  }
     const handleStatusChange = async (requestId, newStatus) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/tech-requests/${requestId}/status`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tech-requests/${requestId}/status`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

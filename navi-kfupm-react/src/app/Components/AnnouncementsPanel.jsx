@@ -33,7 +33,7 @@ export function AnnouncementsPanel() {
     const [announcements, setAnnouncements] = useState([]);
 
 useEffect(() => {
-    fetch("http://localhost:5000/api/announcements")
+    fetch(`${import.meta.env.VITE_API_URL}/api/announcements`)
         .then(res => res.json())
         .then(data => setAnnouncements(data))
         .catch(err => console.error(err));

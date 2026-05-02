@@ -37,7 +37,7 @@ export function AdminRequestsToTechPage() {
     ];
 
     useEffect(() => {
-      fetch("http://localhost:5000/api/tech-requests")
+      fetch(`${import.meta.env.VITE_API_URL}/api/tech-requests`)
         .then(res => res.json())
         .then(data => setRequests(data))
         .catch(err => console.error(err));
@@ -69,7 +69,7 @@ export function AdminRequestsToTechPage() {
       };
 
       try {
-        const res = await fetch("http://localhost:5000/api/tech-requests", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tech-requests`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -18,7 +18,7 @@ export function AdminComplaintsManagement() {{/* AdminComplaintsManagement compo
     useEffect(() => {
       const fetchComplaints = async () => {
         try {
-          const res = await fetch("http://localhost:5000/api/complaints");
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints`);
           const data = await res.json();
           setComplaints(data);
         } catch (error) {
@@ -48,7 +48,7 @@ export function AdminComplaintsManagement() {{/* AdminComplaintsManagement compo
 {/* Handle updating the status of a complaint. This function updates the status of the specified complaint in the state and shows a success toast message. */  }
   const handleUpdateStatus = async (complaintId, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/complaints/${complaintId}/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints/${complaintId}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -70,7 +70,7 @@ export function AdminComplaintsManagement() {{/* AdminComplaintsManagement compo
 {/* Handle submitting a response to a complaint. This function updates the adminResponse and status of the specified complaint in the state, clears the response text, and shows a success toast message. */  }
     const handleSubmitResponse = async (complaintId) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/complaints/${complaintId}/response`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints/${complaintId}/response`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ adminResponse: responseText }),

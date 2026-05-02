@@ -23,7 +23,7 @@ export function BusRoutesPage() {
   useEffect(() => {
   const fetchBusRoutes = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/bus-routes");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/bus-routes`);
       const data = await response.json();
 
       setBusRoutes(data);

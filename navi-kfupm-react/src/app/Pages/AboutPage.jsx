@@ -20,7 +20,7 @@ export function AboutPage() {
   useEffect(() => {
     const fetchAboutPage = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/about-page");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/about-page`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch About page data");

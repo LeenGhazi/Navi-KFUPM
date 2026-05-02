@@ -90,13 +90,13 @@ export function AccountPage() {   {/* this page allows users to view and edit th
       const userId = user.id || user._id || user.userId || 2; // Fallback to 2 for mock data if no user ID found
 
       // fetch stories
-      fetch(`http://localhost:5000/api/building-comments/user/${userId}`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/building-comments/user/${userId}`)
         .then(res => res.json())
         .then(data => setUserStories(data))
         .catch(err => console.error(err));
 
       // fetch reviews
-      fetch(`http://localhost:5000/api/building-reviews/user/${userId}`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/user/${userId}`)
         .then(res => res.json())
         .then(data => setUserReviews(data))
         .catch(err => console.error(err));

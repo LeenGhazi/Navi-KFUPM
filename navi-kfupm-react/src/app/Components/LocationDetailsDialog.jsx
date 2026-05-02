@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { mockComments } from '../../mockData';
 import { useAuth } from '../../AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, } from './ui/dialog';
 import { Badge } from './ui/badge';
@@ -40,7 +39,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     useEffect(() => {
       if (!location) return;
 
-      fetch(`http://localhost:5000/api/building-reviews/${location.id}`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${location.id}`)
         .then(res => res.json())
         .then(data => setReviews(data))
         .catch(err => console.error(err));
@@ -50,7 +49,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     useEffect(() => {
       if (!location) return;
 
-      fetch(`http://localhost:5000/api/building-comments/${location.id}`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/building-comments/${location.id}`)
         .then(res => res.json())
         .then(data => setStories(data))
         .catch(err => console.error(err));
@@ -99,7 +98,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
       if (!user || user.role !== 'maintenance_staff') return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
           method: "DELETE",
         });
 
@@ -123,7 +122,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
       if (!review) return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -161,7 +160,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
       if (!editingCommentId) return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/building-reviews/${editingCommentId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${editingCommentId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -213,7 +212,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
     const handleSaveBuildingChanges = async () => {
         try {
             const res = await fetch(
-                `http://localhost:5000/api/buildings/${editForm.id}`,
+                `${import.meta.env.VITE_API_URL}/api/buildings/${editForm.id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -318,7 +317,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
 
       try {
         const res = await fetch(
-          `http://localhost:5000/api/building-comments/${storyId}/like`,
+          `${import.meta.env.VITE_API_URL}/api/building-comments/${storyId}/like`,
           {
             method: "PATCH",
             headers: {
@@ -355,7 +354,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
       };
 
       try {
-        const res = await fetch("http://localhost:5000/api/building-comments", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-comments`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -397,7 +396,7 @@ export function LocationDetailsDialog({ location, open, onOpenChange, onSubmitCo
       };
 
       try {
-        const res = await fetch("http://localhost:5000/api/building-reviews", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

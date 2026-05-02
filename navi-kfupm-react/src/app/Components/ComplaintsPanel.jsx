@@ -29,8 +29,8 @@ export function ComplaintsPanel() {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const complaintsRes = await fetch("http://localhost:5000/api/complaints");
-          const locationsRes = await fetch("http://localhost:5000/api/buildings");
+          const complaintsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints`);
+          const locationsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/buildings`);
 
           const complaintsData = await complaintsRes.json();
           const locationsData = await locationsRes.json();
@@ -86,7 +86,7 @@ export function ComplaintsPanel() {
     // After updating, it clears the selected complaint and notes.
     const handleUpdateStatus = async (complaintId, newStatus) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/complaints/${complaintId}/status`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints/${complaintId}/status`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export function ComplaintsPanel() {
     // assigning complaints to a staff member.
     const handleAssignComplaint = async (complaintId, staffId) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/complaints/${complaintId}/assign`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints/${complaintId}/assign`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -162,7 +162,7 @@ export function ComplaintsPanel() {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
-        const response = await fetch("http://localhost:5000/api/complaints", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/complaints`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

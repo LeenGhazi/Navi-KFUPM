@@ -20,7 +20,7 @@ export function AdminVerifyComments() {
 
     /// useEffect hook fetches the building reviews from the backend API when the component mounts and updates the comments state with the retrieved data. It also handles any errors that may occur during the fetch operation.
     useEffect(() => {
-      fetch("http://localhost:5000/api/building-reviews")
+      fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews`)
         .then(res => res.json())
         .then(data => setComments(data))
         .catch(err => console.error(err));
@@ -42,7 +42,7 @@ export function AdminVerifyComments() {
     {/*handleVerifyComment function updates the state to mark a comment as verified, while handleUnverifyComment removes the verification.  */  }
     const handleVerifyComment = async (commentId) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ verified: true }),
@@ -62,7 +62,7 @@ export function AdminVerifyComments() {
 
     const handleUnverifyComment = async (commentId) => {
       try {
-        const res = await fetch(`http://localhost:5000/api/building-reviews/${commentId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ verified: false }),
