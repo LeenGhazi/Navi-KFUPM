@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
 import { mockLocations } from '../../mockData';
@@ -26,69 +26,136 @@ const initialCategories = [
 {/* FilterManagementPage component is responsible for managing filter categories used for building classification on the map. 
   It allows maintenance staff to add, edit, delete categories, and assign buildings to each category. 
   The component uses various UI components such as Card, Dialog, and Tabs to provide an interactive interface for managing filters. */  }
-export function FilterManagementPage() {
-    const { user } = useAuth();
-    const [categories, setCategories] = useState(initialCategories);
-    const [buildings] = useState(mockLocations);
-    const [showAddDialog, setShowAddDialog] = useState(false);
-    const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showBuildingsDialog, setShowBuildingsDialog] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [formData, setFormData] = useState({ name: '', value: '' });
-    const [selectedBuildings, setSelectedBuildings] = useState([]);
-    if (!user || user.role !== 'maintenance_staff') {
-        return <Navigate to="/" replace/>;
-    }
-    {/* Handler function to add a new filter category. It validates the input fields, creates a new category object, updates the state with the new category, and shows a success toast message. 
-      If validation fails, it shows an error toast message. */  }
-    const handleAddCategory = () => {
-        if (!formData.name.trim() || !formData.value.trim()) {
-            toast.error('Please fill in all fields');
-            return;
+    export function FilterManagementPage() {
+        const { user } = useAuth();
+        const [categories, setCategories] = useState([]);
+        const [buildings] = useState(mockLocations);
+        const [showAddDialog, setShowAddDialog] = useState(false);
+        const [showEditDialog, setShowEditDialog] = useState(false);
+        const [showBuildingsDialog, setShowBuildingsDialog] = useState(false);
+        const [selectedCategory, setSelectedCategory] = useState(null);
+        const [formData, setFormData] = useState({ name: '', value: '' });
+        const [selectedBuildings, setSelectedBuildings] = useState([]);
+
+        useEffect(() => {
+          fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`)
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(err => console.error(err));
+        }, []);
+
+        if (!user || user.role !== 'maintenance_staff') {
+            return <Navigate to="/" replace/>;
         }
-        const newCategory = {
-            id: `cat${Date.now()}`,
-            name: formData.name,
-            value: formData.value.toLowerCase().replace(/\s+/g, '_'),
-            buildingCount: 0,
-            createdDate: new Date().toISOString().split('T')[0],
-        };
-        setCategories([...categories, newCategory]);
+        {/* Handler function to add a new filter category. It validates the input fields, creates a new category object, updates the state with the new category, and shows a success toast message. 
+          If validation fails, it shows an error toast message. */  }
+    const handleAddCategory = async () => {
+      if (!formData.name.trim() || !formData.value.trim()) {
+        toast.error('Please fill in all fields');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categoryName: formData.value.toLowerCase().replace(/\s+/g, '_'),
+            displayLabel: formData.name,
+            order: categories.length + 1,
+            active: true,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Failed to add category");
+
+        const newCategory = await res.json();
+
+        setCategories(prev => [...prev, newCategory]);
+
         toast.success('New filter category added successfully!');
+
         setFormData({ name: '', value: '' });
         setShowAddDialog(false);
+
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to add category');
+      }
     };
     {/* Handler function to edit an existing filter category. It validates the input fields, updates the category object, and shows a success toast message. 
       If validation fails, it shows an error toast message. */  }
-    const handleEditCategory = () => {
+      const handleEditCategory = async () => {
         if (!selectedCategory || !formData.name.trim() || !formData.value.trim()) {
-            toast.error('Please fill in all fields');
-            return;
+          toast.error('Please fill in all fields');
+          return;
         }
-        setCategories(prev => prev.map(cat => cat.id === selectedCategory.id
-            ? { ...cat, name: formData.name, value: formData.value.toLowerCase().replace(/\s+/g, '_') }
-            : cat));
-        toast.success('Filter category updated successfully!');
-        setShowEditDialog(false);
-        setSelectedCategory(null);
-        setFormData({ name: '', value: '' });
-    };
+
+        try {
+          const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/map-categories/${selectedCategory._id}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                categoryName: formData.value.toLowerCase().replace(/\s+/g, '_'),
+                displayLabel: formData.name,
+              }),
+            }
+          );
+
+          if (!res.ok) throw new Error("Failed to update category");
+
+          const updatedCategory = await res.json();
+
+          setCategories(prev =>
+            prev.map(cat =>
+              cat._id === selectedCategory._id ? updatedCategory : cat
+            )
+          );
+
+          toast.success('Filter category updated successfully!');
+          setShowEditDialog(false);
+          setSelectedCategory(null);
+          setFormData({ name: '', value: '' });
+        } catch (err) {
+          console.error(err);
+          toast.error('Failed to update category');
+        }
+      };
     {/* Handler function to delete a filter category. It checks if the category has any buildings assigned and shows an error toast message if so. 
       Otherwise, it removes the category from the state and shows a success toast message. */  }
-    const handleDeleteCategory = (categoryId) => {
-        const category = categories.find(cat => cat.id === categoryId);
-        if (category && category.buildingCount > 0) {
-            toast.error(`Cannot delete category with ${category.buildingCount} buildings assigned`);
-            return;
-        }
-        setCategories(prev => prev.filter(cat => cat.id !== categoryId));
+    const handleDeleteCategory = async (categoryId) => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/map-categories/${categoryId}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!res.ok) throw new Error("Failed to delete category");
+
+        setCategories(prev => prev.filter(cat => cat._id !== categoryId));
+
         toast.success('Filter category deleted successfully!');
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to delete category');
+      }
     };
     {/* function to open the edit dialog for a specific category. It sets the selected category and pre-fills the form data with the category's current name and value. */  }
     const openEditDialog = (category) => {
-        setSelectedCategory(category);
-        setFormData({ name: category.name, value: category.value });
-        setShowEditDialog(true);
+      setSelectedCategory(category);
+      setFormData({
+        name: category.displayLabel || '',
+        value: category.categoryName || '',
+      });
+      setShowEditDialog(true);
     };
     {/*  function to open the add category dialog. It resets the form data and shows the add dialog. */  }
     const openAddDialog = () => {
@@ -137,19 +204,19 @@ export function FilterManagementPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        {categories.map((category) => (<Card key={category.id} className="hover:shadow-md transition-shadow">{/* Card component for each filter category. It displays the category name, value, number of assigned buildings, and creation date. 
+        {categories.map((category) => (<Card key={category._id} className="hover:shadow-md transition-shadow">{/* Card component for each filter category. It displays the category name, value, number of assigned buildings, and creation date. 
         It also includes buttons to edit the category, delete the category . */  }
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2">
                   <Filter className="w-5 h-5 text-primary"/>
-                  <CardTitle className="text-lg">{category.name}</CardTitle>
+                  <CardTitle className="text-lg">{category.displayLabel}</CardTitle>
                 </div>
                 <div className="flex gap-1">
                   <Button size="icon" variant="ghost" onClick={() => openEditDialog(category)}>
                     <Edit className="w-4 h-4"/>
                   </Button>
-                  <Button size="icon" variant="ghost" onClick={() => handleDeleteCategory(category.id)}>
+                  <Button size="icon" variant="ghost" onClick={() => handleDeleteCategory(category._id)}>
                     <Trash2 className="w-4 h-4 text-red-600"/>
                   </Button>
                 </div>
@@ -160,7 +227,7 @@ export function FilterManagementPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Value:</span>
-                  <Badge variant="outline">{category.value}</Badge>
+                  <Badge variant="outline">{category.categoryName}</Badge>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Buildings:</span>
