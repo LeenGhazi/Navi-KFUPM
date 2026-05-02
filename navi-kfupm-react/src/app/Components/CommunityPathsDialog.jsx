@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // UI Components adn icons
 import { useAuth } from "../../AuthContext";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "./ui/dialog";
@@ -73,7 +73,31 @@ const mockPaths = [
 // (which will open the CreatePathDialog).
 export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
     const { user } = useAuth();
-    const [paths, setPaths] = useState(mockPaths.sort((a, b) => b.rating - a.rating));
+    const [paths, setPaths] = useState([]);
+    useEffect(() => {
+      if (!open) return;
+
+      const fetchPaths = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/path-requests`);
+
+          if (!res.ok) {
+            throw new Error("Failed to fetch community paths");
+          }
+
+          const data = await res.json();
+
+          const approvedPaths = data.filter((path) => path.status === "approved");
+
+          setPaths(approvedPaths);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load community paths");
+        }
+      };
+
+      fetchPaths();
+    }, [open]);
     const [sortBy, setSortBy] = useState("rating");
     const handleRatePath = (pathId, rating) => {
         if (!user || user.role !== "student") {
@@ -165,10 +189,10 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="font-semibold">
-                        {path.title}
+                        {path.pathName}
                       </h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        by {path.creator}
+                        by {path.creatorName || path.userId || "Community User"}
                       </p>
                     </div>
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
@@ -179,13 +203,13 @@ export function CommunityPathsDialog({ open, onOpenChange, onCreatePath, }) {
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="w-4 h-4 text-muted-foreground"/>
                     <span className="font-medium">
-                      {path.from}
+                      {path.startLocation}
                     </span>
                     <span className="text-muted-foreground">
                       →
                     </span>
                     <span className="font-medium">
-                      {path.to}
+                      {path.endLocation}
                     </span>
                   </div>
 
