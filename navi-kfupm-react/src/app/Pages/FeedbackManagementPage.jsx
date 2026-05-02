@@ -21,7 +21,7 @@ export function FeedbackManagementPage() {
     useEffect(() => {
       const fetchFeedback = async () => {
         try {
-          const res = await fetch(`${API_BASE_URL}/api/feedback`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/feedback`);
           const data = await res.json();
           setFeedback(data);
         } catch (error) {
@@ -44,7 +44,7 @@ export function FeedbackManagementPage() {
     {/* Handler function to update the status of a feedback item. It updates the feedbacks state with the new status and admin notes, shows a success toast, and closes the details dialog. */  }
     const handleUpdateStatus = async (feedbackId, newStatus) => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/feedback/${feedbackId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/feedback/${feedbackId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

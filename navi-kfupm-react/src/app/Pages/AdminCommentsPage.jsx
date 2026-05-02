@@ -23,8 +23,8 @@ export function AdminCommentsPage() {{/* this function is the main component for
       const fetchData = async () => {
         try {
           const [commentsRes, locationsRes] = await Promise.all([
-            fetch(`${API_BASE_URL}/api/building-reviews`),
-            fetch(`${API_BASE_URL}/api/buildings`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/buildings`),
           ]);
 
           const commentsData = await commentsRes.json();
@@ -48,7 +48,7 @@ export function AdminCommentsPage() {{/* this function is the main component for
       const comment = comments.find(c => c._id === commentId);
 
       try {
-        const res = await fetch(`${API_BASE_URL}/api/building-reviews/${commentId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ hidden: !comment.hidden }),
@@ -71,7 +71,7 @@ export function AdminCommentsPage() {{/* this function is the main component for
       if (!selectedComment) return;
 
       try {
-        await fetch(`${API_BASE_URL}/api/building-reviews/${selectedComment._id}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${selectedComment._id}`, {
           method: "DELETE",
         });
 

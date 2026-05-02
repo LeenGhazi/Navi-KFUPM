@@ -19,7 +19,7 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
     useEffect(() => {
       const fetchPaths = async () => {
         try {
-          const res = await fetch(`${API_BASE_URL}/api/path-requests`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests`);
           const data = await res.json();
           setPaths(data);
         } catch (error) {
@@ -43,7 +43,7 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
     {/* Handler function to approve a community path. It updates the path's status to "Approved" and adds review notes if provided. It also shows a success toast notification. */  }
     const handleApprove = async (pathId) => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/path-requests/${pathId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests/${pathId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -67,7 +67,7 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
 
     const handleReject = async (pathId) => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/path-requests/${pathId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests/${pathId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -267,7 +267,7 @@ export function AdminCommunityPathsReview() { {/* Main component for the admin c
                 {path.status === 'pending' && (<div className="space-y-3 pt-2 border-t">
                     <div className="space-y-2">
                       <Label>Review Notes (Optional)</Label>
-                      <Textarea placeholder="Add notes about your decision..." value={selectedPath?.id === path._id ? reviewNotes : ''} onChange={(e) => {
+                      <Textarea placeholder="Add notes about your decision..." value={selectedPath?._id === path._id ? reviewNotes : ''} onChange={(e) => {
                     setSelectedPath(path);
                     setReviewNotes(e.target.value);
                 }} rows={2}/>
