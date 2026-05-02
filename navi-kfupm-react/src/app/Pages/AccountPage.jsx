@@ -9,63 +9,8 @@ import { Badge } from '../Components/ui/badge';
 import { Separator } from '../Components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from '../Components/ui/select';
-import { UserCircle, Mail, Phone, MapPin, Shield, Edit, Save, X, Key, Activity, Award, Route, MessageSquare, Trash2, Star, } from 'lucide-react';
+import { UserCircle, Mail, Phone, MapPin, Shield, Edit, Save, X, Key, Award, Route, MessageSquare, Trash2, Star, } from 'lucide-react';
 import { toast } from 'sonner';
-// Mock data for community paths
-const mockUserPaths = [
-    {
-        id: 1,
-        title: 'Quick Route to Library',
-        from: 'Engineering Complex',
-        to: 'Central Library',
-        description: 'Fastest path avoiding construction area',
-        status: 'Approved',
-        rating: 4.5,
-        createdDate: '2026-02-20',
-    },
-    {
-        id: 2,
-        title: 'Scenic Campus Tour',
-        from: 'Main Gate',
-        to: 'Student Center',
-        description: 'Beautiful route through the gardens',
-        status: 'Pending',
-        rating: 0,
-        createdDate: '2026-02-24',
-    },
-    {
-        id: 3,
-        title: 'Early Morning Jog Route',
-        from: 'Sports Complex',
-        to: 'Medical Center',
-        description: 'Best morning exercise path',
-        status: 'Rejected',
-        rating: 0,
-        createdDate: '2026-02-18',
-        rejectionReason: 'Path crosses restricted area',
-    },
-];
-// Mock data for user comments
-const mockUserComments = [
-    {
-        id: 1,
-        building: 'Engineering Complex',
-        comment: 'Great study spaces on the 3rd floor! Very quiet and well-lit.',
-        submittedDate: '2026-02-23',
-    },
-    {
-        id: 2,
-        building: 'Central Library',
-        comment: 'The new coffee machine on the second floor is amazing!',
-        submittedDate: '2026-02-25',
-    },
-    {
-        id: 3,
-        building: 'Student Center',
-        comment: 'Love the renovated cafeteria! Much better seating now.',
-        submittedDate: '2026-02-22',
-    },
-];
 
 export function AccountPage() {   {/* this page allows users to view and edit their account information*/ }
     const { user, logout } = useAuth(); {/* Get current user data and logout function */ }
@@ -79,30 +24,38 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         confirmPassword: '',
     });
     {/* User paths */}
-    const [userPaths, setUserPaths] = useState(mockUserPaths);
+    const [userPaths, setUserPaths] = useState([]);
     const [userStories, setUserStories] = useState([]);
+    const [userComments, setUserComments] = useState([]);
     const [userReviews, setUserReviews] = useState([]);
 
     // Fetch user-specific stories and reviews on component mount
     useEffect(() => {
       if (!user) return;
 
-      const userId = user.id || user._id || user.userId || 2; // Fallback to 2 for mock data if no user ID found
+      const userId = user.id || user._id;
 
-      // fetch stories
-      fetch(`${import.meta.env.VITE_API_URL}/api/building-comments/user/${userId}`)
-        .then(res => res.json())
-        .then(data => setUserStories(data))
-        .catch(err => console.error(err));
+      const fetchUserData = async () => {
+        try {
+          const [pathsRes, reviewsRes] = await Promise.all([
+            fetch(`${import.meta.env.VITE_API_URL}/api/path-requests`),
+            fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/user/${userId}`),
+          ]);
 
-      // fetch reviews
-      fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/user/${userId}`)
-        .then(res => res.json())
-        .then(data => setUserReviews(data))
-        .catch(err => console.error(err));
+          const pathsData = await pathsRes.json();
+          const reviewsData = await reviewsRes.json();
 
+          setUserPaths(pathsData.filter(path => path.userId === userId));
+          setUserReviews(reviewsData);
+
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load account data");
+        }
+      };
+
+      fetchUserData();
     }, [user]);
-
     {/* Check authentication on load */}
     useEffect(() => {
         console.log('AccountPage - User:', user);
@@ -162,27 +115,43 @@ export function AccountPage() {   {/* this page allows users to view and edit th
     {/* Render status badge */}
     const getStatusBadge = (status) => {
         switch (status) {
-            case 'Approved':
+            case 'approved':
                 return <Badge className="bg-green-100 text-green-700 border-green-200">Approved</Badge>;
-            case 'Pending':
+            case 'pending':
                 return <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200">Pending</Badge>;
-            case 'Rejected':
+            case 'rejected':
                 return <Badge className="bg-red-100 text-red-700 border-red-200">Rejected</Badge>;
             default:
                 return <Badge variant="outline">{status}</Badge>;
         }
     };
     {/* Delete path  if confirmed */}
-    const handleDeletePath = (pathId) => {
-        toast.success('Path deleted successfully!');
-        // In real app, would delete from database
-        setUserPaths(userPaths.filter((path) => path.id !== pathId));
+    const handleDeletePath = async (pathId) => {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/path-requests/${pathId}`, {
+          method: "DELETE",
+        });
+
+        setUserPaths(prev => prev.filter(p => p._id !== pathId));
+        toast.success("Path deleted successfully!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete path");
+      }
     };
       {/* Delete comment if confirmed */}
-    const handleDeleteComment = (commentId) => {
-        toast.success('Comment deleted successfully!');
-        // In real app, would delete from database
-        setUserComments(userComments.filter((comment) => comment.id !== commentId));
+    const handleDeleteComment = async (commentId) => {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/building-reviews/${commentId}`, {
+          method: "DELETE",
+        });
+
+        setUserComments(prev => prev.filter(c => c._id !== commentId));
+        toast.success("Comment deleted successfully!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete comment");
+      }
     };
       
     const renderStars = (rating) => {
@@ -190,13 +159,6 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         {[1, 2, 3, 4, 5].map((star) => (<Star key={star} className={`w-4 h-4 ${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}/>))}
       </div>);
     };
-    // Mock activity data
-    const recentActivity = [
-        { date: '2026-02-08', action: 'Submitted complaint', details: 'AC not working in Building 5' },
-        { date: '2026-02-07', action: 'Posted comment', details: 'Engineering Complex' },
-        { date: '2026-02-06', action: 'Liked story', details: 'Library memories' },
-        { date: '2026-02-05', action: 'Viewed map', details: 'Searched for Study Rooms' },
-    ];
     return (
       
     <div className="container mx-auto py-6 px-4 h-full overflow-auto">{/* Main container */}
@@ -249,7 +211,7 @@ export function AccountPage() {   {/* this page allows users to view and edit th
         {/* Tabs for different sections */}
         <Tabs defaultValue={user.role === 'student' ? 'paths' : 'profile'} className="space-y-4">
           {/* Tabs Navigation */}
-          <TabsList className={`grid w-full ${user.role === 'student' ? 'grid-cols-2' : 'grid-cols-5'}`}>
+          <TabsList className={`grid w-full ${user.role === 'student' ? 'grid-cols-2' : 'grid-cols-4'}`}>
              {/* Non-student tabs */}
             {user.role !== 'student' && (
               <>
@@ -260,10 +222,6 @@ export function AccountPage() {   {/* this page allows users to view and edit th
                 <TabsTrigger value="security" className="gap-2">
                   <Key className="w-4 h-4"/>
                   Security
-                </TabsTrigger>
-                <TabsTrigger value="activity" className="gap-2">
-                  <Activity className="w-4 h-4"/>
-                  Activity
                 </TabsTrigger>
               </>
             )}
@@ -468,40 +426,6 @@ export function AccountPage() {   {/* this page allows users to view and edit th
             </Card>
           </TabsContent>
 
-          {/* Activity Tab */}
-          <TabsContent value="activity" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your recent actions on Navi-KFUPM</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity, index) => (<div key={index}>
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <Activity className="w-5 h-5 text-primary"/>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <h4 className="font-medium">{activity.action}</h4>
-                            <span className="text-xs text-muted-foreground">
-                              {new Date(activity.date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-            })}
-                            </span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-1">{activity.details}</p>
-                        </div>
-                      </div>
-                      {index < recentActivity.length - 1 && <Separator className="mt-4"/>}
-                    </div>))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           {/* Paths Tab */}
           <TabsContent value="paths" className="space-y-4">
             <Card>
@@ -511,26 +435,26 @@ export function AccountPage() {   {/* this page allows users to view and edit th
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {userPaths.map((path) => (<div key={path.id} className="flex items-start gap-4">
+                  {userPaths.map((path) => (<div key={path._id} className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                         <Route className="w-5 h-5 text-primary"/>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium">{path.title}</h4>
+                          <h4 className="font-medium">{path.pathName}</h4>
                           <div className="flex items-center gap-2">
                             {getStatusBadge(path.status)}
                             {path.rating > 0 && renderStars(path.rating)}
                           </div>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">
-                          {path.description} ({path.from} to {path.to})
+                          {path.description} ({path.startLocation} to {path.endLocation})
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Created on {new Date(path.createdDate).toLocaleDateString('en-US')}
+                          Created on {new Date(path.createdAt).toLocaleDateString('en-US')}
                         </p>
                         {path.rejectionReason && (<p className="text-xs text-red-500 mt-1">Reason: {path.rejectionReason}</p>)}
-                        <Button variant="outline" className="mt-2" onClick={() => handleDeletePath(path.id)}>
+                        <Button variant="outline" className="mt-2" onClick={() => handleDeletePath(path._id)}>
                           <Trash2 className="w-4 h-4"/>
                           Delete
                         </Button>

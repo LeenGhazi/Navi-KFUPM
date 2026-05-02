@@ -14,6 +14,20 @@ Navi-KFUPM aims to simplify navigation inside the KFUPM campus by offering:
 
 This project is developed as part of the SWE363 Web Engineering course.
 
+# Technologies Used
+
+Frontend:
+- React (Vite)
+- Tailwind CSS
+- ShadCN UI
+
+Backend:
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+
+Deployment:
+- REST API architecture
 
 # Web Overview
 ### 🏠 Home Page
@@ -34,6 +48,7 @@ For developers/maintainers, they can monitor, update the system, mand communicat
 ### ℹ️ About Page
 Provides information about the project idea and detailed information about the purpsose of the system.
 
+
 # ⚙️ Installation & Setup
 Follow these steps to run the project locally:
 
@@ -43,9 +58,27 @@ Follow these steps to run the project locally:
 git clone https://github.com/LeenGhazi/Navi-KFUPM.git
 ```
 
+#### Backend (.env file inside Backend-Data)
+
+Create a `.env` file:
+
+```
+MONGO_URI=mongodb_connection_string
+PORT=5000
+```
+
+#### Frontend (.env file inside navi-kfupm-react)
+Create a `.env` file:
+```
+VITE_API_URL=http://localhost:5000
+```
+
 2️⃣ 1st Terminal: Run the Backend 
 ```
 cd Backend-Data
+```
+```
+npm install
 ```
 ```
 npm start
@@ -111,6 +144,39 @@ http://localhost:PORT
 **👤 Using the System as a Registered User**
 - Login or signup using the demo accounts information provided  
 - Access personalized features  
+
+---
+
+## API Endpoints
+
+### Buildings
+GET /api/buildings
+GET /api/buildings/:id
+
+### Bus Routes
+GET /api/bus-routes
+
+### Complaints
+GET /api/complaints\
+POST /api/complaints\
+DELETE /api/complaints/:id
+
+### Path Requests
+GET /api/path-requests\
+POST /api/path-requests\
+PATCH /api/path-requests/:id\
+DELETE /api/path-requests/:id
+
+### Building Reviews (Comments)
+GET /api/building-reviews\
+POST /api/building-reviews\
+DELETE /api/building-reviews/:id
+
+### Feedback
+GET /api/feedback\
+POST /api/feedback\
+PATCH /api/feedback/:id\
+DELETE /api/feedback/:id
 
 ---
 

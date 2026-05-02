@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../AuthContext';
 import { Navigate } from 'react-router';
-import { mockLocations } from '../../mockData';
 import { Card, CardContent, CardHeader, CardTitle } from '../Components/ui/card';
 import { Button } from '../Components/ui/button';
 import { Input } from '../Components/ui/input';
@@ -26,29 +25,42 @@ const initialCategories = [
 {/* FilterManagementPage component is responsible for managing filter categories used for building classification on the map. 
   It allows maintenance staff to add, edit, delete categories, and assign buildings to each category. 
   The component uses various UI components such as Card, Dialog, and Tabs to provide an interactive interface for managing filters. */  }
-    export function FilterManagementPage() {
-        const { user } = useAuth();
-        const [categories, setCategories] = useState([]);
-        const [buildings] = useState(mockLocations);
-        const [showAddDialog, setShowAddDialog] = useState(false);
-        const [showEditDialog, setShowEditDialog] = useState(false);
-        const [showBuildingsDialog, setShowBuildingsDialog] = useState(false);
-        const [selectedCategory, setSelectedCategory] = useState(null);
-        const [formData, setFormData] = useState({ name: '', value: '' });
-        const [selectedBuildings, setSelectedBuildings] = useState([]);
+export function FilterManagementPage() {
+    const { user } = useAuth();
+    const [categories, setCategories] = useState([]);
+    const [buildings, setBuildings] = useState([]);
+    const [showAddDialog, setShowAddDialog] = useState(false);
+    const [showEditDialog, setShowEditDialog] = useState(false);
+    const [showBuildingsDialog, setShowBuildingsDialog] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [formData, setFormData] = useState({ name: '', value: '' });
+    const [selectedBuildings, setSelectedBuildings] = useState([]);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [categoriesRes, buildingsRes] = await Promise.all([
+            fetch(`${API_BASE_URL}/api/map-categories`),
+            fetch(`${API_BASE_URL}/api/buildings`),
+          ]);
 
-        useEffect(() => {
-          fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`)
-            .then(res => res.json())
-            .then(data => setCategories(data))
-            .catch(err => console.error(err));
-        }, []);
+          const categoriesData = await categoriesRes.json();
+          const buildingsData = await buildingsRes.json();
 
-        if (!user || user.role !== 'maintenance_staff') {
-            return <Navigate to="/" replace/>;
+          setCategories(categoriesData);
+          setBuildings(buildingsData);
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to load filter data");
         }
-        {/* Handler function to add a new filter category. It validates the input fields, creates a new category object, updates the state with the new category, and shows a success toast message. 
-          If validation fails, it shows an error toast message. */  }
+      };
+
+      fetchData();
+    }, []);
+    if (!user || user.role !== 'maintenance_staff') {
+        return <Navigate to="/" replace/>;
+    }
+    {/* Handler function to add a new filter category. It validates the input fields, creates a new category object, updates the state with the new category, and shows a success toast message. 
+      If validation fails, it shows an error toast message. */  }
     const handleAddCategory = async () => {
       if (!formData.name.trim() || !formData.value.trim()) {
         toast.error('Please fill in all fields');
@@ -56,106 +68,78 @@ const initialCategories = [
       }
 
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/map-categories`, {
+        const res = await fetch(`${API_BASE_URL}/api/map-categories`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             categoryName: formData.value.toLowerCase().replace(/\s+/g, '_'),
             displayLabel: formData.name,
-            order: categories.length + 1,
             active: true,
+            order: categories.length + 1,
           }),
         });
 
-        if (!res.ok) throw new Error("Failed to add category");
-
         const newCategory = await res.json();
 
-        setCategories(prev => [...prev, newCategory]);
-
+        setCategories([...categories, newCategory]);
         toast.success('New filter category added successfully!');
 
         setFormData({ name: '', value: '' });
         setShowAddDialog(false);
-
-      } catch (err) {
-        console.error(err);
-        toast.error('Failed to add category');
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to add category");
       }
     };
     {/* Handler function to edit an existing filter category. It validates the input fields, updates the category object, and shows a success toast message. 
       If validation fails, it shows an error toast message. */  }
-      const handleEditCategory = async () => {
-        if (!selectedCategory || !formData.name.trim() || !formData.value.trim()) {
-          toast.error('Please fill in all fields');
-          return;
-        }
-
-        try {
-          const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/api/map-categories/${selectedCategory._id}`,
-            {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                categoryName: formData.value.toLowerCase().replace(/\s+/g, '_'),
-                displayLabel: formData.name,
-              }),
-            }
-          );
-
-          if (!res.ok) throw new Error("Failed to update category");
-
-          const updatedCategory = await res.json();
-
-          setCategories(prev =>
-            prev.map(cat =>
-              cat._id === selectedCategory._id ? updatedCategory : cat
-            )
-          );
-
-          toast.success('Filter category updated successfully!');
-          setShowEditDialog(false);
-          setSelectedCategory(null);
-          setFormData({ name: '', value: '' });
-        } catch (err) {
-          console.error(err);
-          toast.error('Failed to update category');
-        }
-      };
+    const handleEditCategory = async () => {
+      if (!selectedCategory || !formData.name.trim() || !formData.value.trim()) {
+        toast.error('Please fill in all fields');
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/map-categories/${selectedCategory._id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            categoryName: formData.value.toLowerCase().replace(/\s+/g, '_'),
+            displayLabel: formData.name,
+          }),
+        });
+        const updated = await res.json();
+        setCategories(prev =>
+          prev.map(cat => cat._id === selectedCategory._id ? updated : cat)
+        );
+        toast.success('Filter category updated successfully!');
+        setShowEditDialog(false);
+        setSelectedCategory(null);
+        setFormData({ name: '', value: '' });
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to update category");
+      }
+    };
     {/* Handler function to delete a filter category. It checks if the category has any buildings assigned and shows an error toast message if so. 
       Otherwise, it removes the category from the state and shows a success toast message. */  }
     const handleDeleteCategory = async (categoryId) => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/map-categories/${categoryId}`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        if (!res.ok) throw new Error("Failed to delete category");
+        await fetch(`${API_BASE_URL}/api/map-categories/${categoryId}`, {
+          method: "DELETE",
+        });
 
         setCategories(prev => prev.filter(cat => cat._id !== categoryId));
-
         toast.success('Filter category deleted successfully!');
-      } catch (err) {
-        console.error(err);
-        toast.error('Failed to delete category');
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete category");
       }
     };
     {/* function to open the edit dialog for a specific category. It sets the selected category and pre-fills the form data with the category's current name and value. */  }
     const openEditDialog = (category) => {
-      setSelectedCategory(category);
-      setFormData({
-        name: category.displayLabel || '',
-        value: category.categoryName || '',
-      });
-      setShowEditDialog(true);
+        setSelectedCategory(category);
+        setFormData({ name: category.displayLabel, value: category.categoryName });
+        setShowEditDialog(true);
     };
     {/*  function to open the add category dialog. It resets the form data and shows the add dialog. */  }
     const openAddDialog = () => {
